@@ -1,0 +1,52 @@
+(*============*)
+(*  DefInert  *)
+(*============*)
+
+ToInertRules={};
+FromInertRules={};
+DefInert[InputTensorHead_]:=Module[{
+	DerInd,
+	ActDerInd,
+	IneDerInd,
+	TenInd,
+	TenExp=FromIndexFree@ToIndexFree@InputTensorHead,
+	DerExp,
+	IneExp,
+	},
+
+	TenInd=TenExp/.{InputTensorHead->List};
+	Table[
+		DerInd=(ToExpression/@Alphabet[])~Take~(-DerOrd);
+		IneExp=("CD"~StringRepeat~DerOrd)<>ToString@Head@TenExp;
+		IneExp//=ToExpression;
+		IneExp//=((#)@@(DerInd~Join~TenInd))&;
+		If[DerOrd>1,
+			DefTensor[IneExp,M3,Symmetric@DerInd];
+		,
+			DefTensor[IneExp,M3];
+		];
+		Table[
+			IneDerOrd=DerOrd-ActDerOrd;
+			ActDerInd=(DerInd~Take~(-ActDerOrd));
+			IneDerInd=DerInd~Take~IneDerOrd;
+			DerExp=("CD"~StringRepeat~IneDerOrd)<>ToString@Head@TenExp;
+			DerExp//=ToExpression;
+			DerExp//=((#)@@(IneDerInd~Join~TenInd))&;
+			(DerExp//=CD[#])&/@(Reverse@ActDerInd);
+			ToInertRules=ToInertRules~Join~MakeRule[{
+				Evaluate@DerExp,
+				Evaluate@IneExp},
+				MetricOn->All,ContractMetrics->True];
+			If[ActDerOrd==DerOrd,
+				FromInertRules=FromInertRules~Join~MakeRule[{
+					Evaluate@IneExp,
+					Evaluate@DerExp},
+					MetricOn->All,ContractMetrics->True];
+			];
+		,
+			{ActDerOrd,1,DerOrd}
+		];
+	,
+		{DerOrd,1,$MaxDerOrd}
+	];
+];
