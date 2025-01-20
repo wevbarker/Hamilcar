@@ -24,7 +24,8 @@ BeginPackage["xAct`Hamelin`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamelin` version ",$Version[[1]],", ",$Version[[2]]];
-Print["CopyRight \[Copyright] 2023, Will Barker and Sebastian Zell, under the General Public License."];
+Print["CopyRight \[Copyright] 2023, Will Barker, under the General Public License."];
+Print@" ** Von einem Pfeiffer verfürt und verloren.";
 
 If[$FrontEnd==Null,
 	xAct`Hamelin`Private`$CLI=True,
