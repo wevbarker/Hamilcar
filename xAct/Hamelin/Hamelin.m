@@ -51,12 +51,27 @@ Print[xAct`xCore`Private`bars];
 Print["These packages come with ABSOLUTELY NO WARRANTY; for details type Disclaimer[]. This is free software, and you are welcome to redistribute it under certain conditions. See the General Public License for details."];
 Print[xAct`xCore`Private`bars]];
 
+(*============================*)
+(*  Declaration of functions  *)
+(*============================*)
+
 PoissonBracket::usage="PoissonBracket";
 DefCanonicalField::usage="DefCanonicalField";
 DefSmearingFunction::usage="DefSmearingFunction";
 
+(*===========================*)
+(*  Declaration of geometry  *)
+(*===========================*)
+
+M3::usage="M3 is the three-dimensional Lorentzian spacetime manifold.";
+G::usage="G[-a,-b] is the spatial metric on M3.";
+ConjugateMomentumG::usage="G[a,b] is the spatial metric on M3.";
+CD::usage="CD[-a] is the covariant derivative on M3.";
+
 Begin["xAct`Hamelin`Private`"];
 $MaxDerOrd=5;
+RegisteredFields={};
+RegisteredMomenta={};
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};

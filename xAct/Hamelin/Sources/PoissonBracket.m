@@ -17,6 +17,9 @@ PoissonBracket[InputLeftOperand_,InputRightOperand_]:=Module[{
 	LeftOperand//=(#~SmearOperand~Left)&;
 	RightOperand//=(#~SmearOperand~Right)&;
 
+	LeftOperand*=Sqrt[DetG[]];
+	RightOperand*=Sqrt[DetG[]];
+
 	ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
 
 	ProgressOngoing=PrintTemporary@Dynamic@Refresh[Image[ProgressMatrix/Max@ProgressMatrix],
@@ -47,4 +50,19 @@ PoissonBracket[InputLeftOperand_,InputRightOperand_]:=Module[{
 	Expr//=ToCanonical;
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;
+
+	LeftFactor=InputLeftOperand/.ToInertRules;
+	RightFactor=InputRightOperand/.ToInertRules;
+	LeftFactor//=(#~SmearFactor~Left)&;
+	RightFactor//=(#~SmearFactor~Right)&;
+
+	Off[VarD::nouse];
+	Expr//=VarD[LeftFactor,CD];	
+	Expr//=VarD[RightFactor,CD];	
+	On[VarD::nouse];
+	Expr/=DetG[];
+	Expr//=ToCanonical;
+	Expr//=ContractMetric;
+	Expr//=ScreenDollarIndices;
+
 Expr];

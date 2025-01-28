@@ -3,9 +3,9 @@
 (*===============*)
 
 DefManifold[M3,3,IndexRange[{a,z}]];
-GSymb="\[Eta]";
-Quiet@DefMetric[1,G[-a,-b],CD,{",","\[PartialD]"},
-	PrintAs->GSymb,SymCovDQ->True,FlatMetric->True];
+GSymb="\[ScriptG]";
+Quiet@DefMetric[1,G[-a,-b],CD,{";","\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},
+	PrintAs->GSymb,SymCovDQ->True];
 
 StandardIndices=ToString/@Alphabet[];
 StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	
@@ -40,3 +40,7 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 
 DefTensor[SmearingLeft[AnyIndices@TangentM3],M3,PrintAs->"\[Alpha]"];
 DefTensor[SmearingRight[AnyIndices@TangentM3],M3,PrintAs->"\[Beta]"];
+
+DefTensor[ConjugateMomentumG[-a,-b],M3,Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
+xAct`Hamelin`Private`DefInert@ConjugateMomentumG;
+G~xAct`Hamelin`Private`RegisterPair~ConjugateMomentumG;

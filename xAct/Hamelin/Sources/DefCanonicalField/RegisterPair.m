@@ -2,8 +2,6 @@
 (*  RegisterPair  *)
 (*================*)
 
-RegisteredFields={};
-RegisteredMomenta={};
 RegisterPair[FieldName_,MomentumName_]:=Module[{
 	IndexedField=FromIndexFree@ToIndexFree@FieldName,
 	Indices,
