@@ -2,7 +2,7 @@
 (*  PoissonBracket  *)
 (*==================*)
 
-IncludeHeader@"SmearInput";
+IncludeHeader@"DefSmearingTensor";
 IncludeHeader@"SemiD";
 
 PoissonBracket[InputLeftOperand_,InputRightOperand_]:=Module[{
@@ -11,15 +11,25 @@ PoissonBracket[InputLeftOperand_,InputRightOperand_]:=Module[{
 	SubExpr,
 	Expr,
 	DerInd,
+	SmearingR,
+	SmearingL,
 	LeftOperand=InputLeftOperand/.ToInertRules,
 	RightOperand=InputRightOperand/.ToInertRules},
 
-	LeftOperand//=(#~SmearOperand~Left)&;
-	RightOperand//=(#~SmearOperand~Right)&;
+	SmearingL="SmearingL"<>(ResourceFunction@"RandomString")@5;
+	SmearingL//=(#~DefSmearingTensor~LeftOperand)&;
+	LeftOperand*=SmearingL;
+	LeftOperand//=ReplaceDummies;
 
+	SmearingR="SmearingR"<>(ResourceFunction@"RandomString")@5;
+	SmearingR//=(#~DefSmearingTensor~RightOperand)&;
+	RightOperand*=SmearingR;
+	RightOperand//=ReplaceDummies;
+	
+(*
 	LeftOperand*=Sqrt[DetG[]];
 	RightOperand*=Sqrt[DetG[]];
-
+*)
 	ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
 
 	ProgressOngoing=PrintTemporary@Dynamic@Refresh[Image[ProgressMatrix/Max@ProgressMatrix],
@@ -51,16 +61,19 @@ PoissonBracket[InputLeftOperand_,InputRightOperand_]:=Module[{
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;
 
+(*
 	LeftFactor=InputLeftOperand/.ToInertRules;
 	RightFactor=InputRightOperand/.ToInertRules;
 	LeftFactor//=(#~SmearFactor~Left)&;
 	RightFactor//=(#~SmearFactor~Right)&;
+*)
 
 	Off[VarD::nouse];
-	Expr//=VarD[LeftFactor,CD];	
-	Expr//=VarD[RightFactor,CD];	
+	Expr//=VarD[SmearingL,CD];	
+	Expr//=VarD[SmearingR,CD];	
 	On[VarD::nouse];
-	Expr/=DetG[];
+	
+	(*Expr/=DetG[];*)
 	Expr//=ToCanonical;
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;

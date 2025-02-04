@@ -16,14 +16,17 @@ DefCanonicalField[FieldName_[Inds___],Opts___?OptionQ]:=DefCanonicalField[FieldN
 DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]:=Module[{
 	MomentumName=ToExpression@("ConjugateMomentum"<>(ToString@FieldName)),
 	FieldSymbolValue=OptionValue@FieldSymbol,
+	NewSymmExpr,
 	MomentumSymbolValue=OptionValue@MomentumSymbol,
 	DaggerValue=OptionValue@Dagger},
 	
 	DefTensor[
-		FieldName[Inds],M3,SymmExpr,PrintAs->FieldSymbolValue,Dagger->DaggerValue];	
+		FieldName@Inds,M3,SymmExpr,PrintAs->FieldSymbolValue,Dagger->DaggerValue];	
 	DefInert@FieldName;	
+	NewSymmExpr=SymmExpr/.{SomeIndex_?TangentM3`Q->-SomeIndex};
+	NewSymmExpr//Print;
 	DefTensor[
-		MomentumName[Inds],M3,SymmExpr,PrintAs->MomentumSymbolValue,Dagger->DaggerValue];
+		MomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->MomentumSymbolValue,Dagger->DaggerValue];
 	DefInert@MomentumName;	
 	FieldName~RegisterPair~MomentumName;
 ];
