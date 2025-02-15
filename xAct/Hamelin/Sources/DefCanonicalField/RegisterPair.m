@@ -7,8 +7,9 @@ RegisterPair[FieldName_,MomentumName_]:=Module[{
 	Indices,
 	IndexedMomentum},
 
+	$RegisteredFields~AppendTo~FromIndexFree@ToIndexFree@FieldName;
+
 	Indices=List@@IndexedField;
 	IndexedMomentum=MomentumName@@(Minus/@Indices);
-	RegisteredFields~AppendTo~IndexedField;
-	RegisteredMomenta~AppendTo~IndexedMomentum;
+	$RegisteredMomenta~AppendTo~IndexedMomentum;
 ];

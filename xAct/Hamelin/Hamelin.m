@@ -24,7 +24,7 @@ BeginPackage["xAct`Hamelin`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamelin` version ",$Version[[1]],", ",$Version[[2]]];
-Print["CopyRight \[Copyright] 2023, Will Barker, under the General Public License."];
+Print["CopyRight \[Copyright] 2023, Will Barker, Drazen Glavan and Tom Zlosnik, under the General Public License."];
 Print@" ** Von einem Pfeiffer verfürt und verloren.";
 
 If[$FrontEnd==Null,
@@ -55,9 +55,8 @@ Print[xAct`xCore`Private`bars]];
 (*  Declaration of functions  *)
 (*============================*)
 
-PoissonBracket::usage="PoissonBracket";
 DefCanonicalField::usage="DefCanonicalField";
-DefSmearingFunction::usage="DefSmearingFunction";
+PoissonBracket::usage="PoissonBracket";
 
 (*===========================*)
 (*  Declaration of geometry  *)
@@ -65,13 +64,13 @@ DefSmearingFunction::usage="DefSmearingFunction";
 
 M3::usage="M3 is the three-dimensional Lorentzian spacetime manifold.";
 G::usage="G[-a,-b] is the spatial metric on M3.";
-ConjugateMomentumG::usage="G[a,b] is the spatial metric on M3.";
+ConjugateMomentumG::usage="ConjugateMomentumG[a,b] is the momentum conjugate to the spatial metric on M3.";
 CD::usage="CD[-a] is the covariant derivative on M3.";
 
 Begin["xAct`Hamelin`Private`"];
 $MaxDerOrd=5;
-RegisteredFields={};
-RegisteredMomenta={};
+$RegisteredFields={};
+$RegisteredMomenta={};
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};
@@ -84,8 +83,6 @@ ReadAtRuntime[FunctionName_]:=Module[{PathName,FunctionSymbol=Symbol@FunctionNam
 ];
 RereadSources[]:=(Off@Syntax::stresc;(Get@FileNameJoin@{$InstallDirectory,"Sources",#})&/@{
 	"ReloadPackage.m",
-	"DisplaySettings.m",
-	"MultiCD.m",
 	"DefCanonicalField.m",
 	"PoissonBracket.m"};On@Syntax::stresc;);
 RereadSources[];
