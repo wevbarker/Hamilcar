@@ -68,6 +68,7 @@ ConjugateMomentumG::usage="ConjugateMomentumG[a,b] is the momentum conjugate to 
 CD::usage="CD[-a] is the covariant derivative on M3.";
 
 Begin["xAct`Hamelin`Private`"];
+$Strip=True;
 $MaxDerOrd=5;
 $RegisteredFields={};
 $RegisteredMomenta={};
@@ -86,6 +87,8 @@ RereadSources[]:=(Off@Syntax::stresc;(Get@FileNameJoin@{$InstallDirectory,"Sourc
 	"DefCanonicalField.m",
 	"PoissonBracket.m"};On@Syntax::stresc;);
 RereadSources[];
+ToInertRules={};
+FromInertRules={};
 Begin["xAct`Hamelin`"];
 	xAct`Hamelin`Private`ReloadPackage[];
 	Quiet@If[$FrontEnd==Null,

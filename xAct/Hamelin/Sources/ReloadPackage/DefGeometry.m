@@ -4,7 +4,7 @@
 
 DefManifold[M3,3,IndexRange[{a,z}]];
 GSymb="\[ScriptG]";
-Quiet@DefMetric[1,G[-a,-b],CD,{";","\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},
+Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},
 	PrintAs->GSymb,SymCovDQ->True];
 
 StandardIndices=ToString/@Alphabet[];
@@ -37,11 +37,6 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 	{z,"\(\*OverscriptBox[\(\[Zeta]\),\(_\)]\)"}});
 (PrintAs@Evaluate@#1^=Evaluate@#2)&~MapThread~{ToExpression/@StandardIndices,
 	StandardIndicesSymb};
-
-(*
-DefTensor[SmearingLeft[AnyIndices@TangentM3],M3,PrintAs->"\[Alpha]"];
-DefTensor[SmearingRight[AnyIndices@TangentM3],M3,PrintAs->"\[Beta]"];
-*)
 
 DefTensor[ConjugateMomentumG[-a,-b],M3,Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
 xAct`Hamelin`Private`DefInert@ConjugateMomentumG;

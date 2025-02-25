@@ -20,18 +20,18 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	
 	SmearingOne="SmearingOne"<>(CreateFile[]~StringTake~(-12));
 	(*SmearingOne="SmearingOne"<>(ResourceFunction@"RandomString")@5;*)
-	SmearingOne//=(#~DefSmearingTensor~OperatorOne)&;
+	SmearingOne//=(#~DefSmearingOneTensor~OperatorOne)&;
 	OperatorOne*=SmearingOne;
 	OperatorOne//=ReplaceDummies;
 
 	SmearingTwo="SmearingTwo"<>(CreateFile[]~StringTake~(-12));
 	(*SmearingTwo="SmearingTwo"<>(ResourceFunction@"RandomString")@5;*)
-	SmearingTwo//=(#~DefSmearingTensor~OperatorTwo)&;
+	SmearingTwo//=(#~DefSmearingTwoTensor~OperatorTwo)&;
 	OperatorTwo*=SmearingTwo;
 	OperatorTwo//=ReplaceDummies;	
 
-	OperatorOne*=Sqrt[DetG[]];
-	OperatorTwo*=Sqrt[DetG[]];
+	(*OperatorOne*=Sqrt[DetG[]];
+	OperatorTwo*=Sqrt[DetG[]];*)
 	ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
 	ProgressOngoing=PrintTemporary@Dynamic@Refresh[Image[ProgressMatrix/Max@ProgressMatrix],
 							TrackedSymbols->{ProgressMatrix}];
@@ -54,9 +54,11 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	Expr=Expr/.FromInertRules;
 	Expr//=Recanonicalise;
 	Off[VarD::nouse];
-	Expr//=SmearingOne~VarD~CD;
-	Expr//=SmearingTwo~VarD~CD;
+	If[$Strip,
+		Expr//=SmearingTwo~VarD~CD;
+		Expr//=SmearingOne~VarD~CD;
+	];
 	On[VarD::nouse];
-	Expr/=DetG[];
+	(*Expr/=DetG[];*)
 	Expr//=Recanonicalise;
 Expr];

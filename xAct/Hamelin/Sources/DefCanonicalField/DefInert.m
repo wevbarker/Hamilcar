@@ -2,8 +2,6 @@
 (*  DefInert  *)
 (*============*)
 
-ToInertRules={};
-FromInertRules={};
 DefInert[InputTensorHead_]:=Module[{
 	DerInd,
 	ActDerInd,
