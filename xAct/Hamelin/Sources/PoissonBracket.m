@@ -35,6 +35,7 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
 	ProgressOngoing=PrintTemporary@Dynamic@Refresh[Image[ProgressMatrix/Max@ProgressMatrix],
 							TrackedSymbols->{ProgressMatrix}];
+
 	Table[
 		Table[
 			DerInd=(ToExpression/@Alphabet[])~Take~(-IndM);
