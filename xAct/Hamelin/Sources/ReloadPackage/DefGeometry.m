@@ -4,11 +4,12 @@
 
 DefManifold[M3,3,IndexRange[{a,z}]];
 GSymb="\[ScriptG]";
-Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},
+(*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
+Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
 	PrintAs->GSymb,SymCovDQ->True];
 
 StandardIndices=ToString/@Alphabet[];
-StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	
+(*StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	
 	{a,"\(\*OverscriptBox[\(\[Alpha]\),\(_\)]\)"},
 	{b,"\(\*OverscriptBox[\(\[Beta]\),\(_\)]\)"},
 	{c,"\(\*OverscriptBox[\(\[Chi]\),\(_\)]\)"},
@@ -34,7 +35,11 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 	{w,"\(\*OverscriptBox[\(\[Omega]\),\(_\)]\)"},
 	{x,"\(\*OverscriptBox[\(\[Xi]\),\(_\)]\)"},
 	{y,"\(\*OverscriptBox[\(\[CurlyPhi]\),\(_\)]\)"},
-	{z,"\(\*OverscriptBox[\(\[Zeta]\),\(_\)]\)"}});
+	{z,"\(\*OverscriptBox[\(\[Zeta]\),\(_\)]\)"}});*)
+
+StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	
+	{a,"\[ScriptA]"},{b,"\[ScriptB]"},{c,"\[ScriptC]"},{d,"\[ScriptD]"},{e,"\[ScriptE]"},{f,"\[ScriptF]"},{g,"\[ScriptG]"},{h,"\[ScriptH]"},{i,"\[ScriptI]"},{j,"\[ScriptJ]"},{k,"\[ScriptK]"},{l,"\[ScriptL]"},{m,"\[ScriptM]"},{n,"\[ScriptN]"},{o,"\[ScriptO]"},{p,"\[ScriptP]"},{q,"\[ScriptQ]"},{r,"\[ScriptR]"},{s,"\[ScriptS]"},{t,"\[ScriptT]"},{u,"\[ScriptU]"},{v,"\[ScriptV]"},{w,"\[ScriptW]"},{x,"\[ScriptX]"},{y,"\[ScriptY]"},{z,"\[ScriptZ]"}});
+
 (PrintAs@Evaluate@#1^=Evaluate@#2)&~MapThread~{ToExpression/@StandardIndices,
 	StandardIndicesSymb};
 
