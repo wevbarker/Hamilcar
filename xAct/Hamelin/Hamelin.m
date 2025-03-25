@@ -68,6 +68,7 @@ ConjugateMomentumG::usage="ConjugateMomentumG[a,b] is the momentum conjugate to 
 CD::usage="CD[-a] is the covariant derivative on M3.";
 
 Begin["xAct`Hamelin`Private`"];
+$ManualSmearing=False;
 $Strip=True;
 $MaxDerOrd=5;
 $RegisteredFields={};

@@ -44,5 +44,10 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 	StandardIndicesSymb};
 
 DefTensor[ConjugateMomentumG[-a,-b],M3,Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
-xAct`Hamelin`Private`DefInert@ConjugateMomentumG;
-G~xAct`Hamelin`Private`RegisterPair~ConjugateMomentumG;
+(*xAct`Hamelin`Private`DefInert@ConjugateMomentumG;*)
+(*G~xAct`Hamelin`Private`RegisterPair~ConjugateMomentumG;*)
+DefTensor[PseudoDeltaOne[],M3,PrintAs->"\[Delta]"];
+DefTensor[PseudoDeltaTwo[],M3,PrintAs->"\[Delta]"];
+
+(*DefTensor[SmearingOneTensor[AnyIndices@TangentM3],M3,PrintAs->"\[Alpha]"];
+DefTensor[SmearingTwoTensor[AnyIndices@TangentM3],M3,PrintAs->"\[Beta]"];*)
