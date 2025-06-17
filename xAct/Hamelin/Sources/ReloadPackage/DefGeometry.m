@@ -7,6 +7,10 @@ GSymb="\[ScriptG]";
 (*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
 Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
 	PrintAs->GSymb,SymCovDQ->True];
+DefCovD[CDT[-a],SymbolOfCovD->{"#","D"},FromMetric->G];
+DefTensor[TraceChristoffelCD[-c],M3,PrintAs->"\[CapitalGamma]"];
+$ExpandTraceChristoffelCD=MakeRule[{TraceChristoffelCD[-c],ChristoffelCD[z,-z,-c]},MetricOn->All,ContractMetrics->True];
+DefConstantSymbol[Pr,PrintAs->"\[ScriptW]"];
 
 StandardIndices=ToString/@Alphabet[];
 (*StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	

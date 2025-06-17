@@ -6,6 +6,7 @@ IncludeHeader@"DefSmearingTensor";
 IncludeHeader@"Recanonicalise";
 IncludeHeader@"SemiD";
 IncludeHeader@"MultiCD";
+IncludeHeader@"ToDensities";
 
 PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	ProgressMatrix,
@@ -41,7 +42,7 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 
 	(*OperatorOne*=Sqrt[DetG[]];
 	OperatorTwo*=Sqrt[DetG[]];*)
-	ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
+(*ProgressMatrix=0.01~ConstantArray~{$MaxDerOrd+1,$MaxDerOrd+1};
 	ProgressOngoing=PrintTemporary@Dynamic@Refresh[Image[ProgressMatrix/Max@ProgressMatrix],
 							TrackedSymbols->{ProgressMatrix}];
 
@@ -60,13 +61,25 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 		{IndN,0,$MaxDerOrd},{IndR,0,$MaxDerOrd}
 	]&~MapThread~{$RegisteredFields,$RegisteredMomenta};
 	NotebookDelete@ProgressOngoing;
+	*)
 
-	OperatorOne*=PseudoDeltaOne[];
-	OperatorTwo*=PseudoDeltaTwo[];
-	Expr+=Module[{Expr},
-		Expr=VarD[G[-a,-b],CD][OperatorOne]*VarD[ConjugateMomentumG[a,b],CD][OperatorTwo]-VarD[G[-a,-b],CD][OperatorTwo]*VarD[ConjugateMomentumG[a,b],CD][OperatorOne];
-		Expr//=PseudoDeltaOne[]~VarD~CD;
-		Expr//=PseudoDeltaTwo[]~VarD~CD;
+	(*OperatorOne*=PseudoDeltaOne[];
+	OperatorTwo*=PseudoDeltaTwo[];*)
+
+	(*OperatorOne/=Sqrt[DetG[]];
+	OperatorTwo/=Sqrt[DetG[]];*)
+	Expr=0;
+	Expr+=Module[{Expr,DensityOperatorOne=OperatorOne,DensityOperatorTwo=OperatorTwo},
+		If[True,
+			DensityOperatorOne//=ToDensities;
+			DensityOperatorTwo//=ToDensities;
+		];
+		Expr=VarD[G[-a,-b],CD][DensityOperatorOne]*VarD[ConjugateMomentumG[a,b],CD][DensityOperatorTwo]-VarD[G[-a,-b],CD][DensityOperatorTwo]*VarD[ConjugateMomentumG[a,b],CD][DensityOperatorOne];
+		If[$NewDensities,
+			Expr//=FromDensities;
+		];
+		(*Expr//=PseudoDeltaOne[]~VarD~CD;
+		Expr//=PseudoDeltaTwo[]~VarD~CD;*)
 	Expr];
 
 	Expr=Expr/.FromInertRules;
