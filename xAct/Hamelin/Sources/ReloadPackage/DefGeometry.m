@@ -1,16 +1,12 @@
 (*===============*)
 (*  DefGeometry  *)
 (*===============*)
-
 DefManifold[M3,3,IndexRange[{a,z}]];
-GSymb="\[ScriptG]";
+GSymb="\[ScriptH]";
 (*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
 Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
 	PrintAs->GSymb,SymCovDQ->True];
 DefCovD[CDT[-a],SymbolOfCovD->{"#","D"},FromMetric->G];
-DefTensor[TraceChristoffelCD[-c],M3,PrintAs->"\[CapitalGamma]"];
-$ExpandTraceChristoffelCD=MakeRule[{TraceChristoffelCD[-c],ChristoffelCD[z,-z,-c]},MetricOn->All,ContractMetrics->True];
-DefConstantSymbol[Pr,PrintAs->"\[ScriptW]"];
 
 StandardIndices=ToString/@Alphabet[];
 (*StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{	
@@ -47,11 +43,20 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 (PrintAs@Evaluate@#1^=Evaluate@#2)&~MapThread~{ToExpression/@StandardIndices,
 	StandardIndicesSymb};
 
-DefTensor[ConjugateMomentumG[-a,-b],M3,Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
-(*xAct`Hamelin`Private`DefInert@ConjugateMomentumG;*)
-(*G~xAct`Hamelin`Private`RegisterPair~ConjugateMomentumG;*)
-DefTensor[PseudoDeltaOne[],M3,PrintAs->"\[Delta]"];
-DefTensor[PseudoDeltaTwo[],M3,PrintAs->"\[Delta]"];
-
-(*DefTensor[SmearingOneTensor[AnyIndices@TangentM3],M3,PrintAs->"\[Alpha]"];
-DefTensor[SmearingTwoTensor[AnyIndices@TangentM3],M3,PrintAs->"\[Beta]"];*)
+(*Define the momentum conjugate to the metric on the foliation*)
+DefTensor[ConjugateMomentumG[-a,-b],M3,
+	Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
+DefTensor[TensorConjugateMomentumG[-a,-b],M3,
+	Symmetric[{-a,-b}],PrintAs->"\[GothicCapitalT]\[Pi]"];
+(*Define a dummy constraint for `CollectConstraints`*)
+DefTensor[DummyConstraint[AnyIndices@TangentM3],M3];
+(*Define a dummy measure for use in `FindAlgebra`*)
+DefTensor[Measure[],M3];
+(*Define a dummy reciprocal for use in `FindAlgebra`*)
+DefTensor[GeneralReciprocal[],M3];
+(*Define a collection of parameters for the boundary ansatz*)
+DefConstantSymbol[ToExpression["s"<>ToString[i]]]~Table~{i,1,1000};
+$AnsatzCoefficients=ToExpression["s"<>ToString[i]]~Table~{i,1,1000};
+(*Initialize the rules for abbreviations*)
+$FromRulesTotal={DummyVar->DummyVar};
+$ToRulesTotal={DummyVar->DummyVar};

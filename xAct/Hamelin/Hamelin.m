@@ -57,6 +57,11 @@ Print[xAct`xCore`Private`bars]];
 
 DefCanonicalField::usage="DefCanonicalField";
 PoissonBracket::usage="PoissonBracket";
+FindAlgebra::usage="FindAlgebra";
+TotalFrom::usage="TotalFrom";
+TotalTo::usage="TotalTo";
+PrependTotalFrom::usage="PrependTotalFrom";
+PrependTotalTo::usage="PrependTotalTo";
 
 (*===========================*)
 (*  Declaration of geometry  *)
@@ -67,12 +72,19 @@ G::usage="G[-a,-b] is the spatial metric on M3.";
 ConjugateMomentumG::usage="ConjugateMomentumG[a,b] is the momentum conjugate to the spatial metric on M3.";
 CD::usage="CD[-a] is the covariant derivative on M3.";
 
-Begin["xAct`Hamelin`Private`"];
+(*====================*)
+(*  Global variables  *)
+(*====================*)
+
+$DynamicalMetric::usage="$DynamicalMetric is a global variable that determines whether the spatial metric is dynamical or not. Default is True.";
+$DynamicalMetric=True;
 $ManualSmearing=False;
-$Strip=True;
+
+Begin["xAct`Hamelin`Private`"];
 $MaxDerOrd=5;
 $RegisteredFields={};
 $RegisteredMomenta={};
+$RegisteredTensorMomenta={};
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};
@@ -86,7 +98,9 @@ ReadAtRuntime[FunctionName_]:=Module[{PathName,FunctionSymbol=Symbol@FunctionNam
 RereadSources[]:=(Off@Syntax::stresc;(Get@FileNameJoin@{$InstallDirectory,"Sources",#})&/@{
 	"ReloadPackage.m",
 	"DefCanonicalField.m",
-	"PoissonBracket.m"};On@Syntax::stresc;);
+	"PoissonBracket.m",
+	"RulesTotal.m",
+	"FindAlgebra.m"};On@Syntax::stresc;);
 RereadSources[];
 ToInertRules={};
 FromInertRules={};

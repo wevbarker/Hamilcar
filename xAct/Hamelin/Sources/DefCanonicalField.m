@@ -20,9 +20,11 @@ DefCanonicalField[FieldName_[Inds___],Opts___?OptionQ]:=DefCanonicalField[FieldN
 
 DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]:=Module[{
 	MomentumName=ToExpression@("ConjugateMomentum"<>(ToString@FieldName)),
+	TensorMomentumName=ToExpression@("TensorConjugateMomentum"<>(ToString@FieldName)),
 	FieldSymbolValue=OptionValue@FieldSymbol,
 	NewSymmExpr,
 	MomentumSymbolValue=OptionValue@MomentumSymbol,
+	TensorMomentumSymbolValue="\[GothicCapitalT]"<>ToString@OptionValue@MomentumSymbol,
 	DaggerValue=OptionValue@Dagger},
 	
 	DefTensor[
@@ -31,6 +33,8 @@ DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]:=Module[{
 	NewSymmExpr=SymmExpr/.{SomeIndex_?TangentM3`Q->-SomeIndex};
 	DefTensor[
 		MomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->MomentumSymbolValue,Dagger->DaggerValue];
+	DefTensor[
+		TensorMomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->TensorMomentumSymbolValue,Dagger->DaggerValue];
 	DefInert@MomentumName;	
-	FieldName~RegisterPair~MomentumName;
+	RegisterPair[FieldName,MomentumName,TensorMomentumName];
 ];

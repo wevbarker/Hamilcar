@@ -2,86 +2,54 @@
 (*  ToDensities  *)
 (*===============*)
 
-ToDensities[InputExpr_]:=Module[{
-	Expr=InputExpr,
-	ChangeFirstDerivativesRules,
-	ChangeSecondDerivativesRules},
+DensitiesToTensors[InputMyExpr_]:=Module[{
+	MyExpr=InputMyExpr,
+	DensitiesToTensorsRules},
 
-	ChangeFirstDerivativesRules=Module[
-		{ConjMo=FromIndexFree@ToIndexFree@ConjugateMomentum},
-		MakeRule[{Evaluate@(CD[-z]@ConjMo),
-			Evaluate@(
-				CDT[-z]@ConjMo
-				-Pr*TraceChristoffelCD[-z]*ConjMo
-			)},
+	DensitiesToTensorsRules=Module[
+		{ConjugateMomentum=#1,
+		ConjugateTensorMomentum=#2},
+
+		ConjugateMomentum//=ToIndexFree;
+		ConjugateMomentum//=FromIndexFree;
+		ConjugateTensorMomentum//=ToIndexFree;
+		ConjugateTensorMomentum//=FromIndexFree;
+		MakeRule[{Evaluate@ConjugateMomentum,
+			Evaluate@(Sqrt[DetG[]]*ConjugateTensorMomentum)},
 			MetricOn->All,
 			ContractMetrics->True
 		]
-	]~Table~{ConjugateMomentum,$RegisteredMomenta};
+	]&~MapThread~{$RegisteredMomenta~Append~ConjugateMomentumG,
+		$RegisteredTensorMomenta~Append~TensorConjugateMomentumG};
+	DensitiesToTensorsRules//=Flatten;
+	MyExpr//=(#/.DensitiesToTensorsRules)&;
+	MyExpr//=ToCanonical;
+	MyExpr//=ContractMetric;
+	MyExpr//=ScreenDollarIndices;
+MyExpr];
 
-	ChangeSecondDerivativesRules=Module[
-		{ConjMo=FromIndexFree@ToIndexFree@ConjugateMomentum},
-		MakeRule[{
-			Evaluate@(CD[-y]@CD[-z]@ConjMo),
-			Evaluate@(
-				CDT[-y]@CDT[-z]@ConjMo
-				-Pr*CDT[-y]@(TraceChristoffelCD[-z]*ConjMo)
-				-Pr*TraceChristoffelCD[-y]*CDT[-z]@ConjMo
-				+Pr^2*TraceChristoffelCD[-y]*TraceChristoffelCD[-z]*ConjMo
-			)},
+TensorsToDensities[InputMyExpr_]:=Module[{
+	MyExpr=InputMyExpr,
+	TensorsToDensitiesRules},
+
+	TensorsToDensitiesRules=Module[
+		{ConjugateMomentum=#1,
+		ConjugateTensorMomentum=#2},
+
+		ConjugateMomentum//=ToIndexFree;
+		ConjugateMomentum//=FromIndexFree;
+		ConjugateTensorMomentum//=ToIndexFree;
+		ConjugateTensorMomentum//=FromIndexFree;
+		MakeRule[{Evaluate@ConjugateTensorMomentum,
+			Evaluate@(ConjugateMomentum/Sqrt[DetG[]])},
 			MetricOn->All,
 			ContractMetrics->True
 		]
-	]~Table~{ConjugateMomentum,$RegisteredMomenta};
-	ChangeFirstDerivativesRules//=Flatten;
-	ChangeSecondDerivativesRules//=Flatten;
-	Expr//=(#/.ChangeSecondDerivativesRules)&;
-	Expr//=(#/.ChangeFirstDerivativesRules)&;
-	Expr//=(#/.CDT->CD)&;
-	Expr//=(#/.$ExpandTraceChristoffelCD)&;
-	Expr//=ToCanonical;
-	Expr//=ContractMetric;
-	Expr//=ScreenDollarIndices;
-Expr];
-
-FromDensities[InputExpr_]:=Module[{
-	Expr=InputExpr,
-	ChangeFirstDerivativesRules,
-	ChangeSecondDerivativesRules},
-
-	ChangeFirstDerivativesRules=Module[
-		{ConjMo=FromIndexFree@ToIndexFree@ConjugateMomentum},
-		MakeRule[{Evaluate@(CD[-z]@ConjMo),
-			Evaluate@(
-				CDT[-z]@ConjMo
-				+Pr*TraceChristoffelCD[-z]*ConjMo
-			)},
-			MetricOn->All,
-			ContractMetrics->True
-		]
-	]~Table~{ConjugateMomentum,$RegisteredMomenta};
-
-	ChangeSecondDerivativesRules=Module[
-		{ConjMo=FromIndexFree@ToIndexFree@ConjugateMomentum},
-		MakeRule[{
-			Evaluate@(CD[-y]@CD[-z]@ConjMo),
-			Evaluate@(
-				CDT[-y]@CDT[-z]@ConjMo
-				+Pr*CD[-y]@(TraceChristoffelCD[-z]*ConjMo)
-				+Pr*TraceChristoffelCD[-y]*CD[-z]@ConjMo
-				-Pr^2*TraceChristoffelCD[-y]*TraceChristoffelCD[-z]*ConjMo
-			)},
-			MetricOn->All,
-			ContractMetrics->True
-		]
-	]~Table~{ConjugateMomentum,$RegisteredMomenta};
-	ChangeSecondDerivativesRules//=Flatten;
-	ChangeFirstDerivativesRules//=Flatten;
-	Expr//=(#/.ChangeSecondDerivativesRules)&;
-	Expr//=(#/.ChangeFirstDerivativesRules)&;
-	Expr//=(#/.CDT->CD)&;
-	Expr//=(#/.$ExpandTraceChristoffelCD)&;
-	Expr//=ToCanonical;
-	Expr//=ContractMetric;
-	Expr//=ScreenDollarIndices;
-Expr];
+	]&~MapThread~{$RegisteredMomenta~Append~ConjugateMomentumG,
+		$RegisteredTensorMomenta~Append~TensorConjugateMomentumG};
+	TensorsToDensitiesRules//=Flatten;
+	MyExpr//=(#/.TensorsToDensitiesRules)&;
+	MyExpr//=ToCanonical;
+	MyExpr//=ContractMetric;
+	MyExpr//=ScreenDollarIndices;
+MyExpr];
