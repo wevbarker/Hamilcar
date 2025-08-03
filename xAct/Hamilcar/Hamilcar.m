@@ -24,7 +24,7 @@ BeginPackage["xAct`Hamilcar`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPer
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamilcar` version ",$Version[[1]],", ",$Version[[2]]];
-Print["CopyRight \[Copyright] 2023, Will Barker, Drazen Glavan and Tom Zlosnik, under the General Public License."];
+Print["CopyRight \[Copyright] 2023, Will Barker, under the General Public License."];
 Print@" ** Von einem Pfeiffer verfürt und verloren.";
 
 If[$FrontEnd==Null,

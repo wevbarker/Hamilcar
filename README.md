@@ -1,18 +1,27 @@
-# Hamilcar: A Mathematica Package for Canonical Field Theory
-
-![Hamilcar](xAct/Hamilcar/Logos/GitHubLogo.png)
-
-![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)
+![license](https://img.shields.io/github/license/wevbarker/Hamilcar)
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
 
+<img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
+
+# _Hamilcar_: A Mathematica Package for Canonical Field Theory
 ## Version 0.0.0-developer
 
-Hamilcar is a Mathematica package for computational field theory, specifically designed for canonical field theory calculations. It extends the xAct tensor algebra system to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.
+_Hamilcar_ is a Mathematica package for computational field theory, specifically designed for canonical field theory calculations. It extends the xAct tensor algebra system to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.
+
+## License
+
+Copyright © 2023 Will E. V. Barker
+
+_Hamilcar_ is distributed as free software under the [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+_Hamilcar_ is provided without warranty, or the implied warranty of merchantibility or fitness for a particular purpose.
+
+If _Hamilcar_ was useful to your research, please cite appropriately and consider contributing back to the project.
 
 ## About
 
-Hamilcar provides a comprehensive framework for:
+_Hamilcar_ provides a comprehensive framework for:
 - Defining canonical field pairs with their conjugate momenta
 - Computing Poisson brackets between field operators
 - Deriving field algebra coefficients through constraint solving
@@ -21,41 +30,32 @@ Hamilcar provides a comprehensive framework for:
 
 The package is particularly useful for studying canonical formulations of gravity, gauge theories, and other field theories where the Hamiltonian approach is essential.
 
-## Key Features
-
-- **Canonical Field Definition**: Define field-momentum pairs with automatic registration for Poisson bracket calculations
-- **Poisson Bracket Computation**: Calculate brackets using variational derivatives with optional metric sector contributions
-- **Algebra Finding**: Determine field algebra coefficients by solving constraint equations
-- **Time Derivatives**: Handle time-dependent tensors with multiple derivative orders
-- **Geometry Integration**: Work with 3+1 dimensional spacetime decomposition and spatial metrics
-
-## Installation
+## Quickstart
 
 ### Requirements
 
-Hamilcar has been tested in the following environment(s):
-- Linux x86 (64-bit), specifically Arch
-- Mathematica v 14.0.0.0 or compatible
-- xAct v 1.2.0 tensor algebra system
-- Required xAct packages: xTensor, SymManipulator, xPerm, xCore, xTras
+#### Software dependencies
 
-### Install
+- [_Wolfram_ (formerly _Mathematica_)](https://www.wolfram.com/mathematica/) (required, tested on _Wolfram v 14.0.0.0_).
+- [_xAct_](http://www.xact.es/) (required packages [_xTensor_](http://www.xact.es/xCoba/index.html), [_SymManipulator_](http://www.xact.es/SymManipulator/index.html), [_xPerm_](http://www.xact.es/xPerm/index.html), [_xCore_](http://www.xact.es/xCore/index.html) and [_xTras_](http://www.xact.es/xTras/index.html), tested on _xAct v 1.2.0_).
 
-1. Make sure you have [installed xAct](http://www.xact.es/download.html).
+### Installation
+
+1. Make sure you have [installed _xAct_](http://www.xact.es/download.html).
 2. Use the provided installation script:
    ```bash
    ./install.sh
    ```
-   This copies the xAct/Hamilcar directory to both `~/.Wolfram/Applications/xAct/` and `~/.Mathematica/Applications/xAct/` directories.
+   This copies the `xAct/Hamilcar` directory to both `~/.Wolfram/Applications/xAct/` and `~/.Mathematica/Applications/xAct/` directories.
 
-3. Alternatively, place the `./xAct/Hamilcar` directory relative to your xAct install. A global install might have ended up at:
+3. Alternatively, place the `./xAct/Hamilcar` directory relative to your _xAct_ install. A global install might have ended up at:
    ```bash
-   /usr/share/Mathematica/Applications/xAct
+   /usr/share/Wolfram/Applications/xAct/
    ```
 
 ## Loading the Package
 
-In Mathematica, load the package with:
+In _Wolfram_ (formerly _Mathematica_), load the package with:
 ```mathematica
 << xAct`Hamilcar`
 ```
@@ -133,7 +133,7 @@ The package defines a 3+1 dimensional spacetime with:
 RereadSources[]
 ```
 
-This reloads all source files without restarting Mathematica, useful during active development.
+This reloads all source files without restarting _Wolfram_, useful during active development.
 
 ### Adding New Functionality
 
@@ -159,25 +159,13 @@ Hamilcar/
             └── [other modules]
 ```
 
-## License
-
-Copyright © 2023 Will E. V. Barker, Drazen Glavan and Tom Zlosnik
-
-Hamilcar is distributed as free software under the [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.en.html).
-
-Hamilcar is provided without warranty, or the implied warranty of merchantibility or fitness for a particular purpose.
-
 ## Getting Help
 
-For questions or issues:
-- Consult the xAct documentation at [xact.es](http://www.xact.es/)
+There are several ways to get help:
+- The [_xAct_ Google Group](https://groups.google.com/g/xAct) contains a well established, highly active and very friendly community of researchers. Feel free to start a _New conversation_ by posting a minimal working example of your code.
+- Consult the [_xAct_ documentation](http://www.xact.es/) for tensor algebra fundamentals
 - Check the source files in `Sources/` directory for implementation details
-- Review the CLAUDE.md file for development guidelines
-- Join the [xAct Google Group](https://groups.google.com/g/xAct) for community support
-
-## Citation
-
-If Hamilcar was useful to your research, please cite appropriately and consider contributing back to the project.
+- Review the `CLAUDE.md` file for development guidelines
 
 ## Acknowledgements
 
