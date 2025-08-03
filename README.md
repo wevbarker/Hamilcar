@@ -1,5 +1,7 @@
 # Hamilcar: A Mathematica Package for Canonical Field Theory
 
+![Hamilcar](xAct/Hamilcar/Logos/GitHubLogo.png)
+
 ![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
