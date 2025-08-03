@@ -30,13 +30,8 @@ FindAlgebra[InputBracket_,InputBracketAnsatz_,ConstraintsList_]:=Module[{
 	ParameterSolution//=TotalFrom;
 	ParameterSolution//=AugmentWithBoundary;
 	ParameterSolution//=ToHigherDerivativeCanonical;
-	(*ParameterSolution//=(#/.RiemannCD->Zero)&;
-	ParameterSolution//=(#/.RicciCD->Zero)&;
-	ParameterSolution//=(#/.RicciScalarCD->Zero)&;*)
-	ParameterSolution//CollectTensors//Print;
 
 	ParameterSolution//=ToConstantSymbolEquations[#==0]&;
-	ParameterSolution//Print;
 	ParameterSolution//=Solve;
 	ParameterSolution//=First;
 

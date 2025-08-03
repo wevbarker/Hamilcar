@@ -44,10 +44,29 @@ StandardIndicesSymb=(ToString@#)&/@Evaluate@((#[[2]])&/@{
 	StandardIndicesSymb};
 
 (*Define the momentum conjugate to the metric on the foliation*)
-DefTensor[ConjugateMomentumG[-a,-b],M3,
-	Symmetric[{-a,-b}],PrintAs->"\[Pi]"];
-DefTensor[TensorConjugateMomentumG[-a,-b],M3,
-	Symmetric[{-a,-b}],PrintAs->"\[GothicCapitalT]\[Pi]"];
+DefTimeTensor[ConjugateMomentumG[a,b],M3,
+	Symmetric[{a,b}],PrintAs->"\[Pi]"];
+DefTensor[TensorConjugateMomentumG[a,b],M3,
+	Symmetric[{a,b}],PrintAs->"\[GothicCapitalT]\[Pi]"];
+(*Define the time coordinate orthogonal to the foliation*)
+DefConstantSymbol[Time,PrintAs->"\[ScriptT]"];
+(*Define the time-dependent metric*)
+DefTimeTensor[GTime[-a,-b],M3,
+	Symmetric[{-a,-b}],PrintAs->GSymb];
+(*Define the inverse of the time-dependent metric*)
+DefTimeTensor[GTimeInverse[a,b],M3,
+	Symmetric[{a,b}],PrintAs->"\[GothicH]"];
+xAct`Hamelin`Private`GToGTime=MakeRule[{G[-a,-b],GTime[-a,-b]},
+	MetricOn->None,ContractMetrics->False];
+xAct`Hamelin`Private`GTimeToG=MakeRule[{GTime[-a,-b],G[-a,-b]},
+	MetricOn->None,ContractMetrics->False];
+xAct`Hamelin`Private`GToGTimeInverse=MakeRule[{G[a,b],GTimeInverse[a,b]},
+	MetricOn->All,ContractMetrics->True];
+xAct`Hamelin`Private`GTimeInverseToG=MakeRule[{GTimeInverse[a,b],G[a,b]},
+	MetricOn->All,ContractMetrics->True];
+AutomaticRules[GTimeInversep,
+	MakeRule[{GTimeInversep[a,b],-GTimep[a,b]},
+	MetricOn->All,ContractMetrics->True]];
 (*Define a dummy constraint for `CollectConstraints`*)
 DefTensor[DummyConstraint[AnyIndices@TangentM3],M3];
 (*Define a dummy measure for use in `FindAlgebra`*)

@@ -1,0 +1,69 @@
+(*=========*)
+(*  TimeD  *)
+(*=========*)
+
+Options@DefTimeTensor={PrintAs->"\[Zeta]",Dagger->False};
+DefTimeTensor[InputField_[Inds___],Manifold_,Opts___?OptionQ]:=DefTimeTensor[InputField[Inds],Manifold,GenSet[],Opts];
+DefTimeTensor[InputField_[Inds___],Manifold_,SymmExpr_,OptionsPattern[]]:=Module[{},
+	(*Print@(" ** DefTimeTensor: defining a Time-dependent tensor "<>ToString@InputField<>" Timeith Time-velocity "<>ToString@InputField<>"p"<>", Time-acceleration "<>ToString@InputField<>"pp"<>", Time-jerk "<>ToString@InputField<>"ppp"<>", Time-snap "<>ToString@InputField<>"pppp"<>", Time-crackle "<>ToString@InputField<>"ppppp"<>" and Time-pop "<>ToString@InputField<>"pppppp"<>"...");*)
+	DefTensor[(Symbol@(ToString@InputField<>"p"))[Inds],
+		M3,SymmExpr,PrintAs->(OptionValue@PrintAs<>"'")];
+	DefTensor[(Symbol@(ToString@InputField<>"pp"))[Inds],
+		M3,SymmExpr,PrintAs->(OptionValue@PrintAs<>"''")];
+	DefTensor[(Symbol@(ToString@InputField<>"ppp"))[Inds],
+		M3,SymmExpr,PrintAs->(OptionValue@PrintAs<>"'''")];
+	DefTensor[(Symbol@(ToString@InputField<>"pppp"))[Inds],
+		M3,SymmExpr,PrintAs->(OptionValue@PrintAs<>"''''")];
+	DefTensor[(Symbol@(ToString@InputField<>"ppppp"))[Inds],
+		M3,SymmExpr,PrintAs->(OptionValue@PrintAs<>"'''''")];
+	DefTensor[InputField[Inds],M3,SymmExpr,PrintAs->OptionValue@PrintAs];
+	$FromInert//=(#~Join~{
+		InputField->(Symbol@(ToString@InputField<>"x"))[Time],
+		Symbol@(ToString@InputField<>"p")->(Symbol@(ToString@InputField<>"xp"))[Time],
+		Symbol@(ToString@InputField<>"pp")->(Symbol@(ToString@InputField<>"xpp"))[Time],
+		Symbol@(ToString@InputField<>"ppp")->(Symbol@(ToString@InputField<>"xppp"))[Time],
+		Symbol@(ToString@InputField<>"pppp")->(Symbol@(ToString@InputField<>"xpppp"))[Time],
+		Symbol@(ToString@InputField<>"ppppp")->(Symbol@(ToString@InputField<>"xppppp"))[Time]})&;
+	(Symbol@(ToString@InputField<>"x"))'[Time_]:=(Symbol@(ToString@InputField<>"xp"))[Time];
+	(Symbol@(ToString@InputField<>"xp"))'[Time_]:=(Symbol@(ToString@InputField<>"xpp"))[Time];
+	(Symbol@(ToString@InputField<>"xpp"))'[Time_]:=(Symbol@(ToString@InputField<>"xppp"))[Time];
+	(Symbol@(ToString@InputField<>"xppp"))'[Time_]:=(Symbol@(ToString@InputField<>"xpppp"))[Time];
+	(Symbol@(ToString@InputField<>"xpppp"))'[Time_]:=(Symbol@(ToString@InputField<>"xppppp"))[Time];
+	$ToInert//=(#~Join~{
+		(Symbol@(ToString@InputField<>"x"))[Time]->InputField,
+		(Symbol@(ToString@InputField<>"xp"))[Time]->(Symbol@(ToString@InputField<>"p")),
+		(Symbol@(ToString@InputField<>"xpp"))[Time]->(Symbol@(ToString@InputField<>"pp")),
+		(Symbol@(ToString@InputField<>"xppp"))[Time]->(Symbol@(ToString@InputField<>"ppp")),
+		(Symbol@(ToString@InputField<>"xpppp"))[Time]->(Symbol@(ToString@InputField<>"pppp")),
+		(Symbol@(ToString@InputField<>"xppppp"))[Time]->(Symbol@(ToString@InputField<>"ppppp"))})&;
+];
+
+TimeD[InputExpr_]:=Module[{Expr=InputExpr},
+	Expr//=TotalFrom;
+	Expr//=SeparateMetric[G];
+	Expr//=ScreenDollarIndices;
+	Expr//=(#/.GToGTime)&;
+	Expr//=(#/.GToGTimeInverse)&;
+	Expr//=ScreenDollarIndices;
+	Expr//=(#/.$FromInert)&;
+	Expr//=D[#,Time]&;
+	Block[{Derivative},
+		Derivative//Unprotect;
+		Derivative[1][CD[m_]][Anything_]:=CD[m][D[Anything,Time]]/D[Anything,Time];
+		Expr//=Simplify;
+		Derivative//Protect;
+	];
+	Expr//=(#/.$ToInert)&;
+	Expr//=ToCanonical;
+	Expr//ScreenDollarIndices;
+	Expr//CollectTensors;
+	Expr//=(#/.GTimeToG)&;
+	Expr//=(#/.GTimeInverseToG)&;
+	Expr//=ToCanonical;
+	Expr//ScreenDollarIndices;
+	Expr//CollectTensors;
+Expr];
+
+TimeD[InputExpr_,Ord_]:=Module[{Expr=InputExpr},
+	Do[Expr//=TimeD,{Ord}];
+Expr];

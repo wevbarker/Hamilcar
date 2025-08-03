@@ -62,13 +62,18 @@ TotalFrom::usage="TotalFrom";
 TotalTo::usage="TotalTo";
 PrependTotalFrom::usage="PrependTotalFrom";
 PrependTotalTo::usage="PrependTotalTo";
+DefTimeTensor::usage="DefTimeTensor";
+TimeD::usage="TimeD";
 
 (*===========================*)
 (*  Declaration of geometry  *)
 (*===========================*)
 
 M3::usage="M3 is the three-dimensional Lorentzian spacetime manifold.";
+Time::usage="Time is the time coordinate orthogonal to M3.";
 G::usage="G[-a,-b] is the spatial metric on M3.";
+GTime::usage="GTime[-a,-b] is the time-dependent spatial metric on M3.";
+GTimeInverse::usage="GTimeInverse[a,b] is the inverse of the time-dependent spatial metric on M3.";
 ConjugateMomentumG::usage="ConjugateMomentumG[a,b] is the momentum conjugate to the spatial metric on M3.";
 CD::usage="CD[-a] is the covariant derivative on M3.";
 
@@ -85,6 +90,8 @@ $MaxDerOrd=5;
 $RegisteredFields={};
 $RegisteredMomenta={};
 $RegisteredTensorMomenta={};
+$FromInert={};
+$ToInert={};
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};
@@ -100,7 +107,8 @@ RereadSources[]:=(Off@Syntax::stresc;(Get@FileNameJoin@{$InstallDirectory,"Sourc
 	"DefCanonicalField.m",
 	"PoissonBracket.m",
 	"RulesTotal.m",
-	"FindAlgebra.m"};On@Syntax::stresc;);
+	"FindAlgebra.m",
+	"TimeD.m"};On@Syntax::stresc;);
 RereadSources[];
 ToInertRules={};
 FromInertRules={};
