@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Hamelin is a Mathematica package for computational field theory, specifically designed for canonical field theory calculations. It extends the xAct tensor algebra system to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.
+Hamilcar is a Mathematica package for computational field theory, specifically designed for canonical field theory calculations. It extends the xAct tensor algebra system to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.
 
 ## Installation and Setup
 
@@ -14,20 +14,20 @@ Use the provided installation script:
 ./install.sh
 ```
 
-This script copies the xAct/Hamelin directory to both `~/.Wolfram/Applications/xAct/` and `~/.Mathematica/Applications/xAct/` directories, excluding .mx files.
+This script copies the xAct/Hamilcar directory to both `~/.Wolfram/Applications/xAct/` and `~/.Mathematica/Applications/xAct/` directories, excluding .mx files.
 
 ### Loading the Package
 In Mathematica, load the package with:
 ```mathematica
-<< xAct`Hamelin`
+<< xAct`Hamilcar`
 ```
 
-The package automatically loads via the kernel initialization file at `xAct/Hamelin/Kernel/init.wl`.
+The package automatically loads via the kernel initialization file at `xAct/Hamilcar/Kernel/init.wl`.
 
 ## Code Architecture
 
 ### Core Package Structure
-- **Main package file**: `xAct/Hamelin/Hamelin.m` - Contains package initialization, global variables, and function declarations
+- **Main package file**: `xAct/Hamilcar/Hamilcar.m` - Contains package initialization, global variables, and function declarations
 - **Sources directory**: Contains modular implementation files loaded dynamically
 - **Kernel directory**: Contains Mathematica kernel initialization
 

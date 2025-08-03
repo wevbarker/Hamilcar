@@ -1,0 +1,11 @@
+Rename package from Hamelin to Hamilcar
+
+Update package name references throughout documentation and configuration files.
+Remove old Hamelin package directory structure and prepare for new Hamilcar
+package with updated naming conventions.
+
+Changes include:
+- Updated project name in CLAUDE.md and README.md
+- Modified installation script references
+- Removed legacy Hamelin package files
+- Added new Hamilcar package directory structure

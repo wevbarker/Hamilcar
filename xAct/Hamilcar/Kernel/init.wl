@@ -2,4 +2,4 @@
 (*  Load the package  *)
 (*====================*)
 
-Get["xAct/Hamelin/Hamelin.m"]
+Get["xAct/Hamilcar/Hamilcar.m"]

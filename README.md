@@ -1,13 +1,13 @@
-# Hamelin 
+# Hamilcar 
 ## Version 0.0.0-developer
 
 ## License
 
 Copyright © 2023 Will E. V. Barker
 
-Hamelin is distributed as free software under the [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Hamilcar is distributed as free software under the [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
-Hamelin is provided without warranty, or the implied warranty of merchantibility or fitness for a particular purpose.
+Hamilcar is provided without warranty, or the implied warranty of merchantibility or fitness for a particular purpose.
 
 ## Motivations 
 
@@ -15,7 +15,7 @@ Hamelin is provided without warranty, or the implied warranty of merchantibility
 
 #### Requirements 
 
-Hamelin has been tested in the following environment(s):
+Hamilcar has been tested in the following environment(s):
 - Linux x86 (64-bit), specifically Arch
 - Mathematica v 14.0.0.0
 - xAct v 1.2.0
@@ -23,7 +23,7 @@ Hamelin has been tested in the following environment(s):
 #### Install 
 
 1. Make sure you have [installed xAct](http://www.xact.es/download.html).
-2. Place the `./xAct/Hamelin` directory relative to your xAct install. A global install might have ended up at: 
+2. Place the `./xAct/Hamilcar` directory relative to your xAct install. A global install might have ended up at: 
 	```bash
 	/usr/share/Mathematica/Applications/xAct
 	```

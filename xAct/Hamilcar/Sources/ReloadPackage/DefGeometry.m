@@ -56,13 +56,13 @@ DefTimeTensor[GTime[-a,-b],M3,
 (*Define the inverse of the time-dependent metric*)
 DefTimeTensor[GTimeInverse[a,b],M3,
 	Symmetric[{a,b}],PrintAs->"\[GothicH]"];
-xAct`Hamelin`Private`GToGTime=MakeRule[{G[-a,-b],GTime[-a,-b]},
+xAct`Hamilcar`Private`GToGTime=MakeRule[{G[-a,-b],GTime[-a,-b]},
 	MetricOn->None,ContractMetrics->False];
-xAct`Hamelin`Private`GTimeToG=MakeRule[{GTime[-a,-b],G[-a,-b]},
+xAct`Hamilcar`Private`GTimeToG=MakeRule[{GTime[-a,-b],G[-a,-b]},
 	MetricOn->None,ContractMetrics->False];
-xAct`Hamelin`Private`GToGTimeInverse=MakeRule[{G[a,b],GTimeInverse[a,b]},
+xAct`Hamilcar`Private`GToGTimeInverse=MakeRule[{G[a,b],GTimeInverse[a,b]},
 	MetricOn->All,ContractMetrics->True];
-xAct`Hamelin`Private`GTimeInverseToG=MakeRule[{GTimeInverse[a,b],G[a,b]},
+xAct`Hamilcar`Private`GTimeInverseToG=MakeRule[{GTimeInverse[a,b],G[a,b]},
 	MetricOn->All,ContractMetrics->True];
 AutomaticRules[GTimeInversep,
 	MakeRule[{GTimeInversep[a,b],-GTimep[a,b]},

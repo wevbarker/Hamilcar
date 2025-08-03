@@ -1,51 +1,51 @@
-(*===========*)
-(*  Hamelin  *)
-(*===========*)
+(*=============*)
+(*  Hamilcar  *)
+(*=============*)
 
 (*===========*)
 (*  Version  *)
 (*===========*)
 
 (*xAct`Hamelin`$Version={"0.0.0",{2023,11,4}};*)
-xAct`Hamelin`$Version={"0.0.0-developer",DateList@FileDate@$InputFileName~Drop~(-3)};
+xAct`Hamilcar`$Version={"0.0.0-developer",DateList@FileDate@$InputFileName~Drop~(-3)};
 
-If[Unevaluated[xAct`xCore`Private`$LastPackage]===xAct`xCore`Private`$LastPackage,xAct`xCore`Private`$LastPackage="xAct`Hamelin`"];
+If[Unevaluated[xAct`xCore`Private`$LastPackage]===xAct`xCore`Private`$LastPackage,xAct`xCore`Private`$LastPackage="xAct`Hamilcar`"];
 
 (* here is an error-killing line, I can't quite remember why we needed it! *)
 Off@(Solve::fulldim);
 Off@(Syntax::stresc);
 Off@(FrontEndObject::notavail);
 
-(*=================*)
-(*  xAct`Hamelin`  *)
-(*=================*)
+(*==================*)
+(*  xAct`Hamilcar`  *)
+(*==================*)
 
-BeginPackage["xAct`Hamelin`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm`","xAct`xCore`","xAct`xTras`"}];
+BeginPackage["xAct`Hamilcar`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm`","xAct`xCore`","xAct`xTras`"}];
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
-Print["Package xAct`Hamelin` version ",$Version[[1]],", ",$Version[[2]]];
+Print["Package xAct`Hamilcar` version ",$Version[[1]],", ",$Version[[2]]];
 Print["CopyRight \[Copyright] 2023, Will Barker, Drazen Glavan and Tom Zlosnik, under the General Public License."];
 Print@" ** Von einem Pfeiffer verfürt und verloren.";
 
 If[$FrontEnd==Null,
-	xAct`Hamelin`Private`$CLI=True,
-	xAct`Hamelin`Private`$CLI=False,
-	xAct`Hamelin`Private`$CLI=False];
-Quiet@If[xAct`Hamelin`Private`$CLI,
-	xAct`Hamelin`Private`$WorkingDirectory=Directory[],
+	xAct`Hamilcar`Private`$CLI=True,
+	xAct`Hamilcar`Private`$CLI=False,
+	xAct`Hamilcar`Private`$CLI=False];
+Quiet@If[xAct`Hamilcar`Private`$CLI,
+	xAct`Hamilcar`Private`$WorkingDirectory=Directory[],
 	SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 	If[NotebookDirectory[]==$Failed,
-		xAct`Hamelin`Private`$WorkingDirectory=Directory[],
-		xAct`Hamelin`Private`$WorkingDirectory=NotebookDirectory[],
-		xAct`Hamelin`Private`$WorkingDirectory=NotebookDirectory[]]];
-$Path~AppendTo~xAct`Hamelin`Private`$WorkingDirectory;
-xAct`Hamelin`Private`$InstallDirectory=Select[FileNameJoin[{#,"xAct/Hamelin"}]&/@$Path,DirectoryQ][[1]];
+		xAct`Hamilcar`Private`$WorkingDirectory=Directory[],
+		xAct`Hamilcar`Private`$WorkingDirectory=NotebookDirectory[],
+		xAct`Hamilcar`Private`$WorkingDirectory=NotebookDirectory[]]];
+$Path~AppendTo~xAct`Hamilcar`Private`$WorkingDirectory;
+xAct`Hamilcar`Private`$InstallDirectory=Select[FileNameJoin[{#,"xAct/Hamilcar"}]&/@$Path,DirectoryQ][[1]];
 
 (*==============*)
 (*  Disclaimer  *)
 (*==============*)
 
-If[xAct`xCore`Private`$LastPackage==="xAct`Hamelin`",
+If[xAct`xCore`Private`$LastPackage==="xAct`Hamilcar`",
 Unset[xAct`xCore`Private`$LastPackage];
 Print[xAct`xCore`Private`bars];
 Print["These packages come with ABSOLUTELY NO WARRANTY; for details type Disclaimer[]. This is free software, and you are welcome to redistribute it under certain conditions. See the General Public License for details."];
@@ -85,7 +85,7 @@ $DynamicalMetric::usage="$DynamicalMetric is a global variable that determines w
 $DynamicalMetric=True;
 $ManualSmearing=False;
 
-Begin["xAct`Hamelin`Private`"];
+Begin["xAct`Hamilcar`Private`"];
 $MaxDerOrd=5;
 $RegisteredFields={};
 $RegisteredMomenta={};
@@ -112,12 +112,12 @@ RereadSources[]:=(Off@Syntax::stresc;(Get@FileNameJoin@{$InstallDirectory,"Sourc
 RereadSources[];
 ToInertRules={};
 FromInertRules={};
-Begin["xAct`Hamelin`"];
-	xAct`Hamelin`Private`ReloadPackage[];
+Begin["xAct`Hamilcar`"];
+	xAct`Hamilcar`Private`ReloadPackage[];
 	Quiet@If[$FrontEnd==Null,
-		xAct`Hamelin`Private`$CLI=True,
-		xAct`Hamelin`Private`$CLI=False,
-		xAct`Hamelin`Private`$CLI=False];
+		xAct`Hamilcar`Private`$CLI=True,
+		xAct`Hamilcar`Private`$CLI=False,
+		xAct`Hamilcar`Private`$CLI=False];
 	$DefInfoQ=False;
 End[];
 End[];
