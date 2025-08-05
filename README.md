@@ -7,7 +7,8 @@
 # _Hamilcar_: A Mathematica Package for Canonical Field Theory
 ## Version 0.0.0-developer
 
-_Hamilcar_ is a Mathematica package for computational field theory, specifically designed for canonical field theory calculations. It extends the xAct tensor algebra system to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.
+- Initial development version of the canonical field theory package.
+- Extends xAct for time-dependent field calculations.
 
 ## License
 
@@ -17,156 +18,228 @@ _Hamilcar_ is distributed as free software under the [GNU General Public License
 
 _Hamilcar_ is provided without warranty, or the implied warranty of merchantibility or fitness for a particular purpose.
 
-If _Hamilcar_ was useful to your research, please cite appropriately and consider contributing back to the project.
+If _Hamilcar_ was useful to your research, please **cite us** using the following _BibTeX_:
+```tex
+@misc{Barker:2025Hamilcar,
+    author = "Barker, Will E. V.",
+    title = "{Hamilcar: A Mathematica Package for Canonical Field Theory}",
+    year = "2025",
+    note = "In development"
+}
+```
 
 ## About
 
-_Hamilcar_ provides a comprehensive framework for:
-- Defining canonical field pairs with their conjugate momenta
-- Computing Poisson brackets between field operators
-- Deriving field algebra coefficients through constraint solving
-- Handling time-dependent tensor calculations
-- Working with variational derivatives in field theory
+_Hamilcar_ is a software package for _Wolfram_ (formerly _Mathematica_) designed to perform canonical field theory calculations in 3+1 dimensions. The canonical formulation assumes the action $S$ to have the structure
+```math
+S=\int\mathrm{d}t\int\mathrm{d}^3x\ \Big[\pi_\psi(x,t)\cdot\dot{\psi}(x,t)-H(\psi,\pi_\psi)\Big],
+```
+where the ingredients are:
+- The dynamical fields $\psi(x,t)$ are real tensors on the spatial manifold, which may be a collection of distinct fields, each field having some collection of spatial indices ($a$, $b$, etc.), perhaps with some symmetry among the indices.
+- The conjugate momenta $\pi_\psi(x,t)$ are the canonical momenta conjugate to the fields $\psi(x,t)$.
+- The Hamiltonian density $H(\psi,\pi_\psi)$ is constructed from the fields, momenta, spatial metric, and spatial derivatives.
 
-The package is particularly useful for studying canonical formulations of gravity, gauge theories, and other field theories where the Hamiltonian approach is essential.
+## Example: scalar field theory
 
-## Quickstart
+As a demonstration, we consider a simple scalar field theory in 3+1 dimensions
+```math
+S=\int\mathrm{d}^4x\ \Big[-\tfrac{1}{2}\partial^\mu\phi\partial_\mu\phi+\tfrac{1}{2}m^2\phi^2\Big],
+```
+where $m$ is the mass parameter.
 
-### Requirements
+In a fresh notebook we first load the package:
+```mathematica
+<<xAct`Hamilcar`;
+```
+Next, we define a scalar field using the command `DefCanonicalField`:
+```mathematica
+DefCanonicalField[Phi[],FieldSymbol->"\[Phi]",MomentumSymbol->"\[Pi]"];
+```
+We can then compute Poisson brackets between quantities:
+```mathematica
+PoissonBracket[Phi[],ConjugateMomentumPhi[]];
+```
+
+## Documentation 
+
+TBC
+
+## General use 
+
+### Pre-defined geometry
+
+When you first run `` <<xAct`Hamilcar` `` the software defines a three-dimensional spatial hypersurface with the ingredients:
+
+| _Wolfram Language_      | Output format                    | Meaning                                                                                     |
+|-------------------------|----------------------------------|---------------------------------------------------------------------------------------------|
+| `a`, `b`, `c`, ..., `z` | $a$, $b$, $c$, ... $z$           | Spatial coordinate indices (corresponding to _adapted_ coordinates in the ADM prescription) |
+| `G[-a,-b]`              | $h_{ab}$                         | Induced metric on the spatial hypersurface                                                  |
+| `CD[-a]@`               | $\nabla_{a}$                     | Spatial covariant derivative                                                                |
+| `epsilonG[-a,-b,-c]`    | $\epsilon_{abc}$                 | Induced totally antisymmetric tensor on the spatial hypersurface                            |
+
+For those familiar with _xAct_, note that calls to `DefManifold` and `DefMetric` are made internally at this stage. The package establishes a spatial manifold `M3`, creating the necessary geometric structure for canonical field theory calculations.
+
+### Function `DefCanonicalField`
+
+```mathematica
+DefCanonicalField[<Fld>[]]
+```
+defines a scalar canonical field `<Fld>` and its conjugate momentum `ConjugateMomentum<Fld>`.
+```mathematica
+DefCanonicalField[<Fld>[<Ind1>,<Ind2>,...]]
+```
+defines a tensor canonical field `<Fld>` and its conjugate momentum `ConjugateMomentum<Fld>` with indices `<Ind1>`, `<Ind2>`, etc..
+```mathematica
+DefCanonicalField[<Fld>[<Ind1>,<Ind2>,...],<Symm>]
+```
+defines a tensor canonical field `<Fld>` and its conjugate momentum `ConjugateMomentum<Fld>` with indices `<Ind1>`, `<Ind2>`, etc. and symmetry `<Symm>`.
+
+#### Details and options
+
+- The syntax of `DefCanonicalField` follows similar patterns to `DefTensor` in _xTensor_.
+- Any number of comma-separated indices may be drawn from the contravariant `a`, `b`, `c`, up to `z`, the covariant `-a`, `-b`, `-c`, up to `-z`, or any admixture.
+- The symmetry `<Symm>` can be one of the following (or any admixture allowed by `DefTensor`):
+	- `Symmetric[{<SymmInd1>,<SymInd2>,...}]` denotes symmetrized indices.
+	- `Antisymmetric[{<SymmInd1>,<SymInd2>,...}]` denotes antisymmetrized indices.
+- If the global variable  `$DynamicalMetric` is set to `True`, then: 
+	- The spatial metric `G` is automatically registered as a canonical field, and `ConjugateMomentumG` is defined.
+	- All conjugate momenta are automatically defined as tensor densities of weight one (the effects of this are only seen by the `G`-variations performed internally by `PoissonBracket`).
+- The following options may be given:
+	- `FieldSymbol` is the symbol that `<Fld>` will use for display formatting.
+	- `MomentumSymbol` is the symbol that the conjugate momentum will use for display formatting.
+
+### Function `PoissonBracket`
+
+```mathematica
+PoissonBracket[<Op1>,<Op2>]
+```
+computes the Poisson bracket between operators `<Op1>` and `<Op2>`.
+
+#### Details and options
+
+- The operators `<Op1>` and `<Op2>` must be expressions involving:
+	- Canonical fields and their conjugate momenta which have been defined using `DefCanonicalField`.
+	- Tensors which have been defined on the manifold `M3` using `DefTensor`, and which are assumed always to be independent of the canonical fields.
+	- Derivatives of canonical and non-canonical quantities of the form `CD`, the spatial metric `G`, and the totally antisymmtric tensor `epsilonG`.
+	- Constant symbols which have been defined using `DefConstantSymbol` (or `DefNiceConstantSymbol` from the _xTras_ package).
+- The function automatically generates smearing tensors unless `$ManualSmearing` is set to `True`.
+- When `$DynamicalMetric` is set to `True`, the `G`-sector contributions are included.
+- The function computes variational derivatives with respect to all registered fields and momenta.
+
+### Function `FindAlgebra`
+
+This function is undocumented and under active development. The purpose of the function is to determine constraint algebroids.
+
+### Function `TimeD`
+
+This function is undocumented and under active development. The purpose of the function is to manage time derivatives of fields.
+
+## Quickstart 
+
+### Requirements 
+
+#### Basic hardware requirements
+
+- A multi-core processor (recommended, note that most modern PCs are multi-core).
+- An internet connection (recommended for _Hamilcar_ to interrogate the [Wolfram Function Repository](https://resources.wolframcloud.com/FunctionRepository)).
+
+#### Operating systems
+
+- [_Linux_](https://www.linux.org/) (recommended, tested on _Linux v 6.15.8_ via [_Arch_](https://archlinux.org/), [_Manjaro_](https://manjaro.org/), [_RockyLinux 8 (RHEL8)_](https://rockylinux.org/), [_CentOS7 (RHEL7)_](https://www.centos.org/)) and [_Ubuntu_](https://ubuntu.com/).
+- [_macOS_](https://www.apple.com/uk/macos) (not recommended, tested on _macOS Monterey_).
+- [_Windows_](https://www.microsoft.com/en-gb/windows?r=1) (not recommended, tested on _Windows 10_).
 
 #### Software dependencies
 
-- [_Wolfram_ (formerly _Mathematica_)](https://www.wolfram.com/mathematica/) (required, tested on _Wolfram v 14.0.0.0_).
+- [_Wolfram_ (formerly _Mathematica_)](https://www.wolfram.com/mathematica/) (required, tested on _Wolfram v 14.2.0.0_).
 - [_xAct_](http://www.xact.es/) (required packages [_xTensor_](http://www.xact.es/xCoba/index.html), [_SymManipulator_](http://www.xact.es/SymManipulator/index.html), [_xPerm_](http://www.xact.es/xPerm/index.html), [_xCore_](http://www.xact.es/xCore/index.html) and [_xTras_](http://www.xact.es/xTras/index.html), tested on _xAct v 1.2.0_).
 
 ### Installation
 
-1. Make sure you have [installed _xAct_](http://www.xact.es/download.html).
-2. Use the provided installation script:
-   ```bash
-   ./install.sh
-   ```
-   This copies the `xAct/Hamilcar` directory to both `~/.Wolfram/Applications/xAct/` and `~/.Mathematica/Applications/xAct/` directories.
+:warning: Note that _Mathematica_ was re-branded as _Wolfram_ on July 31 2024 with the release of _Wolfram v 14.1_. You may still be able to install _Hamilcar_ in older versions of _Wolfram_ (formerly _Mathematica_) by replacing `Wolfram` with `Mathematica` in the various paths below.
 
-3. Alternatively, place the `./xAct/Hamilcar` directory relative to your _xAct_ install. A global install might have ended up at:
-   ```bash
-   /usr/share/Wolfram/Applications/xAct/
-   ```
+#### _Linux_
 
-## Loading the Package
-
-In _Wolfram_ (formerly _Mathematica_), load the package with:
-```mathematica
-<< xAct`Hamilcar`
+1. ***Prepare.*** Make sure your system satisfies all the [requirements](#requirements).
+2. ***Download.*** You can download the latest release from the panel on the right, and unzip using:
+```console, bash
+[user@system ~]$ unzip ~/Downloads/Hamilcar*
+[user@system ~]$ mv ~/Hamilcar* ~/Hamilcar
+```
+Alternatively, if you have _git_ installed, the following _bash_ command will download _Hamilcar_ into the home directory:
+```console, bash, git
+[user@system ~]$ git clone https://github.com/wevbarker/Hamilcar
 ```
 
-The package automatically loads via the kernel initialization file at `xAct/Hamilcar/Kernel/init.wl`.
-
-## Basic Usage
-
-### Defining a Canonical Field
-
-```mathematica
-DefCanonicalField[φ[a], FieldSymbol -> "φ", MomentumSymbol -> "π"]
+3. ***Install.*** To perform the installation, the sources need only be copied to the location of the other _xAct_ sources. For a global installation of _xAct_ this may require:
+```console, bash
+[user@system ~]$ cd Hamilcar/xAct
+[user@system xAct]$ sudo cp -r Hamilcar /usr/share/Wolfram/Applications/xAct/
+```
+For a local installation of _xAct_, the path may be vary:
+```console, bash
+[user@system xAct]$ cp -r Hamilcar ~/.Wolfram/Applications/xAct/
+```
+Alternatively, use the provided installation script:
+```console, bash
+[user@system Hamilcar]$ ./install.sh
 ```
 
-This creates:
-- Field tensor `φ[a]` with time derivatives
-- Momentum tensor `ConjugateMomentumφ[a]` conjugate to the field
-- Tensor momentum `TensorConjugateMomentumφ[a]` for extended calculations
-- Automatic registration for Poisson bracket calculations
+#### _macOS_
 
-### Computing Poisson Brackets
+:warning: Note that _macOS_ is not recommended for use with _Hamilcar_.
 
-```mathematica
-PoissonBracket[operator1, operator2]
+1. ***Prepare.*** Make sure your system satisfies all the [requirements](#requirements).
+2. ***Download.*** You can download the latest release from the panel on the right, and unzip using:
+```console, zsh 
+user@system ~ % unzip ~/Downloads/Hamilcar*
+user@system ~ % mv ~/Hamilcar* ~/Hamilcar
+```
+Alternatively, if you have _git_ installed, the following _zsh_ command will download _Hamilcar_ into the home directory:
+```console, zsh, git
+user@system ~ % git clone https://github.com/wevbarker/Hamilcar
 ```
 
-The function automatically:
-- Generates smearing tensors (unless `$ManualSmearing=True`)
-- Computes variational derivatives with respect to registered fields and momenta
-- Includes metric sector contributions when `$DynamicalMetric=True`
-
-### Working with Time Dependencies
-
-```mathematica
-DefTimeTensor[field[a], M3, GenSet[], PrintAs -> "ψ"]
+3. ***Install.*** To perform the installation, the sources need only be copied to the location of the other _xAct_ sources. For a global installation of _xAct_ this may require:
+```console, zsh 
+user@system ~ % cd Hamilcar/xAct
+user@system xAct % sudo cp -r Hamilcar /Library/Mathematica/Applications/xAct/
+```
+For a local installation of _xAct_, the path may be vary:
+```console, zsh 
+user@system xAct % cp -r Hamilcar ~/Library/Mathematica/Applications/xAct/
 ```
 
-This defines time-dependent tensors with derivatives up to 5th order (velocity, acceleration, jerk, snap, crackle).
+#### _Microsoft Windows_
 
-### Finding Field Algebras
+:warning: Note that _Microsoft Windows_ is not recommended for use with _Hamilcar_.
 
-```mathematica
-FindAlgebra[inputBracket, inputBracketAnsatz, constraintsList]
+1. ***Prepare.*** Make sure your system satisfies all the [requirements](#requirements).
+2. ***Download.*** You can download the latest release from the panel on the right, and unzip in _File Explorer_ using _right-click_ and _Extract All_. Alternatively, if you have _git_ installed, the following _cmd_ command will download _Hamilcar_ into the home directory:
+```console, cmd, git
+C:\Users\user> git clone https://github.com/wevbarker/Hamilcar
+```
+3. ***Install.*** To perform the installation, the sources need only be copied to the location of the other _xAct_ sources. For a global installation of _xAct_, you may need to open _File Explorer_ using _right-click_ and _Run as administrator_. Alternatively, use the following _cmd_ commands (again, opening _cmd_ using _Run as administrator_): 
+```console, cmd
+C:\Users\user> cd Hamilcar
+C:\Users\user\Hamilcar> xcopy /e /k /h /i xAct\ "C:\Program Files\Wolfram Research\Mathematica\14.0\AddOns\Applications\xAct\"
+```
+For a local installation of _xAct_, the path may be vary:
+```console, cmd 
+C:\Users\user\Hamilcar> xcopy /e /k /h /i xAct\ "C:\Users\user\AppData\Roaming\Mathematica\Applications\xAct\"
 ```
 
-This function:
-- Takes ansatz expressions for bracket structures
-- Converts to higher-derivative canonical form
-- Solves for unknown parameters using constraint equations
-- Augments with boundary terms
-
-## Configuration
-
-### Global Variables
-
-- `$DynamicalMetric`: Controls whether spatial metric is treated as dynamical field (default: True)
-- `$ManualSmearing`: When True, disables automatic smearing in Poisson brackets (default: False)
-- `$RegisteredFields`: List of registered field tensors
-- `$RegisteredMomenta`: List of registered momentum tensors
-
-### Geometry Setup
-
-The package defines a 3+1 dimensional spacetime with:
-- `M3`: 3-dimensional spatial manifold
-- `Time`: Time coordinate orthogonal to M3
-- `G[-a,-b]`: Spatial metric on M3
-- `GTime[-a,-b]`: Time-dependent spatial metric
-- `CD[-a]`: Covariant derivative on M3
-
-## Development
-
-### Reloading Code During Development
-
-```mathematica
-RereadSources[]
-```
-
-This reloads all source files without restarting _Wolfram_, useful during active development.
-
-### Adding New Functionality
-
-1. Create new .m files in the `Sources/` directory
-2. Add function declarations to `Hamilcar.m` in the usage section
-3. Include the new file in the `RereadSources[]` function list
-4. Use `IncludeHeader[]` for loading sub-modules within source files
-
-## File Structure
-
-```
-Hamilcar/
-└── xAct/
-    └── Hamilcar/
-        ├── Hamilcar.m              # Main package file
-        ├── Kernel/
-        │   └── init.wl             # Kernel initialization
-        └── Sources/
-            ├── DefCanonicalField.m # Field definition
-            ├── PoissonBracket.m    # Poisson bracket computation
-            ├── FindAlgebra.m       # Algebra coefficient finding
-            ├── TimeD.m             # Time derivatives
-            └── [other modules]
-```
-
-## Getting Help
+## Getting help 
 
 There are several ways to get help:
-- The [_xAct_ Google Group](https://groups.google.com/g/xAct) contains a well established, highly active and very friendly community of researchers. Feel free to start a _New conversation_ by posting a minimal working example of your code.
-- Consult the [_xAct_ documentation](http://www.xact.es/) for tensor algebra fundamentals
-- Check the source files in `Sources/` directory for implementation details
-- Review the `CLAUDE.md` file for development guidelines
+- The [xAct google group](https://groups.google.com/g/xAct) contains a well established, highly active and very friendly community of researchers. Feel free to start a _New conversation_ by posting a minimal working example of your code.
+- For private correspondence, you can email us at [barker@fzu.cz](mailto:barker@fzu.cz).
+- Alternatively you may wish to raise a [_New issue_](https://github.com/wevbarker/Hamilcar/issues) on _GitHub_.
 
 ## Acknowledgements
 
-This work was performed using resources provided by the Cambridge Service for Data Driven Discovery (CSD3) operated by the University of Cambridge Research Computing Service ([www.csd3.cam.ac.uk](www.csd3.cam.ac.uk)), provided by Dell EMC and Intel using Tier-2 funding from the Engineering and Physical Sciences Research Council (capital grant EP/T022159/1), and DiRAC funding from the Science and Technology Facilities Council ([www.dirac.ac.uk](www.dirac.ac.uk)).
+_Hamilcar_ was improved by many useful discussions with Dražen Glavan and Tom Złośnik.
+
+This work used the DiRAC Data Intensive service (CSD3 [www.csd3.cam.ac.uk](www.csd3.cam.ac.uk)) at the University of Cambridge, managed by the University of Cambridge University Information Services on behalf of the STFC DiRAC HPC Facility ([www.dirac.ac.uk](www.dirac.ac.uk)). The DiRAC component of CSD3 at Cambridge was funded by BEIS, UKRI and STFC capital funding and STFC operations grants. DiRAC is part of the UKRI Digital Research Infrastructure.
+
+WB is grateful for the kind hospitality of Leiden University and the Lorentz Institute, and the support of Girton College, Cambridge, Marie Skłodowska-Curie Actions and the Institute of Physics of the Czech Academy of Sciences.
