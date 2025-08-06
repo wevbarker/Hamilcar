@@ -120,7 +120,7 @@ computes the Poisson bracket between operators `<Op1>` and `<Op2>`.
 - The operators `<Op1>` and `<Op2>` must be expressions involving:
 	- Canonical fields and their conjugate momenta which have been defined using `DefCanonicalField`.
 	- Tensors which have been defined on the manifold `M3` using `DefTensor`, and which are assumed always to be independent of the canonical fields.
-	- Derivatives of canonical and non-canonical quantities of the form `CD`, the spatial metric `G`, and the totally antisymmtric tensor `epsilonG`.
+	- Derivatives via `CD` of canonical and non-canonical quantities, the spatial metric `G`, and the totally antisymmtric tensor `epsilonG`.
 	- Constant symbols which have been defined using `DefConstantSymbol` (or `DefNiceConstantSymbol` from the _xTras_ package).
 - The function automatically generates smearing tensors unless `$ManualSmearing` is set to `True`.
 - When `$DynamicalMetric` is set to `True`, the `G`-sector contributions are included.
