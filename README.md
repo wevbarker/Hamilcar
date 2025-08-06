@@ -62,7 +62,17 @@ PoissonBracket[Phi[],ConjugateMomentumPhi[]];
 
 ## Documentation 
 
-TBC
+Comprehensive documentation with worked examples is available in the form of a Mathematica notebook generated from `xAct/Hamilcar/Documentation/English/Documentation.m`. This documentation includes:
+
+- **General Relativity**: Complete walkthrough of the ADM formalism, including constraint definitions, smearing functions, and computation of the Dirac hypersurface deformation algebra
+- **Maxwell Theory**: Canonical electromagnetic field theory demonstrating Gauss constraint analysis and the Dirac algorithm
+
+To generate the documentation notebook, load the documentation source file in Mathematica:
+```mathematica
+Get["xAct/Hamilcar/Documentation/English/Documentation.m"]
+```
+
+This will create an interactive notebook with all calculations, explanations, and mathematical results.
 
 ## General use 
 
@@ -125,6 +135,61 @@ computes the Poisson bracket between operators `<Op1>` and `<Op2>`.
 - The function automatically generates smearing tensors unless `$ManualSmearing` is set to `True`.
 - When `$DynamicalMetric` is set to `True`, the `G`-sector contributions are included.
 - The function computes variational derivatives with respect to all registered fields and momenta.
+
+### Function `TotalFrom`
+
+```mathematica
+TotalFrom[<Expr>]
+```
+expands composite expressions to canonical variable form by applying all registered expansion rules.
+
+#### Details and options
+
+- The function converts composite quantities (like constraint expressions, traces, or field combinations) into explicit expressions involving only the fundamental canonical variables: fields, conjugate momenta, and their spatial derivatives.
+- This expansion is essential before computing Poisson brackets, as bracket calculations require expressions to be written in terms of the canonical variables registered by `DefCanonicalField`.
+- The function applies all rules stored in the internal list `$FromRulesTotal`, which are populated using `PrependTotalFrom`.
+
+### Function `TotalTo`
+
+```mathematica
+TotalTo[<Expr>]
+```
+converts expressions from canonical variable form back to compact notation using registered contraction rules.
+
+#### Details and options
+
+- The function performs the inverse operation of `TotalFrom`, converting expressions written in terms of canonical variables back to more compact composite notation.
+- This is primarily used for presentation purposes to make final results more readable.
+- The function applies all rules stored in the internal list `$ToRulesTotal`, which are populated using `PrependTotalTo`.
+- Unlike `TotalFrom`, this function is optional in most calculations.
+
+### Function `PrependTotalFrom`
+
+```mathematica
+PrependTotalFrom[<Rule>]
+```
+registers an expansion rule to convert a composite quantity to canonical variable form.
+
+#### Details and options
+
+- The function adds `<Rule>` to the front of the internal list `$FromRulesTotal` used by `TotalFrom`.
+- Typically used with `MakeRule` expressions that define composite quantities in terms of canonical variables.
+- Essential for setting up the expansion system before performing Poisson bracket calculations.
+- Example usage: `FromSuperHamiltonian//PrependTotalFrom` registers the rule to expand the super-Hamiltonian constraint.
+
+### Function `PrependTotalTo`
+
+```mathematica
+PrependTotalTo[<Rule>]
+```
+registers a contraction rule to convert canonical variable expressions back to compact notation.
+
+#### Details and options
+
+- The function adds `<Rule>` to the front of the internal list `$ToRulesTotal` used by `TotalTo`.
+- Used with rules that convert expanded canonical expressions back to composite quantities.
+- Provides the symmetric counterpart to `PrependTotalFrom` for bidirectional transformations.
+- Less commonly used than `PrependTotalFrom` as conversion back to compact form is often optional.
 
 ### Function `FindAlgebra`
 

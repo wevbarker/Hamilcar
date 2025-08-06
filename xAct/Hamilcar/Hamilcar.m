@@ -25,7 +25,6 @@ SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamilcar` version ",$Version[[1]],", ",$Version[[2]]];
 Print["CopyRight \[Copyright] 2023, Will Barker, under the General Public License."];
-Print@" ** Von einem Pfeiffer verfürt und verloren.";
 
 If[$FrontEnd==Null,
 	xAct`Hamilcar`Private`$CLI=True,
@@ -40,6 +39,11 @@ Quiet@If[xAct`Hamilcar`Private`$CLI,
 		xAct`Hamilcar`Private`$WorkingDirectory=NotebookDirectory[]]];
 $Path~AppendTo~xAct`Hamilcar`Private`$WorkingDirectory;
 xAct`Hamilcar`Private`$InstallDirectory=Select[FileNameJoin[{#,"xAct/Hamilcar"}]&/@$Path,DirectoryQ][[1]];
+If[xAct`Hamilcar`Private`$CLI,	
+	Print@Import@FileNameJoin@{xAct`Hamilcar`Private`$InstallDirectory,
+				"Logos","ASCIILogo.txt"},
+	Print@Magnify[Import@FileNameJoin@{xAct`Hamilcar`Private`$InstallDirectory,
+				"Logos","GitLabLogo.png"},0.3]];
 
 (*==============*)
 (*  Disclaimer  *)
