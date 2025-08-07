@@ -4,7 +4,7 @@
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
-# _Hamilcar_: A Mathematica Package for Canonical Field Theory
+# _Hamilcar_: MCP-compliant Hamiltonian analysis tools
 ## Version 0.0.0-developer
 
 - Initial development version of the canonical field theory package.
@@ -30,7 +30,9 @@ If _Hamilcar_ was useful to your research, please **cite us** using the followin
 
 ## About
 
-_Hamilcar_ is a software package for _Wolfram_ (formerly _Mathematica_) designed to perform canonical field theory calculations in 3+1 dimensions. The canonical formulation assumes the action $S$ to have the structure
+_Hamilcar_ is a software package for _Wolfram_ (formerly _Mathematica_) designed to provide robust tools for agentic systems to perform Hamiltonian analysis in canonical field theory. The overall goal is to enable AI agents and automated systems to conduct sophisticated field theory calculations through well-defined interfaces.
+
+The package focuses on canonical field theory calculations in 3+1 dimensions, where the action $S$ has the structure
 ```math
 S=\int\mathrm{d}t\int\mathrm{d}^3x\ \Big[\pi_\psi(x,t)\cdot\dot{\psi}(x,t)-H(\psi,\pi_\psi)\Big],
 ```
@@ -73,6 +75,16 @@ Get["xAct/Hamilcar/Documentation/English/Documentation.m"]
 ```
 
 This will create an interactive notebook with all calculations, explanations, and mathematical results.
+
+## Agentic Integration
+
+While _Hamilcar_ currently provides a comprehensive _Mathematica_ interface for canonical field theory calculations, the ultimate goal is to enable seamless integration with agentic systems. The requisite **JSON-RPC interface** that will allow AI agents to programmatically access Hamilcar's functionality is **yet to be developed**.
+
+This future interface will enable:
+- Automated constraint algebra analysis
+- Programmatic field theory calculations
+- Integration with larger agentic workflows
+- Standardized communication protocols for field theory operations
 
 ## General use 
 
@@ -244,10 +256,6 @@ Alternatively, if you have _git_ installed, the following _bash_ command will do
 For a local installation of _xAct_, the path may be vary:
 ```console, bash
 [user@system xAct]$ cp -r Hamilcar ~/.Wolfram/Applications/xAct/
-```
-Alternatively, use the provided installation script:
-```console, bash
-[user@system Hamilcar]$ ./install.sh
 ```
 
 #### _macOS_

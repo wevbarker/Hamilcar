@@ -1,5 +1,7 @@
+Block[{Print=DoNothing},
 <<xAct`xPlain`;
-Title@"Hamilcar: A Mathematica Package for Canonical Field Theory";
+];
+Title@"Hamilcar: MCP-compliant Hamiltonian analysis tools";
 Author@"Will E. V. Barker";
 
 Comment@"This is the main documentation for the Hamilcar package, which extends xAct to perform canonical field theory calculations in a 3+1 dimensional spacetime decomposition.
@@ -10,44 +12,39 @@ Hamilcar is a software package for Wolfram (formerly Mathematica) designed to pe
 - The Hamiltonian density H(psi,pi psi) is constructed from the fields, momenta, spatial metric, and spatial derivatives.
 
 The package provides essential functions for canonical field theory:
-- DefCanonicalField: defines canonical field pairs and their conjugate momenta
-- PoissonBracket: computes Poisson brackets between operators using variational derivatives
-- TotalFrom/TotalTo: expands expressions to canonical variables and converts back
-- FindAlgebra: determines constraint algebra coefficients using ansatz expressions";
+- \"DefCanonicalField\": defines canonical field pairs and their conjugate momenta
+- \"PoissonBracket\": computes Poisson brackets between operators using variational derivatives
+- \"TotalFrom\"/\"TotalTo\": expands expressions to canonical variables and converts back
+- \"FindAlgebra\": determines constraint algebra coefficients using ansatz expressions";
 
 Section@"Introduction";
 Comment@"Hamilcar provides tools for defining canonical field pairs, computing Poisson brackets, and analyzing constraint algebras in field theory.
 
 Installation and Setup:
-To install Hamilcar, use the provided installation script: ./install.sh which copies the xAct/Hamilcar directory to both ~/.Wolfram/Applications/xAct/ and ~/.Mathematica/Applications/xAct/ directories, excluding .mx files. In Mathematica, load the package with: <<xAct`Hamilcar`.
+To install Hamilcar, copy the \"xAct/Hamilcar\" directory to your \"~/.Wolfram/Applications/xAct/\" or \"~/.Mathematica/Applications/xAct/\" directory. In \"Mathematica\", load the package with: \"<<xAct`Hamilcar`\".
 
 Pre-defined geometry:
-When you first run <<xAct`Hamilcar` the software defines a three-dimensional spatial hypersurface with the ingredients: a, b, c, ..., z are spatial coordinate indices (corresponding to adapted coordinates in the ADM prescription); G[-a,-b] is the induced metric h ab on the spatial hypersurface; CD[-a]@ is the spatial covariant derivative nabla a; epsilonG[-a,-b,-c] is the induced totally antisymmetric tensor epsilon abc on the spatial hypersurface.
+When you first run \"<<xAct`Hamilcar`\" the software defines a three-dimensional spatial hypersurface with the ingredients: a, b, c, ..., z are spatial coordinate indices (corresponding to adapted coordinates in the ADM prescription); \"G[-a,-b]\" is the induced metric on the spatial hypersurface; \"CD[-a]@\" is the spatial covariant derivative; \"epsilonG[-a,-b,-c]\" is the induced totally antisymmetric tensor on the spatial hypersurface.
 
 Key global variables:
-- $DynamicalMetric: Controls whether spatial metric is treated as dynamical field (default: True)
-- $ManualSmearing: When True, disables automatic smearing in Poisson brackets (default: False)
-- $RegisteredFields: List of registered field tensors
-- $RegisteredMomenta: List of registered momentum tensors";
+- \"$DynamicalMetric\": Controls whether spatial metric is treated as dynamical field (default: \"True\")
+- \"$ManualSmearing\": When \"True\", disables automatic smearing in Poisson brackets (default: \"False\")
+- \"$RegisteredFields\": List of registered field tensors
+- \"$RegisteredMomenta\": List of registered momentum tensors";
 
 Section@"General relativity";
 Comment@"Canonical formulation of general relativity using the ADM decomposition.
 
-This section demonstrates the ADM (Arnowitt-Deser-Misner) formulation of general relativity in canonical field theory. In the ADM formalism, spacetime is decomposed as 3+1 dimensional, with spatial slices evolving in time. The key variables are the spatial metric h ab and its conjugate momentum pi ab, related to the extrinsic curvature. The constraints are the super-Hamiltonian (Hamiltonian constraint) and super-momentum (momentum constraint) which generate time evolution and spatial diffeomorphisms respectively.";
+This section demonstrates the ADM (Arnowitt-Deser-Misner) formulation of general relativity in canonical field theory. In the ADM formalism, spacetime is decomposed as 3+1 dimensional, with spatial slices evolving in time. The key variables are the spatial metric and its conjugate momentum, related to the extrinsic curvature. The constraints are the super-Hamiltonian (Hamiltonian constraint) and super-momentum (momentum constraint) which generate time evolution and spatial diffeomorphisms respectively.";
 
 Comment@"We first load the Hamilcar package, which provides tools for canonical field theory calculations. The package extends xAct to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.";
 Code[<<xAct`Hamilcar`];
 
-Comment@"Set some convenient options for xAct:";
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 $DefInfoQ=False;
 Unprotect@AutomaticRules;
 Options[AutomaticRules]={Verbose->False};
 Protect@AutomaticRules;
-
-Comment@"Define some utility functions for working with expressions and Poisson brackets.
-
-These utility functions help streamline the canonical field theory calculations by providing convenient ways to manipulate expressions, display results, and compute Poisson brackets with proper canonical processing (TotalFrom/TotalTo transformations).";
 
 CompareExpressions[InputExpr1_,InputExpr2_]:=Module[{
 	Expr,Expr1=InputExpr1,Expr2=InputExpr2},
@@ -88,7 +85,7 @@ Expr];
 
 Comment@"Verify the canonical Poisson bracket for the metric and its conjugate momentum. Define the trace of the conjugate momentum of the metric.
 
-The spatial metric G[-a,-b] and its conjugate momentum ConjugateMomentumG[a,b] should satisfy the fundamental canonical Poisson bracket relations. These are the basic building blocks for all subsequent bracket calculations in the ADM formalism.";
+The spatial metric \"G[-a,-b]\" and its conjugate momentum \"ConjugateMomentumG[a,b]\" should satisfy the fundamental canonical Poisson bracket relations. These are the basic building blocks for all subsequent bracket calculations in the ADM formalism.";
 Code[
 DefTensor[TraceConjugateMomentumG[],M3,PrintAs->"\[Pi]"];
 FromTraceConjugateMomentumG=MakeRule[{
@@ -97,10 +94,13 @@ FromTraceConjugateMomentumG=MakeRule[{
 	MetricOn->All,ContractMetrics->True]
 ];
 TraceConjugateMomentumG[]~DisplayRule~FromTraceConjugateMomentumG;
-Comment@"Apply total derivative preprocessing to the trace rule.";
+Comment@"Register the expansion rule for the trace of conjugate momentum.";
 Code[FromTraceConjugateMomentumG//PrependTotalFrom];
 
-Comment@"Test various index configurations for the induced metric and its conjugate momentum to verify canonical Poisson brackets.";
+Comment@"Compute all possible combinations of Poisson brackets between the spatial metric and its conjugate momentum.
+
+The fundamental canonical Poisson brackets provide the foundation for all field theory calculations. We systematically compute brackets between the metric \"G\" and conjugate momentum \"ConjugateMomentumG\" with all possible index configurations (raised and lowered indices). This demonstrates the canonical commutation relations that must be satisfied in the ADM formalism and serves as a verification of the canonical structure.";
+
 Perms={};
 Perms//=(#~Join~Permutations@{1,1,1,1})&;
 Perms//=(#~Join~Permutations@{1,1,1,-1})&;
@@ -113,7 +113,7 @@ Module[{Expr,Answ},Expr=#;Answ=PoissonBracket@@#;DisplayExpression[Expr->Answ];]
 
 Comment@"Define the lapse function and shift vector of the ADM decomposition.
 
-In the ADM formalism, the lapse function N and shift vector N i describe how the spatial slices are embedded in spacetime. The lapse controls the rate of proper time advance between slices, while the shift describes how the spatial coordinate system moves between slices. These are Lagrange multipliers that enforce the super-Hamiltonian and super-momentum constraints respectively.";
+In the ADM formalism, the lapse function and shift vector describe how the spatial slices are embedded in spacetime. The lapse controls the rate of proper time advance between slices, while the shift describes how the spatial coordinate system moves between slices. These are Lagrange multipliers that enforce the super-Hamiltonian and super-momentum constraints respectively.";
 Code[DefTensor[Lapse[],M3,PrintAs->"\[ScriptCapitalN]"]];
 Lapse[]//DisplayExpression;
 Code[DefTensor[Shift[m],M3,PrintAs->"\[ScriptCapitalN]"]];
@@ -124,7 +124,7 @@ Comment@"Define the gravitational coupling constant.";
 Code[DefConstantSymbol[GravitationalCoupling,PrintAs->"\[Alpha]"]];
 GravitationalCoupling//DisplayExpression;
 
-Comment@"Define the super-Hamiltonian constraint (Hamiltonian constraint) from the ADM formalism.";
+Comment@{"Define the super-Hamiltonian constraint (Hamiltonian constraint) from the ADM formalism. This uses the trace of the conjugate momentum defined in",Cref@"FromTraceConjugateMomentumG","."};
 Code[
 DefTensor[SuperHamiltonian[],M3,PrintAs->"\[ScriptCapitalH]"];
 FromSuperHamiltonian=MakeRule[{SuperHamiltonian[],
@@ -135,7 +135,7 @@ FromSuperHamiltonian=MakeRule[{SuperHamiltonian[],
 	MetricOn->All,ContractMetrics->True]
 ];
 SuperHamiltonian[]~DisplayRule~FromSuperHamiltonian;
-Comment@"Apply total derivative preprocessing to the super-Hamiltonian rule.";
+Comment@"Register the expansion rule for the super-Hamiltonian constraint.";
 Code[FromSuperHamiltonian//PrependTotalFrom];
 
 Comment@"Define the super-momentum constraint (momentum constraint) from the ADM formalism.";
@@ -146,7 +146,7 @@ FromSuperMomentum=MakeRule[{SuperMomentum[-i],
 	MetricOn->All,ContractMetrics->True]
 ];
 SuperMomentum[-i]~DisplayRule~FromSuperMomentum;
-Comment@"Apply total derivative preprocessing to the super-momentum rule.";
+Comment@"Register the expansion rule for the super-momentum constraint.";
 Code[FromSuperMomentum//PrependTotalFrom];
 
 
@@ -192,7 +192,7 @@ Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperHamiltonianPoissonBracket"];
 
-Comment@"Use FindAlgebra to express the bracket result in terms of the super-momentum constraint and spatial derivatives of the smearing functions.";
+Comment@{"Use \"FindAlgebra\" to express the bracket result in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum"," and spatial derivatives of the smearing functions."};
 Code[
 Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
@@ -202,7 +202,7 @@ Expr//=FindAlgebra[#,
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
 ];
-BracketExpr//DisplayExpression;
+DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianAlgebra"];
 
 Comment@"Compute the bracket between the super-Hamiltonian and super-momentum using scalar and contravariant vector smearing.";
 Code[
@@ -217,7 +217,7 @@ Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperMomentumPoissonBracket"];
 
-Comment@"Use FindAlgebra to express this bracket in terms of the super-Hamiltonian constraint.";
+Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-Hamiltonian constraint defined in",Cref@"FromSuperHamiltonian","."};
 Code[
 Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
@@ -227,7 +227,7 @@ Expr//=FindAlgebra[#,
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
 ];
-BracketExpr//DisplayExpression;
+DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianMomentumAlgebra"];
 
 Comment@"Compute the auto-commutator of the super-momentum using contravariant vector smearing.";
 Code[
@@ -242,7 +242,7 @@ Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumPoissonBracket"];
 
-Comment@"Use FindAlgebra to express this bracket in terms of the super-momentum constraint.";
+Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum","."};
 Code[
 Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
@@ -252,9 +252,9 @@ Expr//=FindAlgebra[#,
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
 ];
-BracketExpr//DisplayExpression;
+DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraContravariant"];
 
-Comment@"Compute the auto-commutator of the super-momentum using covariant vector smearing for comparison.";
+Comment@{"Compute the auto-commutator of the super-momentum using covariant vector smearing for comparison with",Cref@"SuperMomentumAlgebraContravariant","."};
 Code[
 Expr={VectorSmearingCovariantF[-i]*SuperMomentum[i],VectorSmearingCovariantS[-j]*SuperMomentum[j]}
 ];
@@ -267,7 +267,7 @@ Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumCovariantPoissonBracket"];
 
-Comment@"Use FindAlgebra to express this bracket in terms of the super-momentum constraint with covariant smearing.";
+Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint with covariant smearing, comparing to",Cref@"SuperMomentumAlgebraContravariant","."};
 Code[
 Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
@@ -277,12 +277,14 @@ Expr//=FindAlgebra[#,
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
 ];
-BracketExpr//DisplayExpression;
+DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraCovariant"];
+
+Comment@{"The results in",Cref@{"SuperHamiltonianAlgebra","SuperHamiltonianMomentumAlgebra","SuperMomentumAlgebraContravariant","SuperMomentumAlgebraCovariant"}," constitute the complete Dirac hypersurface deformation algebra of general relativity, showing how the constraints generate spacetime diffeomorphisms."};
 
 Section@"Maxwell theory";
 Comment@"Canonical electromagnetic field theory in the Hamiltonian formalism. Maxwell theory is simpler than GR since there are no metric variations in Poisson brackets.
 
-This section demonstrates the canonical formulation of electromagnetic field theory (Maxwell theory). Unlike general relativity, Maxwell theory is formulated on a fixed background spacetime, making it conceptually simpler. The canonical variables are the spatial components of the vector potential A i and their conjugate momenta (the electric field components E i). The theory contains the Gauss constraint as a primary constraint arising from the absence of time derivatives of the temporal component A 0. The Dirac algorithm shows that no secondary constraints arise, confirming that the theory describes two transverse photon polarizations.";
+This section demonstrates the canonical formulation of electromagnetic field theory (Maxwell theory). Unlike general relativity, Maxwell theory is formulated on a fixed background spacetime, making it conceptually simpler. The canonical variables are the spatial components of the vector potential and their conjugate momenta (the electric field components). The theory contains the Gauss constraint as a primary constraint arising from the absence of time derivatives of the temporal component of the vector potential. The Dirac algorithm shows that no secondary constraints arise, confirming that the theory describes two transverse photon polarizations.";
 
 
 Comment@"For Maxwell theory, we need to disable dynamical metric since we work on a fixed background and enable manual smearing for Maxwell theory calculations.";
@@ -292,7 +294,7 @@ Code[$ManualSmearing=True];
 
 Comment@"Define the spatial components of the electromagnetic vector potential and their canonical conjugate momenta (the electric field components).
 
-In the canonical formulation of electromagnetism, the spatial components of the vector potential A i serve as the canonical position variables, while their conjugate momenta are the electric field components E i. The temporal component A 0 does not have a conjugate momentum, making it a non-dynamical Lagrange multiplier that enforces the Gauss constraint.";
+In the canonical formulation of electromagnetism, the spatial components of the vector potential serve as the canonical position variables, while their conjugate momenta are the electric field components. The temporal component of the vector potential does not have a conjugate momentum, making it a non-dynamical Lagrange multiplier that enforces the Gauss constraint.";
 Code[DefCanonicalField[VectorPotential[-i],FieldSymbol->"A",MomentumSymbol->"E"]];
 VectorPotential[-i]//DisplayExpression;
 ConjugateMomentumVectorPotential[i]//DisplayExpression;
@@ -312,7 +314,7 @@ Comment@"Re-enable manual smearing for subsequent calculations.";
 Code[$ManualSmearing=True];
 
 
-Comment@"Define the magnetic field components as the curl of the vector potential.";
+Comment@{"Define the magnetic field components as the curl of the vector potential, establishing the relationship between canonical coordinates and the electromagnetic field tensor components."};
 Code[
 DefTensor[MagneticField[i],M3,PrintAs->"B"];
 FromMagneticField=MakeRule[{MagneticField[i],
@@ -320,10 +322,10 @@ FromMagneticField=MakeRule[{MagneticField[i],
 	MetricOn->All,ContractMetrics->True]
 ];
 MagneticField[i]~DisplayRule~FromMagneticField;
-Comment@"Apply total derivative preprocessing to the magnetic field rule.";
+Comment@"Register the expansion rule for the magnetic field.";
 Code[FromMagneticField//PrependTotalFrom];
 
-Comment@"Define the Maxwell Hamiltonian as the integral of electric and magnetic energy densities.";
+Comment@{"Define the Maxwell Hamiltonian as the integral of electric and magnetic energy densities. This uses the magnetic field definition from",Cref@"FromMagneticField"," and the canonical electric field coordinates."};
 Code[
 DefTensor[MaxwellHamiltonian[],M3,PrintAs->"H"];
 FromMaxwellHamiltonian=MakeRule[{MaxwellHamiltonian[],
@@ -331,13 +333,13 @@ FromMaxwellHamiltonian=MakeRule[{MaxwellHamiltonian[],
 	MetricOn->All,ContractMetrics->True]
 ];
 MaxwellHamiltonian[]~DisplayRule~FromMaxwellHamiltonian;
-Comment@"Apply total derivative preprocessing to the Maxwell Hamiltonian rule.";
+Comment@"Register the expansion rule for the Maxwell Hamiltonian.";
 Code[FromMaxwellHamiltonian//PrependTotalFrom];
 
 
-Comment@"The temporal component of the vector potential is a Lagrange multiplier, leading to Gauss constraint as a primary constraint.
+Comment@{"The temporal component of the vector potential is a Lagrange multiplier, leading to Gauss constraint as a primary constraint.
 
-In electromagnetic theory, the temporal component A 0 of the four-vector potential does not appear with time derivatives in the Lagrangian, making it a non-dynamical variable (Lagrange multiplier). The Euler-Lagrange equation for A 0 gives the Gauss constraint, which states that the divergence of the electric field equals the charge density. In the absence of charges, this constraint takes the simple form divergence of E = 0.";
+In electromagnetic theory, the temporal component of the four-vector potential does not appear with time derivatives in the Lagrangian, making it a non-dynamical variable (Lagrange multiplier). The Euler-Lagrange equation for the temporal component gives the Gauss constraint, which states that the divergence of the electric field equals the charge density. In the absence of charges, this constraint takes the simple form that the divergence of the electric field vanishes. This constraint couples to the canonical momentum coordinates established with",Cref@"MaxwellCanonicalBracket","."};
 Code[
 DefTensor[GaussConstraint[],M3,PrintAs->"G"];
 FromGaussConstraint=MakeRule[{GaussConstraint[],
@@ -345,7 +347,7 @@ FromGaussConstraint=MakeRule[{GaussConstraint[],
 	MetricOn->All,ContractMetrics->True]
 ];
 GaussConstraint[]~DisplayRule~FromGaussConstraint;
-Comment@"Apply total derivative preprocessing to the Gauss constraint rule.";
+Comment@"Register the expansion rule for the Gauss constraint.";
 Code[FromGaussConstraint//PrependTotalFrom];
 
 Comment@"Define the Lagrange multiplier for Gauss constraint (the temporal component of the vector potential).";
@@ -353,9 +355,9 @@ Code[DefTensor[LagrangeMultiplierA0[],M3,PrintAs->"\!\(\*SubscriptBox[\(A\),\(0\
 LagrangeMultiplierA0[]//DisplayExpression;
 
 
-Comment@"The total Hamiltonian includes the Maxwell Hamiltonian plus the Gauss constraint with its multiplier.
+Comment@{"The total Hamiltonian includes the Maxwell Hamiltonian plus the Gauss constraint with its multiplier.
 
-In constrained Hamiltonian systems, the total Hamiltonian is constructed by adding to the canonical Hamiltonian all primary constraints multiplied by their corresponding Lagrange multipliers. For Maxwell theory, this gives H T = H Maxwell + A 0 * G, where G is the Gauss constraint and A 0 is its Lagrange multiplier (the temporal component of the vector potential).";
+In constrained Hamiltonian systems, the total Hamiltonian is constructed by adding to the canonical Hamiltonian all primary constraints multiplied by their corresponding Lagrange multipliers. For Maxwell theory, this gives the total Hamiltonian as the sum of the Maxwell Hamiltonian from",Cref@"FromMaxwellHamiltonian"," plus the temporal component of the vector potential times the Gauss constraint from",Cref@"FromGaussConstraint",", where the temporal component serves as the Lagrange multiplier."};
 Code[
 DefTensor[MaxwellTotalHamiltonian[],M3,PrintAs->"\!\(\*SubscriptBox[\(H\),\(T\)]\)"];
 FromMaxwellTotalHamiltonian=MakeRule[{MaxwellTotalHamiltonian[],
@@ -363,13 +365,13 @@ FromMaxwellTotalHamiltonian=MakeRule[{MaxwellTotalHamiltonian[],
 	MetricOn->All,ContractMetrics->True]
 ];
 MaxwellTotalHamiltonian[]~DisplayRule~FromMaxwellTotalHamiltonian;
-Comment@"Apply total derivative preprocessing to the total Hamiltonian rule.";
+Comment@"Register the expansion rule for the total Hamiltonian.";
 Code[FromMaxwellTotalHamiltonian//PrependTotalFrom];
 
 
-Comment@"Check if the Gauss constraint is preserved under time evolution by computing the Poisson bracket between the smeared constraint and the total Hamiltonian.
+Comment@{"Check if the Gauss constraint is preserved under time evolution by computing the Poisson bracket between the smeared constraint and the total Hamiltonian defined in",Cref@"FromMaxwellTotalHamiltonian",".
 
-The consistency of a primary constraint under time evolution is checked by computing its Poisson bracket with the total Hamiltonian. If this bracket vanishes identically, the constraint is preserved and no secondary constraints arise. If the bracket is non-zero, it either gives a secondary constraint or determines a Lagrange multiplier. For the Gauss constraint in Maxwell theory, the bracket should vanish identically, confirming the consistency of the constraint system.";
+The consistency of a primary constraint under time evolution is checked by computing its Poisson bracket with the total Hamiltonian. If this bracket vanishes identically, the constraint is preserved and no secondary constraints arise. If the bracket is non-zero, it either gives a secondary constraint or determines a Lagrange multiplier. For the Gauss constraint in Maxwell theory, the bracket should vanish identically, confirming the consistency of the constraint system."};
 Code[
 Expr={ScalarSmearingF[]*GaussConstraint[],MaxwellTotalHamiltonian[]}
 ];
@@ -384,9 +386,9 @@ Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"GaussConstraintConsistency"];
 
-Comment@"The result should vanish identically, showing that no secondary constraints arise. Taking the variational derivative with respect to the smearing function ScalarSmearingF[] demonstrates that the coefficient of any term must be zero.";
+Comment@{"The result in",Cref@"GaussConstraintConsistency"," should vanish identically, showing that no secondary constraints arise. Taking the variational derivative with respect to the smearing function \"ScalarSmearingF[]\" demonstrates that the coefficient of any term must be zero."};
 
-Comment@"Compute the Poisson bracket between Gauss constraints at different points using scalar smearing.";
+Comment@{"Compute the Poisson bracket between Gauss constraints at different points using scalar smearing, completing the constraint algebra analysis for Maxwell theory."};
 Code[
 Expr={ScalarSmearingF[]*GaussConstraint[],ScalarSmearingS[]*GaussConstraint[]}
 ];
@@ -398,5 +400,7 @@ Expr//=TotalTo;
 Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"GaussGaussConstraintAlgebra"];
+
+Comment@{"The constraint algebra results in",Cref@{"GaussConstraintConsistency","GaussGaussConstraintAlgebra"}," demonstrate that Maxwell theory has a consistent constraint system with the single Gauss constraint generating electromagnetic gauge transformations, contrasting with the richer constraint algebra of general relativity shown in",Cref@{"SuperHamiltonianAlgebra","SuperMomentumAlgebraContravariant"},"."};
 
 Quit[];
