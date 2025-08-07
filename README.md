@@ -4,7 +4,7 @@
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
-# _Hamilcar_: MCP-compliant Hamiltonian analysis tools
+# _Hamilcar_: MCP-compliant tools for Hamiltonian analysis
 ## Version 0.0.0-developer
 
 - Initial development version of the canonical field theory package.
@@ -64,17 +64,17 @@ PoissonBracket[Phi[],ConjugateMomentumPhi[]];
 
 ## Documentation 
 
-Comprehensive documentation with worked examples is available in the form of a Mathematica notebook generated from `xAct/Hamilcar/Documentation/English/Documentation.m`. This documentation includes:
+Comprehensive documentation with worked examples is available as an interactive Mathematica notebook at `xAct/Hamilcar/Documentation/English/Documentation.nb`. This documentation includes:
 
 - **General Relativity**: Complete walkthrough of the ADM formalism, including constraint definitions, smearing functions, and computation of the Dirac hypersurface deformation algebra
 - **Maxwell Theory**: Canonical electromagnetic field theory demonstrating Gauss constraint analysis and the Dirac algorithm
 
-To generate the documentation notebook, load the documentation source file in Mathematica:
+To access the documentation, open the notebook file in Mathematica:
 ```mathematica
-Get["xAct/Hamilcar/Documentation/English/Documentation.m"]
+NotebookOpen["xAct/Hamilcar/Documentation/English/Documentation.nb"]
 ```
 
-This will create an interactive notebook with all calculations, explanations, and mathematical results.
+This provides an interactive notebook with all calculations, explanations, and mathematical results ready to execute.
 
 ## Agentic Integration
 
