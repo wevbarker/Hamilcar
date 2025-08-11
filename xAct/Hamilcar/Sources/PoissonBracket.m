@@ -41,7 +41,6 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	
 	(* Cache contexts to parallel kernels if not already done *)
 	If[!ContextsCachedQ[],
-		Print["Caching contexts for parallel computation..."];
 		CacheContexts[];
 	];
 
