@@ -28,6 +28,7 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 		OperatorOne*=SmearingOne;
 	];
 	OperatorOne//=ReplaceDummies;
+	OperatorOne//=TotalFrom;
 
 	SmearingTwo="SmearingTwo"<>(ResourceFunction@"RandomString")@5;
 	SmearingTwo//=(#~DefSmearingTwoTensor~OperatorTwo)&;
@@ -35,6 +36,7 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 		OperatorTwo*=SmearingTwo;
 	];
 	OperatorTwo//=ReplaceDummies;	
+	OperatorTwo//=TotalFrom;
 
 	Module[{RegisteredMomentum=#1,RegisteredField=#2},
 		RegisteredMomentum//=ToIndexFree;
