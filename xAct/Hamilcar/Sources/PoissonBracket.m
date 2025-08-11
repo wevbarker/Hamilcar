@@ -7,6 +7,7 @@ IncludeHeader@"Recanonicalise";
 IncludeHeader@"SemiD";
 IncludeHeader@"MultiCD";
 IncludeHeader@"ToDensities";
+IncludeHeader@"CacheContexts";
 
 PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	ProgressMatrix,
@@ -37,6 +38,12 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	];
 	OperatorTwo//=ReplaceDummies;	
 	OperatorTwo//=TotalFrom;
+	
+	(* Cache contexts to parallel kernels if not already done *)
+	If[!ContextsCachedQ[],
+		Print["Caching contexts for parallel computation..."];
+		CacheContexts[];
+	];
 
 	Module[{RegisteredMomentum=#1,RegisteredField=#2},
 		RegisteredMomentum//=ToIndexFree;

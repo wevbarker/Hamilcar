@@ -16,11 +16,20 @@ Off@(Solve::fulldim);
 Off@(Syntax::stresc);
 Off@(FrontEndObject::notavail);
 
+(*This became necessary since Wolfram 14.1*)
+Unprotect@Print;
+Print[Expr___]:=Null/;!($KernelID==0);
+Protect@Print;
+Unprotect@Message;
+Message[Expr___]:=Null/;!($KernelID==0);
+Protect@Message;
+
 (*==================*)
 (*  xAct`Hamilcar`  *)
 (*==================*)
 
 BeginPackage["xAct`Hamilcar`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm`","xAct`xCore`","xAct`xTras`"}];
+ParallelNeeds["xAct`Hamilcar`"];
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamilcar` version ",$Version[[1]],", ",$Version[[2]]];

@@ -3,6 +3,8 @@
 (*=================*)
 
 ReadAtRuntime@"DefGeometry";
+IncludeHeader@"NewParallelSubmit";
+IncludeHeader@"MonitorParallel";
 
 ReloadPackage[]:=Module[{},
 	If[$NotLoaded,
