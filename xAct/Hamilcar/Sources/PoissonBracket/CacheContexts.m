@@ -3,6 +3,7 @@
 (*=================*)
 
 CacheContexts[]~Y~Module[{NewContextList={
+	"Global`",
 	"xAct`Hamilcar`",
 	"xAct`Hamilcar`Private`",
 	"xAct`xTensor`",
@@ -10,7 +11,7 @@ CacheContexts[]~Y~Module[{NewContextList={
 	"xAct`xCore`",
 	"xAct`xPerm`",
 	"xAct`SymManipulator`",
-	"M3`"},
+	"TangentM3`"},
 	LoadContexts,
 	NewContextFileList},
 
