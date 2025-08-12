@@ -16,16 +16,23 @@ Options@DefCanonicalField={
 	MomentumSymbol->"\[ScriptP]"
 };
 
-DefCanonicalField[FieldName_[Inds___],Opts___?OptionQ]:=DefCanonicalField[FieldName[Inds],GenSet[],Opts];
+DefCanonicalField[FieldName_[Inds___],Opts___?OptionQ]~Y~DefCanonicalField[FieldName[Inds],GenSet[],Opts];
 
-DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]:=Module[{
+DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]~Y~Module[{
 	MomentumName=ToExpression@("ConjugateMomentum"<>(ToString@FieldName)),
 	TensorMomentumName=ToExpression@("TensorConjugateMomentum"<>(ToString@FieldName)),
 	FieldSymbolValue=OptionValue@FieldSymbol,
 	NewSymmExpr,
 	MomentumSymbolValue=OptionValue@MomentumSymbol,
 	TensorMomentumSymbolValue="\[GothicCapitalT]"<>ToString@OptionValue@MomentumSymbol,
-	DaggerValue=OptionValue@Dagger},
+	DaggerValue=OptionValue@Dagger,
+	CallStack},
+	
+	If[!xAct`Hamilcar`Private`$CLI,
+		CallStack=PrintTemporary@Dynamic@Refresh[
+			GUICallStack@$CallStack,
+			TrackedSymbols->{$CallStack}];
+	];
 	
 	DefTimeTensor[
 		FieldName@Inds,M3,SymmExpr,PrintAs->FieldSymbolValue,Dagger->DaggerValue];	

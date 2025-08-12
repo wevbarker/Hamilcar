@@ -2,7 +2,7 @@
 (*  RegisterPair  *)
 (*================*)
 
-RegisterPair[FieldName_,MomentumName_,TensorMomentumName_]:=Module[{
+RegisterPair[FieldName_,MomentumName_,TensorMomentumName_]~Y~Module[{
 	IndexedField=FromIndexFree@ToIndexFree@FieldName,
 	Indices,
 	IndexedMomentum,

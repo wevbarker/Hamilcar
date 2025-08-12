@@ -2,7 +2,7 @@
 (*  ToDensities  *)
 (*===============*)
 
-DensitiesToTensors[InputMyExpr_]:=Module[{
+DensitiesToTensors[InputMyExpr_]~Y~Module[{
 	MyExpr=InputMyExpr,
 	DensitiesToTensorsRules},
 
@@ -28,7 +28,7 @@ DensitiesToTensors[InputMyExpr_]:=Module[{
 	MyExpr//=ScreenDollarIndices;
 MyExpr];
 
-TensorsToDensities[InputMyExpr_]:=Module[{
+TensorsToDensities[InputMyExpr_]~Y~Module[{
 	MyExpr=InputMyExpr,
 	TensorsToDensitiesRules},
 

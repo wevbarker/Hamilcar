@@ -105,6 +105,10 @@ $RegisteredMomenta={};
 $RegisteredTensorMomenta={};
 $FromInert={};
 $ToInert={};
+(* Debugging infrastructure variables *)
+$CallStack=Null;
+$CallStackTraceFileName="hamilcar-call-stack-trace.txt";
+$NumberOfCriticalPoints=50;
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};

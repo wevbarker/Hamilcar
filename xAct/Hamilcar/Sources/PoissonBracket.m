@@ -9,7 +9,7 @@ IncludeHeader@"MultiCD";
 IncludeHeader@"ToDensities";
 IncludeHeader@"CacheContexts";
 
-PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
+PoissonBracket[InputOperatorOne_,InputOperatorTwo_]~Y~Module[{
 	ProgressMatrix,
 	ProgressOngoing,
 	SubExpr,
@@ -21,7 +21,14 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	OperatorOne=InputOperatorOne,
 	OperatorTwo=InputOperatorTwo,
 	OperatorOneInert,
-	OperatorTwoInert},
+	OperatorTwoInert,
+	CallStack},
+	
+	If[!xAct`Hamilcar`Private`$CLI,
+		CallStack=PrintTemporary@Dynamic@Refresh[
+			GUICallStack@$CallStack,
+			TrackedSymbols->{$CallStack}];
+	];
 	
 	SmearingOne="SmearingOne"<>(ResourceFunction@"RandomString")@5;
 	SmearingOne//=(#~DefSmearingOneTensor~OperatorOne)&;
@@ -79,6 +86,6 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]:=Module[{
 	];
 
 	Expr+=GExpr;
-
 	Expr//=Recanonicalise;
+
 Expr];

@@ -6,10 +6,17 @@ IncludeHeader@"ToHigherDerivativeCanonical";
 IncludeHeader@"CollectConstraints";
 IncludeHeader@"AugmentWithBoundary";
 
-FindAlgebra[InputBracket_,InputBracketAnsatz_,ConstraintsList_]:=Module[{
+FindAlgebra[InputBracket_,InputBracketAnsatz_,ConstraintsList_]~Y~Module[{
 	BracketAnsatz=InputBracketAnsatz,	
 	BracketAnsatzParameters,
-	ParameterSolution=0},
+	ParameterSolution=0,
+	CallStack},
+
+	If[!xAct`Hamilcar`Private`$CLI,
+		CallStack=PrintTemporary@Dynamic@Refresh[
+			GUICallStack@$CallStack,
+			TrackedSymbols->{$CallStack}];
+	];
 
 	BracketAnsatz//=(IndexFree/@#)&;
 	BracketAnsatz//=(MakeContractionAnsatz[#1,

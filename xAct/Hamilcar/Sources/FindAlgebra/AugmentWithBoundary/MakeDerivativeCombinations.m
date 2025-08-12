@@ -2,7 +2,7 @@
 (*  MakeDerivativeCombinations  *)
 (*==============================*)
 
-MakeDerivativeCombinations[InputExpr_]:=Module[{
+MakeDerivativeCombinations[InputExpr_]~Y~Module[{
 	Expr=InputExpr,
 	ReciprocalValue,
 	ReciprocalRule,

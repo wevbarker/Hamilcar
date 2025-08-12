@@ -44,7 +44,7 @@ Unprotect@AutomaticRules;
 Options[AutomaticRules]={Verbose->False};
 Protect@AutomaticRules;
 
-CompareExpressions[InputExpr1_,InputExpr2_]:=Module[{
+CompareExpressions[InputExpr1_,InputExpr2_]~Y~Module[{
 	Expr,Expr1=InputExpr1,Expr2=InputExpr2},
 	Comment@"Comparing...";
 	Expr=Expr1-Expr2;
@@ -58,7 +58,7 @@ CompareExpressions[InputExpr1_,InputExpr2_]:=Module[{
 Expr];
 
 DisplayRule~SetAttributes~HoldAll;
-DisplayRule[InputExpr_,InputRule_]:=Module[{Expr=Evaluate@InputExpr,EqnLabelValue=ToString@Defer@InputRule},
+DisplayRule[InputExpr_,InputRule_]~Y~Module[{Expr=Evaluate@InputExpr,EqnLabelValue=ToString@Defer@InputRule},
 	EqnLabelValue//=StringDelete[#,"Defer["]&;
 	EqnLabelValue//=StringDelete[#,"]"]&;
 	Expr=Expr/.Evaluate@InputRule;
@@ -71,7 +71,7 @@ DisplayRule[InputExpr_,InputRule_]:=Module[{Expr=Evaluate@InputExpr,EqnLabelValu
 	DisplayExpression[(InputExpr->Expr),EqnLabel->EqnLabelValue];
 Expr];
 
-DisplayedPoissonBracket[LeftOperand_,RightOperand_]:=Module[{Expr},
+DisplayedPoissonBracket[LeftOperand_,RightOperand_]~Y~Module[{Expr},
 	Expr={LeftOperand,RightOperand};
 	Expr//DisplayExpression;
 	Expr//=(TotalFrom/@#)&;

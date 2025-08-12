@@ -2,7 +2,7 @@
 (*  CacheContexts  *)
 (*=================*)
 
-CacheContexts[]:=Module[{NewContextList={
+CacheContexts[]~Y~Module[{NewContextList={
 	"xAct`Hamilcar`",
 	"xAct`Hamilcar`Private`",
 	"xAct`xTensor`",
@@ -36,7 +36,7 @@ CacheContexts[]:=Module[{NewContextList={
 ];
 
 (* Function to check if contexts are cached *)
-ContextsCachedQ[] := Module[{TestResult},
+ContextsCachedQ[] ~Y~ Module[{TestResult},
 	(* Check if kernels exist *)
 	If[Length[Kernels[]] == 0, Return[False]];
 	
