@@ -4,12 +4,12 @@
 
 IncludeHeader@"DefSmearingTensor";
 IncludeHeader@"Recanonicalise";
-IncludeHeader@"SemiD";
-IncludeHeader@"MultiCD";
 IncludeHeader@"ToDensities";
 IncludeHeader@"CacheContexts";
 
-PoissonBracket[InputOperatorOne_,InputOperatorTwo_]~Y~Module[{
+Options@PoissonBracket={Parallel->True};
+
+PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 	ProgressMatrix,
 	ProgressOngoing,
 	SubExpr,
@@ -22,7 +22,8 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]~Y~Module[{
 	OperatorTwo=InputOperatorTwo,
 	OperatorOneInert,
 	OperatorTwoInert,
-	CallStack},
+	CallStack,
+	ParallelValue=OptionValue@Parallel},
 	
 	If[!xAct`Hamilcar`Private`$CLI,
 		CallStack=PrintTemporary@Dynamic@Refresh[
@@ -46,8 +47,8 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_]~Y~Module[{
 	OperatorTwo//=ReplaceDummies;	
 	OperatorTwo//=TotalFrom;
 	
-	(* Cache contexts to parallel kernels if not already done *)
-	If[!ContextsCachedQ[],
+	(* Cache contexts to parallel kernels if Parallel->True and not already done *)
+	If[ParallelValue && !ContextsCachedQ[],
 		CacheContexts[];
 	];
 
