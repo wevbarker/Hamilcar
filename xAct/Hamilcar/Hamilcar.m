@@ -71,6 +71,8 @@ Print[xAct`xCore`Private`bars]];
 DefCanonicalField::usage="DefCanonicalField";
 PoissonBracket::usage="PoissonBracket";
 FindAlgebra::usage="FindAlgebra";
+Verify::usage="Verify";
+Constraints::usage="Constraints";
 TotalFrom::usage="TotalFrom";
 TotalTo::usage="TotalTo";
 PrependTotalFrom::usage="PrependTotalFrom";

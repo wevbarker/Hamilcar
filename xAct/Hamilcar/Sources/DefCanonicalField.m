@@ -44,4 +44,8 @@ DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]~Y~Module[{
 		TensorMomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->TensorMomentumSymbolValue,Dagger->DaggerValue];
 	DefInert@MomentumName;	
 	RegisterPair[FieldName,MomentumName,TensorMomentumName];
+	If[!xAct`Hamilcar`Private`$CLI,
+		FinishDynamic[];
+		NotebookDelete@CallStack;
+	];
 ];

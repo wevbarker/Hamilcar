@@ -24,17 +24,17 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 			TrackedSymbols->{$CallStack}];
 	];
 	
-	SmearingOne="SmearingOne"<>(ResourceFunction@"RandomString")@5;
-	SmearingOne//=(#~DefSmearingOneTensor~OperatorOne)&;
 	If[!$ManualSmearing,
+		SmearingOne="SmearingOne"<>(ResourceFunction@"RandomString")@5;
+		SmearingOne//=(#~DefSmearingOneTensor~OperatorOne)&;
 		OperatorOne*=SmearingOne;
 	];
 	OperatorOne//=ReplaceDummies;
 	OperatorOne//=TotalFrom;
 
-	SmearingTwo="SmearingTwo"<>(ResourceFunction@"RandomString")@5;
-	SmearingTwo//=(#~DefSmearingTwoTensor~OperatorTwo)&;
 	If[!$ManualSmearing,
+		SmearingTwo="SmearingTwo"<>(ResourceFunction@"RandomString")@5;
+		SmearingTwo//=(#~DefSmearingTwoTensor~OperatorTwo)&;
 		OperatorTwo*=SmearingTwo;
 	];
 	OperatorTwo//=ReplaceDummies;	
@@ -68,5 +68,9 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 			Expr=Total[LeibnizArray~Flatten~1];
 		];
 	];
-
+	Expr//=Recanonicalise;
+	If[!xAct`Hamilcar`Private`$CLI,
+		FinishDynamic[];
+		NotebookDelete@CallStack;
+	];
 Expr];

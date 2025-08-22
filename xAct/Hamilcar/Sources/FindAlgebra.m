@@ -2,15 +2,21 @@
 (*  FindAlgebra  *)
 (*===============*)
 
-IncludeHeader@"ToHigherDerivativeCanonical";
 IncludeHeader@"CollectConstraints";
-IncludeHeader@"AugmentWithBoundary";
+IncludeHeader@"NewUtils";
+(*IncludeHeader@"ToHigherToSymmetrizedCanonical";*)
 
-FindAlgebra[InputBracket_,InputBracketAnsatz_,ConstraintsList_]~Y~Module[{
-	BracketAnsatz=InputBracketAnsatz,	
-	BracketAnsatzParameters,
-	ParameterSolution=0,
-	CallStack},
+Options@FindAlgebra={Method->Solve,Constraints->{},Verify->False};
+FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
+	CallStack,
+	BulkBracket=InputBulkBracket,
+	SchematicAnsatz=InputSchematicAnsatz,	
+	BulkAnsatz,
+	OutputBulkBracket,
+	BoundaryAnsatz,
+	BulkAnsatzParameters,
+	BoundaryAnsatzParameters,
+	ParameterSolution=0},
 
 	If[!xAct`Hamilcar`Private`$CLI,
 		CallStack=PrintTemporary@Dynamic@Refresh[
@@ -18,32 +24,58 @@ FindAlgebra[InputBracket_,InputBracketAnsatz_,ConstraintsList_]~Y~Module[{
 			TrackedSymbols->{$CallStack}];
 	];
 
-	BracketAnsatz//=(IndexFree/@#)&;
-	BracketAnsatz//=(MakeContractionAnsatz[#1,
-		ConstantPrefix->#2]&~MapThread~{#,
-		(ToString/@Alphabet[])~Take~(Length@#)})&;
-	BracketAnsatz//=(ToHigherDerivativeCanonical/@#)&;
-	BracketAnsatz//=Total;
-	BracketAnsatz//=ToHigherDerivativeCanonical;
+	Block[{DetG},
+		DetG[]:=1;
+		BulkAnsatz=SchematicAnsatz;
+		BulkAnsatz//=MakePermutedBulk;
+		BulkAnsatz//=MakeSchematicBulk;
+		BulkAnsatz//=MakeBulkAnsatz;
+		OutputBulkBracket=BulkAnsatz;
+		Print@OutputBulkBracket;
+		BulkAnsatzParameters=BulkAnsatz;
+		BulkAnsatzParameters//=ExtractParameters;
+		BulkAnsatz//=TotalFrom;
+		BoundaryAnsatz=BulkAnsatz;
+		BoundaryAnsatz//=(#/.{RicciScalarCD->Zero})&;
+		BoundaryAnsatz//=RecoverSchematicAnsatz;
+		BoundaryAnsatz//=CurvatureReduction;
+		BoundaryAnsatz//=MakeSchematicBoundaryCurrent;
+		BoundaryAnsatz//=BoundaryCurrentToBoundary;
+		Print@BoundaryAnsatz;
+		BoundaryAnsatzParameters=BoundaryAnsatz;
+		BoundaryAnsatzParameters//=ExtractParameters;
+		BulkBracket//=TotalFrom;
+		BulkBracket//=CleanInputBracket;
+		ParameterSolution+=BulkBracket;
+		ParameterSolution-=BulkAnsatz;
+		ParameterSolution-=BoundaryAnsatz;
+		ParameterSolution//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
+		(*Block[{RicciCD,RicciScalarCD},
+			ParameterSolution//=(#/.{RicciCD->Zero,RicciScalarCD->Zero})&;
+			ParameterSolution//=CollectTensors[#,
+				CollectMethod->ToExpandedCanonical]&;
+			ParameterSolution//=(#/.{RicciCD->Zero,RicciScalarCD->Zero})&;
+			ParameterSolution//=CollectTensors[#,
+				CollectMethod->ToExpandedCanonical]&;
+		];*)
+		ParameterSolution//=ObtainSolution[#,
+			BulkAnsatzParameters,BoundaryAnsatzParameters,
+			Method->OptionValue@Method]&;
 
-	BracketAnsatzParameters=BracketAnsatz;
-	BracketAnsatzParameters//=Variables;
-	BracketAnsatzParameters//=Cases[#,_?ConstantSymbolQ]&;
-	BracketAnsatzParameters//=DeleteDuplicates;
-	BracketAnsatzParameters//=Sort;
+		BulkBracket=InputBulkBracket;
+		BulkBracket//=TotalFrom;
+	];
+	OutputBulkBracket//=(#/.ParameterSolution)&;
+	OutputBulkBracket//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
+	BulkAnsatz//=(#/.ParameterSolution)&;
+	BulkAnsatz//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
+	(*BracketAnsatz//=(#~CollectConstraints~ConstraintsList)&;*)
+	If[OptionValue@Verify,
+		BulkBracket~VerifyResult~BulkAnsatz;
+	];
 
-	ParameterSolution+=BracketAnsatz;
-	ParameterSolution-=InputBracket;
-	ParameterSolution//=TotalFrom;
-	ParameterSolution//=AugmentWithBoundary;
-	ParameterSolution//=ToHigherDerivativeCanonical;
-
-	ParameterSolution//=ToConstantSymbolEquations[#==0]&;
-	ParameterSolution//=Solve;
-	ParameterSolution//=First;
-
-	BracketAnsatz//=(#/.ParameterSolution)&;
-	BracketAnsatz//=(#/.((#->0)&/@BracketAnsatzParameters))&;
-	BracketAnsatz//=ToHigherDerivativeCanonical;
-	BracketAnsatz//=(#~CollectConstraints~ConstraintsList)&;
-{BracketAnsatz,ParameterSolution}];
+	If[!xAct`Hamilcar`Private`$CLI,
+		FinishDynamic[];
+		NotebookDelete@CallStack;
+	];
+OutputBulkBracket];
