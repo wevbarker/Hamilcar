@@ -2,7 +2,7 @@
 (*  CacheContexts  *)
 (*=================*)
 
-CacheContexts[]~Y~Module[{NewContextList={
+CacheContexts[]:=Module[{NewContextList={
 	"Global`",
 	"xAct`Hamilcar`",
 	"xAct`Hamilcar`Private`",

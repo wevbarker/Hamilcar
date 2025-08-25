@@ -2,7 +2,7 @@
 (*  DefCanonicalField  *)
 (*=====================*)
 
-IncludeHeader@"DefInert";
+IncludeHeader@"DefPower";
 IncludeHeader@"RegisterPair";
 
 $DefInfoQ=False;
@@ -36,13 +36,13 @@ DefCanonicalField[FieldName_[Inds___],SymmExpr_,OptionsPattern[]]~Y~Module[{
 	
 	DefTimeTensor[
 		FieldName@Inds,M3,SymmExpr,PrintAs->FieldSymbolValue,Dagger->DaggerValue];	
-	DefInert@FieldName;	
+	DefPower[FieldName,QuantitySymbol->OptionValue@FieldSymbol];
 	NewSymmExpr=SymmExpr/.{SomeIndex_?TangentM3`Q->-SomeIndex};
 	DefTimeTensor[
 		MomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->MomentumSymbolValue,Dagger->DaggerValue];
 	DefTensor[
 		TensorMomentumName@@({Inds}/.{SomeIndex_?TangentM3`Q->-SomeIndex}),M3,NewSymmExpr,PrintAs->TensorMomentumSymbolValue,Dagger->DaggerValue];
-	DefInert@MomentumName;	
+	DefPower[MomentumName,QuantitySymbol->MomentumSymbolValue];
 	RegisterPair[FieldName,MomentumName,TensorMomentumName];
 	If[!xAct`Hamilcar`Private`$CLI,
 		FinishDynamic[];

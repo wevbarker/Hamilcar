@@ -10,6 +10,7 @@ ConjugateTerm[InputExpr_,Constraint_[ConstInds___]]~Y~Module[{Expr=InputExpr},
 	Expr//=ToCanonical;
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;
+	Expr//=FullSimplify;
 	Constraint[ConstInds]*Expr];
 
 CollectConstraints[InputExpr_,ConstraintsList_]~Y~Module[

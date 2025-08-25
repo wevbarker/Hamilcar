@@ -102,7 +102,9 @@ $ManualSmearing=False;
 
 Begin["xAct`Hamilcar`Private`"];
 $MaxDerOrd=5;
+$MaxPowerNumber=3;
 $RegisteredFields={};
+$RegisteredPowers=<||>;
 $RegisteredMomenta={};
 $RegisteredTensorMomenta={};
 $FromInert={};

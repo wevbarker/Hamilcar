@@ -48,6 +48,13 @@ DefTimeTensor[ConjugateMomentumG[a,b],M3,
 	Symmetric[{a,b}],PrintAs->"\[Pi]"];
 DefTensor[TensorConjugateMomentumG[a,b],M3,
 	Symmetric[{a,b}],PrintAs->"\[GothicCapitalT]\[Pi]"];
+
+(*Define the powers of these canonical fields*)
+xAct`Hamilcar`Private`DefPower[G,
+	xAct`Hamilcar`Private`QuantitySymbol->"\[ScriptH]"];
+xAct`Hamilcar`Private`DefPower[ConjugateMomentumG,
+	xAct`Hamilcar`Private`QuantitySymbol->"\[Pi]"];
+
 (*Define the time coordinate orthogonal to the foliation*)
 DefConstantSymbol[Time,PrintAs->"\[ScriptT]"];
 (*Define the time-dependent metric*)

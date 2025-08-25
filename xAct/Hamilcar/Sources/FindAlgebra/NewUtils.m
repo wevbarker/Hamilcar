@@ -175,13 +175,6 @@ MinimiseExpr[InputExpr_,InputBulkAnsatzParameters_]~Y~Module[{Expr=InputExpr},
 	Expr//=(#~Join~(InputExpr/.#))&;
 Expr];
 
-FindAlgebra::NoSolution="No solution could be found. Try a different schematic ansatz or a different \"Method\".";
-SolveWithSolve[InputExpr_,InputAnsatzParameters_]~Y~Module[{Expr=InputExpr},
-	Expr//=(#~Reduce~InputAnsatzParameters)&;
-	Expr//=(#~Solve~InputAnsatzParameters)&;
-	(Expr//=First)~Check~(Throw@Message@FindAlgebra::NoSolution);
-Expr];
-
 ListRescaledVariables[InputExpr_,
 		InputRescalingRules_,
 		InputBulkAnsatzParameters_,
@@ -240,12 +233,11 @@ ImposeRescaling[InputExpr_,
 	Expr/=TotalFactor;
 	Expr//=(#==0)&;
 	Expr//=Simplify;
-	(*Expr//Print;*)
 Expr];
 
-SolveWithLinearSolve[InputExpr_,
-	InputBulkAnsatzParameters_,
-	InputBoundaryAnsatzParameters_]~Y~Module[{Expr=InputExpr,
+RescaleFullSystem[InputExpr_,
+		InputBulkAnsatzParameters_,
+		InputBoundaryAnsatzParameters_]~Y~Module[{Expr=InputExpr,
 		RescalingRules,OldRescalingRules,$KeepRescaling},
 	Expr//=(#/.{And->List})&;
 	Expr//=Sort;
@@ -263,11 +255,22 @@ SolveWithLinearSolve[InputExpr_,
 			$KeepRescaling=False,
 			$KeepRescaling=True];
 	];
-	(*RescalingRules//Print;*)
 	Expr//=(ImposeRescaling[#,
 		RescalingRules,
 		InputBulkAnsatzParameters,
 		InputBoundaryAnsatzParameters]&/@#)&;
+Expr];
+
+FindAlgebra::NoSolution="No solution could be found. Try a different schematic ansatz or a different \"Method\".";
+SolveWithSolve[InputExpr_,InputAnsatzParameters_]~Y~Module[{Expr=InputExpr},
+	(*Expr//=(#~Reduce~InputAnsatzParameters)&;*)
+	Expr//=Quiet[(#~Solve~InputAnsatzParameters)]&;
+	(Expr//=First)~Check~(Throw@Message@FindAlgebra::NoSolution);
+Expr];
+
+SolveWithLinearSolve[InputExpr_,
+	InputBulkAnsatzParameters_,
+	InputBoundaryAnsatzParameters_]~Y~Module[{Expr=InputExpr},
 	Expr//=(#~CoefficientArrays~(InputBulkAnsatzParameters~Join~InputBoundaryAnsatzParameters))&;
 	Expr//=Normal;
 	(Expr//=((Last@#)~LinearSolve~(First@#))&)~Check~(Throw@Message@FindAlgebra::NoSolution);
@@ -283,6 +286,9 @@ ObtainSolution[InputExpr_,
 	BulkAnsatzParameters=InputBulkAnsatzParameters,
 	BoundaryAnsatzParameters=InputBoundaryAnsatzParameters},
 	Expr//=ToConstantSymbolEquations[#==0]&;
+	Expr//=RescaleFullSystem[#,
+			InputBulkAnsatzParameters,
+			InputBoundaryAnsatzParameters]&;
 	Switch[OptionValue@Method,
 		Solve,
 		Expr//=(#~SolveWithSolve~(BulkAnsatzParameters~Join~BoundaryAnsatzParameters))&,
@@ -376,3 +382,217 @@ RecoverSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=DeleteDuplicates;
 	Expr//=Sort;
 Expr];
+
+MakeBasicSchematic[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=FactorList;
+	Expr//=(Power@@#&/@#)&;
+	Expr//=DeleteCases[#,_?NumericQ]&;
+	Expr//=DeleteCases[#,_?ConstantCoefficientQ]&;
+	(*May be necessary to stiffen this up for other constant coefficients*)
+	Expr//=Times@@#&;
+	Expr//=ToIndexFree;
+	Expr//=(#/.{IndexFree->Identity})&;
+Expr];
+
+RecoverBasicSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=Expand;
+	Expr//=(If[Head@#===Plus,List@@#,List@#])&;
+	Expr//=(MakeBasicSchematic/@#)&;
+	Expr//=DeleteDuplicates;
+	Expr//=Sort;
+Expr];
+
+MakeBasicDDIs[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=(IndexFree/@#)&;
+	CacheContexts[];
+	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(ConstructDDIs[#]))&,#]&;
+	Expr//=MonitorParallel;	
+	Expr//=Flatten;
+	Expr//=DeleteDuplicates;
+	Expr//=Sort;
+	Expr//=MakeAnsatz[#,ConstantPrefix->"K"]&;
+Expr];
+
+NumFreeIndices[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=IndexFree;
+	Expr//=FromIndexFree;
+	Expr//=(List@@#)&;
+	Expr//=Length;
+Expr];
+
+MakeReduction[InputList_,TargetVariable_]~Y~Module[{
+		Expr=InputList,
+		VarNumber,
+		IndNumber,
+		MaxIndNumber},
+
+	VarNumber=Expr[[1]]~Count~TargetVariable;
+	IndNumber=TargetVariable;
+	IndNumber//=NumFreeIndices;
+	If[VarNumber>=1,
+		VarNumber+=1;
+		VarNumber//=(#~Min~$MaxPowerNumber)&;
+		Expr//=Table[
+			MaxIndNumber=#;
+			MaxIndNumber[[1]]//=(#~DeleteCases~
+				TargetVariable)&;
+			MaxIndNumber[[2]]//=(#~DeleteCases~
+				TargetVariable)&;
+			MaxIndNumber[[1]]//=(NumFreeIndices/@#)&;
+			MaxIndNumber[[2]]//=(NumFreeIndices/@#)&;
+			MaxIndNumber~AppendTo~(Length@MaxIndNumber[[2]]);
+			MaxIndNumber//=Flatten;
+			MaxIndNumber//=Total;
+			MaxIndNumber+=1;
+			MaxIndNumber+=IndNumber*FreeNumber;
+			Table[
+				Module[{ReducedExpr=#,MultiTensor},
+					ReducedExpr[[1]]//=(#~DeleteCases~
+						TargetVariable)&;
+					ReducedExpr[[1]]~AppendTo~
+						(TargetVariable~ConstantArray~
+							FreeNumber);
+					ReducedExpr[[1]]//=Flatten;
+					MultiTensor=ToExpression@(ToString@TargetVariable<>
+							ToString@(VarNumber-
+								FreeNumber)<>
+							ToString@ReducedIndNumber);	
+					$RequiredMultiTensors~AppendTo~MultiTensor;
+					ReducedExpr[[2]]//=(#/.{TargetVariable->
+						MultiTensor})&;	
+					ReducedExpr[[2]]//=(CD/@#)&;
+					ReducedExpr//=Flatten;
+					ReducedExpr//=Sort;
+					ReducedExpr//=(Times@@#)&;
+					ReducedExpr//=IndexFree;
+				ReducedExpr]
+			,
+				{ReducedIndNumber,MaxIndNumber~Min~
+					(IndNumber*(VarNumber-FreeNumber)),0,-2}
+			]
+		,
+			{FreeNumber,0,VarNumber-2}
+		]&;
+		Expr//Return;
+	];
+];
+
+ProcessTerm[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=(#/.{Times->List})&;
+	Derivs=Select[Expr,Head@#===CD&];
+	Expr//=DeleteCases[#,_?((Head@#===CD)&)]&;
+	Expr//={#,Derivs}&;
+	If[Length@Last@Expr>0,
+		Expr[[1]]//=(#/.{Power->ConstantArray})&;
+		Expr[[1]]//=Flatten;
+		Expr[[1]]//=Sort;
+		Expr[[2]]//=(#/.{CD->Identity})&;
+		Expr[[2]]//=Sort;
+		Expr=(Expr~MakeReduction~#)&/@Expr[[2]];
+		Expr//Return;
+	];
+];
+
+ExtractPowerGradients[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=(#~Cases~(_?((Head@#===Times)&)))&;
+	$RequiredMultiTensors={};
+	Expr//=(ProcessTerm/@#)&;
+	$RequiredMultiTensors//=DeleteDuplicates;
+	$RequiredMultiTensors//=Sort;
+	Expr//=(#~Flatten~3)&;
+	Expr//=(#~DeleteCases~Null)&;
+Expr];
+
+DevelopAllScalars[InputExpr_]~Y~Module[{Expr=InputExpr},
+	CacheContexts[];
+	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(AllContractions[#]))&,#]&;
+	Expr//=MonitorParallel;
+Expr];
+
+DevelopDDIs[InputExpr_]:=Module[{Expr=InputExpr,
+	OriginalHead,PowerNumber,IndNumber,IndExample},
+	{OriginalHead,PowerNumber,IndNumber}=$RegisteredPowers@Expr;
+	Expr=OriginalHead^PowerNumber;
+	Expr//=IndexFree;
+	IndExample=Alphabet[];
+	IndExample//=(ToExpression/@#)&;
+	IndExample//=(#~Take~(-IndNumber))&;
+	IndExample//=(IndexList@@#)&;
+	Expr//=(#~ConstructDDIs~IndExample)&;
+	Expr//=ContractMetric;
+	Expr//=ToCanonical;
+	Expr//=ScreenDollarIndices;
+Expr];
+
+DevelopAllDDIs[InputExpr_]~Y~Module[{Expr=InputExpr},
+	CacheContexts[];
+	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(xAct`Hamilcar`Private`DevelopDDIs[#]))&,#]&;
+	Expr//=MonitorParallel;
+	Expr//=(#/.{{}->{0}})&;
+Expr];
+
+DDIsToMultiTensorRules[InputTensorPower_,InputExpr_]:=Module[{
+	TensorPower=InputExpr,
+	Expr=InputExpr},
+	TensorPower//=FindFreeIndices;
+	If[TensorPower===IndexList@AnyIndices,
+		TensorPower=FromIndexFree@IndexFree@InputTensorPower;
+	,
+		TensorPower//=(InputTensorPower@@#)&;
+	];
+	Expr//=MakeRule[{Evaluate@TensorPower,
+		Evaluate@#},MetricOn->All,ContractMetrics->True]&;	
+Expr];
+
+AllDDIsToMultiTensorRules[InputExpr_]~Y~Module[{Expr=InputExpr,
+	AllRules},
+	CacheContexts[];
+	Expr//=MapThread[
+		MapThread[
+			(xAct`Hamilcar`Private`NewParallelSubmit@(xAct`Hamilcar`Private`DDIsToMultiTensorRules[#1,#2]))&,
+			{#1,#2}]&,
+		{MapThread[(#1~ConstantArray~(Length@#2))&,
+			{$RequiredMultiTensors,#}],#}]&;
+	Expr//=MonitorParallel;
+	AllRules=<||>;
+	MapThread[(AllRules@#1=#2)&,{$RequiredMultiTensors,Expr}];
+AllRules];
+
+WhichTensorPower[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=First;
+	Expr//=Variables;
+	Block[{CD},
+		CD[AnyInd___]@AnyVar_:=AnyVar;
+		Expr//=(Head/@#)&;
+	];
+	Expr//=(#~Intersection~$RequiredMultiTensors)&;
+	Expr//=First;
+Expr];
+
+EnforceRule[InputExpr_,InputRule_]:=Module[{Expr=InputExpr},
+	Expr//=(#/.InputRule)&;
+	Expr//=ContractMetric;
+	Expr//=ToCanonical;
+	Expr//=ScreenDollarIndices;
+Expr];
+
+OuterRules[InputExpr_,InputRules_]~Y~Module[{FullAnsatz,
+	AllRules=InputExpr},
+	AllRules//=(WhichTensorPower/@#)&;
+	AllRules//=(InputRules/@#)&;
+	CacheContexts[];
+	FullAnsatz=MapThread[
+		Outer[
+			(xAct`Hamilcar`Private`NewParallelSubmit@(xAct`Hamilcar`Private`EnforceRule[#1,#2]))&,
+			#1,#2,1
+		]&
+	,
+		{InputExpr,AllRules}
+	];
+	FullAnsatz//=MonitorParallel;
+	FullAnsatz//=Flatten;
+	FullAnsatz//=DeleteDuplicates;
+	FullAnsatz//=(#~DeleteCases~0)&;
+	FullAnsatz//=Sort;
+	FullAnsatz//=MakeAnsatz[#,ConstantPrefix->"J"]&;
+FullAnsatz];
