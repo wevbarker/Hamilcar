@@ -6,7 +6,7 @@ IncludeHeader@"CollectConstraints";
 IncludeHeader@"NewUtils";
 (*IncludeHeader@"ToHigherToSymmetrizedCanonical";*)
 
-Options@FindAlgebra={Method->Solve,Constraints->{},Verify->False};
+Options@FindAlgebra={Method->Solve,Constraints->{},Verify->False,DDIs->False};
 FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
 	CallStack,
 	BulkBracket=InputBulkBracket,
@@ -39,26 +39,34 @@ FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
 		BulkAnsatzParameters=BulkAnsatz;
 		BulkAnsatzParameters//=ExtractParameters;
 		BulkAnsatz//=TotalFrom;
+		If[OptionValue@DDIs,
+			DDIAnsatz=BulkAnsatz;
+			DDIAnsatz//=(#/.{RicciScalarCD->Zero})&;
+			DDIAnsatz//=RecoverBasicSchematicAnsatz;
 
-		DDIAnsatz=BulkAnsatz;
-		DDIAnsatz//=(#/.{RicciScalarCD->Zero})&;
-		DDIAnsatz//=RecoverBasicSchematicAnsatz;
-
-		BasicDDIAnsatz=DDIAnsatz;
-		BasicDDIAnsatz//=MakeBasicDDIs;
-
-		AdvancedDDIAnsatz=DDIAnsatz;
-		AdvancedDDIAnsatz//=ExtractPowerGradients;
-		AdvancedDDIAnsatz//=DevelopAllScalars;
-		MultiTensorRules=$RequiredMultiTensors;
-		MultiTensorRules//=DevelopAllDDIs;
-		MultiTensorRules//=AllDDIsToMultiTensorRules;
-		AdvancedDDIAnsatz//=(#~OuterRules~MultiTensorRules)&;
-
-		DDIAnsatz=BasicDDIAnsatz+AdvancedDDIAnsatz;
-		DDIAnsatz//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
-		DDIAnsatzParameters=DDIAnsatz;
-		DDIAnsatzParameters//=ExtractParameters;
+			BasicDDIAnsatz=DDIAnsatz;
+			BasicDDIAnsatz//=MakeBasicDDIs;
+			If[BasicDDIAnsatz===0,
+				DDIAnsatz=0;
+				DDIAnsatzParameters={};
+			,
+				AdvancedDDIAnsatz=DDIAnsatz;
+				AdvancedDDIAnsatz//=ExtractPowerGradients;
+				If[AdvancedDDIAnsatz==={},
+					DDIAnsatz=BasicDDIAnsatz;
+				,
+					AdvancedDDIAnsatz//=DevelopAllScalars;
+					MultiTensorRules=$RequiredMultiTensors;
+					MultiTensorRules//=DevelopAllDDIs;
+					MultiTensorRules//=AllDDIsToMultiTensorRules;
+					AdvancedDDIAnsatz//=(#~OuterRules~MultiTensorRules)&;
+					DDIAnsatz=BasicDDIAnsatz+AdvancedDDIAnsatz;
+				];
+				DDIAnsatz//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
+				DDIAnsatzParameters=DDIAnsatz;
+				DDIAnsatzParameters//=ExtractParameters;
+			];
+		];
 
 		BoundaryAnsatz=BulkAnsatz;
 		BoundaryAnsatz//=(#/.{RicciScalarCD->Zero})&;
@@ -68,14 +76,20 @@ FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
 		BoundaryAnsatz//=BoundaryCurrentToBoundary;
 		BoundaryAnsatzParameters=BoundaryAnsatz;
 		BoundaryAnsatzParameters//=ExtractParameters;
-		BoundaryAnsatzParameters//=(#~Join~DDIAnsatzParameters)&;
+		If[OptionValue@DDIs,
+			BoundaryAnsatzParameters//=(#~Join~DDIAnsatzParameters)&;
+		];
 		BulkBracket//=TotalFrom;
 		BulkBracket//=CleanInputBracket;
 		ParameterSolution+=BulkBracket;
 		ParameterSolution-=BulkAnsatz;
 		ParameterSolution-=BoundaryAnsatz;
-		ParameterSolution-=DDIAnsatz;
+		If[OptionValue@DDIs,
+			ParameterSolution-=DDIAnsatz;
+		];
 		ParameterSolution//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
+		(*ParameterSolution//Print;
+		Quit[];*)
 		ParameterSolution//=ObtainSolution[#,
 			BulkAnsatzParameters,BoundaryAnsatzParameters,
 			Method->OptionValue@Method]&;

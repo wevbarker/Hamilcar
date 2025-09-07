@@ -40,9 +40,12 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 	OperatorTwo//=ReplaceDummies;	
 	OperatorTwo//=TotalFrom;
 	
-	If[ParallelValue && !ContextsCachedQ[],
+	If[ParallelValue,
 		CacheContexts[];
 	];
+	(*If[ParallelValue && !ContextsCachedQ[],
+		CacheContexts[];
+	];*)
 
 	Module[{LeibnizArray,ExpandedOperatorOne,ExpandedOperatorTwo},
 		ExpandedOperatorOne=Expand[OperatorOne];
@@ -50,20 +53,21 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 		
 		ExpandedOperatorTwo=Expand[OperatorTwo];
 		ExpandedOperatorTwo=(If[Head@#===Plus,List@@#,List@#])&@ExpandedOperatorTwo;
-		
+	
 		If[ParallelValue,
 			LeibnizArray=Outer[
 				(xAct`Hamilcar`Private`NewParallelSubmit@(xAct`Hamilcar`Private`MonomialPoissonBracket[#1,#2]))&,
 				ExpandedOperatorOne,ExpandedOperatorTwo,1
 			];
-			LeibnizArray=MonitorParallel[LeibnizArray];,
+			LeibnizArray//=MonitorParallel;
+		,
 			LeibnizArray=Outer[
 				MonomialPoissonBracket[#1,#2]&,
 				ExpandedOperatorOne,ExpandedOperatorTwo,1
 			];
 		];
 		
-		If[LeibnizArray=={{0}},
+		If[LeibnizArray==={{0}},
 			Expr=0,
 			Expr=Total[LeibnizArray~Flatten~1];
 		];

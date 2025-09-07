@@ -44,7 +44,7 @@ Unprotect@AutomaticRules;
 Options[AutomaticRules]={Verbose->False};
 Protect@AutomaticRules;
 
-CompareExpressions[InputExpr1_,InputExpr2_]~Y~Module[{
+CompareExpressions[InputExpr1_,InputExpr2_]:=Module[{
 	Expr,Expr1=InputExpr1,Expr2=InputExpr2},
 	Comment@"Comparing...";
 	Expr=Expr1-Expr2;
@@ -58,7 +58,7 @@ CompareExpressions[InputExpr1_,InputExpr2_]~Y~Module[{
 Expr];
 
 DisplayRule~SetAttributes~HoldAll;
-DisplayRule[InputExpr_,InputRule_]~Y~Module[{Expr=Evaluate@InputExpr,EqnLabelValue=ToString@Defer@InputRule},
+DisplayRule[InputExpr_,InputRule_]:=Module[{Expr=Evaluate@InputExpr,EqnLabelValue=ToString@Defer@InputRule},
 	EqnLabelValue//=StringDelete[#,"Defer["]&;
 	EqnLabelValue//=StringDelete[#,"]"]&;
 	Expr=Expr/.Evaluate@InputRule;
@@ -70,16 +70,6 @@ DisplayRule[InputExpr_,InputRule_]~Y~Module[{Expr=Evaluate@InputExpr,EqnLabelVal
 	Expr//=FullSimplify;
 	DisplayExpression[(InputExpr->Expr),EqnLabel->EqnLabelValue];
 Expr];
-
-DisplayedPoissonBracket[LeftOperand_,RightOperand_]~Y~Module[{Expr},
-	Expr={LeftOperand,RightOperand};
-	Expr//DisplayExpression;
-	Expr//=(TotalFrom/@#)&;
-	Expr//=(PoissonBracket@@#)&;
-	Expr//=TotalTo;
-	Expr//DisplayExpression;
-Expr];
-
 
 Comment@"Verify the canonical Poisson bracket for the metric and its conjugate momentum. Define the trace of the conjugate momentum of the metric.
 
@@ -99,15 +89,22 @@ Comment@"Compute all possible combinations of Poisson brackets between the spati
 
 The fundamental canonical Poisson brackets provide the foundation for all field theory calculations. We systematically compute brackets between the metric \"G\" and conjugate momentum \"ConjugateMomentumG\" with all possible index configurations (raised and lowered indices). This demonstrates the canonical commutation relations that must be satisfied in the ADM formalism and serves as a verification of the canonical structure.";
 
-Perms={};
-Perms//=(#~Join~Permutations@{1,1,1,1})&;
-Perms//=(#~Join~Permutations@{1,1,1,-1})&;
-Perms//=(#~Join~Permutations@{1,1,-1,-1})&;
-Perms//=(#~Join~Permutations@{1,-1,-1,-1})&;
-Perms//=(#~Join~Permutations@{-1,-1,-1,-1})&;
-Indices=MapThread[Times,{{a,b,c,d},#}]&/@Perms;
-AllConfigurations={G[#1,#2],ConjugateMomentumG[#3,#4]}&@@@Indices;
-Module[{Expr,Answ},Expr=#;Answ=PoissonBracket@@#;DisplayExpression[Expr->Answ];]&/@AllConfigurations;
+Code[
+	$ManualSmearing=False;
+	Perms={};
+	Perms//=(#~Join~Permutations@{1,1,1,1})&;
+	Perms//=(#~Join~Permutations@{1,1,1,-1})&;
+	Perms//=(#~Join~Permutations@{1,1,-1,-1})&;
+	Perms//=(#~Join~Permutations@{1,-1,-1,-1})&;
+	Perms//=(#~Join~Permutations@{-1,-1,-1,-1})&;
+	Indices=MapThread[Times,{{a,b,c,d},#}]&/@Perms;
+	AllConfigurations={G[#1,#2],ConjugateMomentumG[#3,#4]}&@@@Indices;
+	Expr=Module[{Expr,Answ},
+		Expr=#;
+		Answ=(PoissonBracket[#1,#2,Parallel->False])&@@#;
+		(Expr->Answ)]&/@AllConfigurations;
+];
+DisplayExpression/@Expr;
 
 Comment@"Define the lapse function and shift vector of the ADM decomposition.
 
@@ -183,8 +180,7 @@ Expr={ScalarSmearingF[]*SuperHamiltonian[],ScalarSmearingS[]*SuperHamiltonian[]}
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
 ];
@@ -192,15 +188,13 @@ DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperHamiltonianPoissonBracket
 
 Comment@{"Use \"FindAlgebra\" to express the bracket result in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum"," and spatial derivatives of the smearing functions."};
 Code[
-Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
-	{SuperMomentum*CD@ScalarSmearingF*ScalarSmearingS,
-	SuperMomentum*ScalarSmearingF*CD@ScalarSmearingS},
-	{SuperHamiltonian[],
-	SuperMomentum[i]}]&;
-{BracketExpr,RulesExpr}=Expr
+	{{{SuperMomentum},{CD,ScalarSmearingF,ScalarSmearingS}}},
+	Constraints->{SuperMomentum[i]},
+	Method->Solve,
+	Verify->True]&;
 ];
-DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianAlgebra"];
+DisplayExpression[Expr,EqnLabel->"SuperHamiltonianAlgebra"];
 
 Comment@"Compute the bracket between the super-Hamiltonian and super-momentum using scalar and contravariant vector smearing.";
 Code[
@@ -208,14 +202,14 @@ Expr={ScalarSmearingF[]*SuperHamiltonian[],VectorSmearingContravariantS[i]*Super
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperMomentumPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-Hamiltonian constraint defined in",Cref@"FromSuperHamiltonian","."};
+(*
 Code[
 Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
@@ -225,7 +219,16 @@ Expr//=FindAlgebra[#,
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
 ];
-DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianMomentumAlgebra"];
+	*)
+Code[
+Expr//=FindAlgebra[#,
+	{{{SuperHamiltonian},{CD,ScalarSmearingF,VectorSmearingContravariantS}},
+	{{CD,ScalarSmearingF},{CD,CD,VectorSmearingContravariantS}}},
+	Constraints->{SuperHamiltonian[]},
+	Method->Solve,
+	Verify->True]&;
+];
+DisplayExpression[Expr,EqnLabel->"SuperHamiltonianMomentumAlgebra"];
 
 Comment@"Compute the auto-commutator of the super-momentum using contravariant vector smearing.";
 Code[
@@ -233,8 +236,7 @@ Expr={VectorSmearingContravariantF[i]*SuperMomentum[-i],VectorSmearingContravari
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
 ];
@@ -242,15 +244,13 @@ DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum","."};
 Code[
-Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
-	{SuperMomentum*CD@VectorSmearingContravariantF*VectorSmearingContravariantS,
-	SuperMomentum*VectorSmearingContravariantF*CD@VectorSmearingContravariantS},
-	{SuperHamiltonian[],
-	SuperMomentum[i]}]&;
-{BracketExpr,RulesExpr}=Expr
+	{{{SuperMomentum},{CD,VectorSmearingContravariantF,VectorSmearingContravariantS}}},
+	Constraints->{SuperMomentum[i]},
+	Method->Solve,
+	Verify->True]&;
 ];
-DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraContravariant"];
+DisplayExpression[Expr,EqnLabel->"SuperMomentumAlgebraContravariant"];
 
 Comment@{"Compute the auto-commutator of the super-momentum using covariant vector smearing for comparison with",Cref@"SuperMomentumAlgebraContravariant","."};
 Code[
@@ -258,8 +258,7 @@ Expr={VectorSmearingCovariantF[-i]*SuperMomentum[i],VectorSmearingCovariantS[-j]
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
 ];
@@ -267,15 +266,14 @@ DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumCovariantPoissonBrac
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint with covariant smearing, comparing to",Cref@"SuperMomentumAlgebraContravariant","."};
 Code[
-Expr//=TotalFrom;
 Expr//=FindAlgebra[#,
-	{SuperMomentum*CD@VectorSmearingCovariantF*VectorSmearingCovariantS,
-	SuperMomentum*VectorSmearingCovariantF*CD@VectorSmearingCovariantS},
-	{SuperHamiltonian[],
-	SuperMomentum[i]}]&;
-{BracketExpr,RulesExpr}=Expr
+	{{{SuperMomentum},{CD,VectorSmearingCovariantF,VectorSmearingCovariantS}}},
+	Constraints->{SuperMomentum[i]},
+	Method->Solve,
+	Verify->True]&;
 ];
-DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraCovariant"];
+DisplayExpression[Expr,EqnLabel->"SuperMomentumAlgebraCovariant"];
+Quit[];
 
 Comment@{"The results in",Cref@{"SuperHamiltonianAlgebra","SuperHamiltonianMomentumAlgebra","SuperMomentumAlgebraContravariant","SuperMomentumAlgebraCovariant"}," constitute the complete Dirac hypersurface deformation algebra of general relativity, showing how the constraints generate spacetime diffeomorphisms."};
 
@@ -304,7 +302,7 @@ Expr={VectorPotential[-i],ConjugateMomentumVectorPotential[j]}
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=FullSimplify
 ];
 DisplayExpression[Expr,EqnLabel->"MaxwellCanonicalBracket"];
@@ -375,8 +373,7 @@ Expr={ScalarSmearingF[]*GaussConstraint[],MaxwellTotalHamiltonian[]}
 ];
 DisplayExpression[Expr,EqnLabel->"PrePoissonBracket"];
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=VarD[ScalarSmearingF[],CD];
 Expr//=TotalFrom;
 Expr//=TotalTo;
@@ -392,8 +389,7 @@ Expr={ScalarSmearingF[]*GaussConstraint[],ScalarSmearingS[]*GaussConstraint[]}
 ];
 Expr//DisplayExpression;
 Code[
-Expr//=(TotalFrom/@#)&;
-Expr//=(PoissonBracket@@#)&;
+Expr//=((PoissonBracket[#1,#2,Parallel->True])&@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
 ];

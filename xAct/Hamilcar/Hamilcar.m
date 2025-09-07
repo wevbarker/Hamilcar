@@ -73,6 +73,7 @@ PoissonBracket::usage="PoissonBracket";
 FindAlgebra::usage="FindAlgebra";
 Verify::usage="Verify";
 Constraints::usage="Constraints";
+DDIs::usage="DDIs";
 TotalFrom::usage="TotalFrom";
 TotalTo::usage="TotalTo";
 PrependTotalFrom::usage="PrependTotalFrom";

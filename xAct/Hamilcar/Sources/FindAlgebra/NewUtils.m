@@ -62,21 +62,23 @@ MakeBulkAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 Expr];
 
 MakeBoundaryCurrentAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
-	Expr//=(IndexFree/@#)&;
-	Expr//=(MakeContractionAnsatz[#1,IndexList@a,
-		ConstantPrefix->#2]&~MapThread~{#,
+	Expr//=(#/.{SpecialPair->List})&;
+	Expr//=({IndexFree@First@#,Last@#}&/@#)&;
+	Expr//=((MakeContractionAnsatz[#1,IndexList@a,
+		ConstantPrefix->#3]*#2)&~MapThread~{First/@#,Last/@#,
 		("S"<>ToString@#)&/@(Range@Length@#)})&;
 	Expr//=Total;
 	Expr//=CollectTensors;
 Expr];
 
 MakeSchematicBoundaryCurrent[InputExpr_]~Y~Module[{Expr=InputExpr},
-	Expr//=(Flatten/@#)&;
-	Expr//=(Sort/@#)&;
-	Expr//=(#~Cases~(_?((#~MemberQ~CD)&)))&;
-	Expr//=((#~Delete~(First@Flatten@(#~Position~CD)))&/@#)&;
-	Expr//=(PermuteAnsatz/@#)&;
-	Expr//=((List@@#)&/@#)&;
+	Expr//=({Flatten@First@#,Last@#}&/@#)&;
+	Expr//=({Sort@First@#,Last@#}&/@#)&;
+	Expr//=(#~Cases~(_?(((First@#)~MemberQ~CD)&)))&;
+	Expr//=({((First@#)~Delete~(First@Flatten@((First@#)~Position~CD))),Last@#}&/@#)&;
+	Expr//=({PermuteAnsatz@First@#,Last@#}&/@#)&;
+	Expr//=({(List@@(First@#)),Last@#}&/@#)&;
+	Expr//=(MapThread[SpecialPair[#1,#2]&,{First@#,(Last@#)~ConstantArray~(Length@First@#)}]&/@#)&;
 	Expr//=Flatten;
 	Expr//=DeleteDuplicates;
 	Expr//=Sort;
@@ -129,7 +131,8 @@ BoundaryCurrentToBoundary[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=CollectTensors[#,CollectMethod->ToSymmetrizedCanonical]&;
 Expr];
 
-MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr=InputExpr,ReturnExpr={}},
+MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr,ReturnExpr={}},
+	{Expr,ExprDenominator}=InputExpr;
 	While[
 		ReducibleQ@Expr
 	,
@@ -137,15 +140,15 @@ MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr=InputExpr,ReturnExpr={}},
 		Expr//=(#~Delete~(First@Flatten@(#~Position~CD)))&;
 		Expr~AppendTo~RicciCD;
 		Expr//=Sort;
-		ReturnExpr~AppendTo~Expr;
+		ReturnExpr~AppendTo~{Expr,ExprDenominator};
 	];
 ReturnExpr];
 
-ReducibleQ[InputExpr_]~Y~((InputExpr~Count~CD)>1);
+ReducibleQ[InputExpr_]~Y~(((First@InputExpr)~Count~CD)>1);
 
 CurvatureReduction[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=(#/.{RicciCD->{CD,CD}})&;
-	Expr//=(Flatten/@#)&;
+	Expr//=({Flatten@First@#,Last@#}&/@#)&;
 	Expr//=(#~Cases~(_?ReducibleQ))&;
 	Expr//=(MakeCurvatureReduction/@#)&;
 	Expr//=(#~Flatten~1)&;
@@ -359,8 +362,16 @@ ConstantCoefficientQ[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=(And@@#)&;
 Expr];
 
-MakeSchematic[InputExpr_]~Y~Module[{Expr=InputExpr},
+MakeSchematic[InputExpr_]~Y~Module[{Expr=InputExpr,Denominators},
 	Expr//=FactorList;
+	Denominators=Expr~Cases~(_?PartOfDenominatorQ);
+	If[Denominators==={},
+		Denominators=1;
+	,
+		Denominators//=(Power@@#&/@#)&;
+		Denominators//=Times@@#&;
+	];
+	Expr//=(#~DeleteCases~(_?PartOfDenominatorQ))&;
 	Expr//=(Power@@#&/@#)&;
 	Expr//=DeleteCases[#,_?NumericQ]&;
 	Expr//=DeleteCases[#,_?ConstantCoefficientQ]&;
@@ -373,7 +384,34 @@ MakeSchematic[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=DeleteCases[#,{1}]&;
 	Expr//=Block[{CD,Expr=#},
 		CD[AnyHead_]:={CD,AnyHead};Expr//=Flatten;Expr]&/@#&;
-Expr];
+{Expr,Denominators}];
+
+(*MakeBasicSchematic[InputExpr_]~Y~Module[{Expr=InputExpr,Denominators},
+	Expr//=FactorList;
+	Denominators=Expr~Cases~(_?PartOfDenominatorQ);
+	If[Denominators==={},
+		Denominators=1;
+	,
+		Denominators//=(Power@@#&/@#)&;
+		Denominators//=Times@@#&;
+	];
+	Expr//=(#~DeleteCases~(_?PartOfDenominatorQ))&;
+	Expr//=(Power@@#&/@#)&;
+	Expr//=DeleteCases[#,_?NumericQ]&;
+	Expr//=DeleteCases[#,_?ConstantCoefficientQ]&;
+	(*May be necessary to stiffen this up for other constant coefficients*)
+	Expr//=Times@@#&;
+	Expr//=ToIndexFree;
+	Expr//=(#/.{IndexFree->Identity})&;
+{Expr,Denominators}];
+
+RecoverBasicSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=Expand;
+	Expr//=(If[Head@#===Plus,List@@#,List@#])&;
+	Expr//=(MakeBasicSchematic/@#)&;
+	Expr//=DeleteDuplicates;
+	Expr//=Sort;
+Expr];*)
 
 RecoverSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Expand;
@@ -383,8 +421,21 @@ RecoverSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Sort;
 Expr];
 
-MakeBasicSchematic[InputExpr_]~Y~Module[{Expr=InputExpr},
+PartOfDenominatorQ[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=Last;
+	Expr//=(#<0)&;
+Expr];
+
+MakeBasicSchematic[InputExpr_]~Y~Module[{Expr=InputExpr,Denominators},
 	Expr//=FactorList;
+	Denominators=Expr~Cases~(_?PartOfDenominatorQ);
+	If[Denominators==={},
+		Denominators=1;
+	,
+		Denominators//=(Power@@#&/@#)&;
+		Denominators//=Times@@#&;
+	];
+	Expr//=(#~DeleteCases~(_?PartOfDenominatorQ))&;
 	Expr//=(Power@@#&/@#)&;
 	Expr//=DeleteCases[#,_?NumericQ]&;
 	Expr//=DeleteCases[#,_?ConstantCoefficientQ]&;
@@ -392,7 +443,7 @@ MakeBasicSchematic[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Times@@#&;
 	Expr//=ToIndexFree;
 	Expr//=(#/.{IndexFree->Identity})&;
-Expr];
+{Expr,Denominators}];
 
 RecoverBasicSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Expand;
@@ -402,10 +453,17 @@ RecoverBasicSchematicAnsatz[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Sort;
 Expr];
 
+SplitConstructDDIs[InputExpr_]:=Module[{Expr,ExprDenominator,ExprNumerator},
+	{ExprNumerator,ExprDenominator}=InputExpr;
+	Expr=ExprNumerator;
+	Expr//=IndexFree;
+	Expr//=ConstructDDIs;
+	Expr*=ExprDenominator;
+Expr];
+
 MakeBasicDDIs[InputExpr_]~Y~Module[{Expr=InputExpr},
-	Expr//=(IndexFree/@#)&;
 	CacheContexts[];
-	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(ConstructDDIs[#]))&,#]&;
+	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(SplitConstructDDIs[#]))&,#]&;
 	Expr//=MonitorParallel;	
 	Expr//=Flatten;
 	Expr//=DeleteDuplicates;
@@ -420,7 +478,7 @@ NumFreeIndices[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=Length;
 Expr];
 
-MakeReduction[InputList_,TargetVariable_]~Y~Module[{
+MakeReduction[InputList_,TargetVariable_,ExprDenominator_]~Y~Module[{
 		Expr=InputList,
 		VarNumber,
 		IndNumber,
@@ -465,6 +523,7 @@ MakeReduction[InputList_,TargetVariable_]~Y~Module[{
 					ReducedExpr//=Sort;
 					ReducedExpr//=(Times@@#)&;
 					ReducedExpr//=IndexFree;
+					ReducedExpr//={#,ExprDenominator}&;
 				ReducedExpr]
 			,
 				{ReducedIndNumber,MaxIndNumber~Min~
@@ -477,7 +536,10 @@ MakeReduction[InputList_,TargetVariable_]~Y~Module[{
 	];
 ];
 
-ProcessTerm[InputExpr_]~Y~Module[{Expr=InputExpr},
+ProcessTerm[InputExpr_]~Y~Module[{Expr,ExprDenominator},
+	(**){Expr,ExprDenominator}=InputExpr;(**)
+	(*InputExpr//Print;*)
+	(*Expr=InputExpr;*)
 	Expr//=(#/.{Times->List})&;
 	Derivs=Select[Expr,Head@#===CD&];
 	Expr//=DeleteCases[#,_?((Head@#===CD)&)]&;
@@ -488,14 +550,21 @@ ProcessTerm[InputExpr_]~Y~Module[{Expr=InputExpr},
 		Expr[[1]]//=Sort;
 		Expr[[2]]//=(#/.{CD->Identity})&;
 		Expr[[2]]//=Sort;
-		Expr=(Expr~MakeReduction~#)&/@Expr[[2]];
+		Expr=MakeReduction[Expr,#,ExprDenominator]&/@Expr[[2]];
+		(*Expr//=({#,ExprDenominator}&/@#)&;*)
 		Expr//Return;
 	];
 ];
 
+RemoveHigherDerivatives[InputExpr_]~Y~Module[{Expr=InputExpr},
+	Expr//=(#/.{CD@CD@AnyExpr___->0})&;
+Expr];
+
 ExtractPowerGradients[InputExpr_]~Y~Module[{Expr=InputExpr},
-	Expr//=(#~Cases~(_?((Head@#===Times)&)))&;
+	Expr//=(RemoveHigherDerivatives/@#)&;
+	Expr//=(#~Cases~(_?(((Head@First@#)===Times)&)))&;
 	$RequiredMultiTensors={};
+	(*Expr//=(First/@#)&;*)
 	Expr//=(ProcessTerm/@#)&;
 	$RequiredMultiTensors//=DeleteDuplicates;
 	$RequiredMultiTensors//=Sort;
@@ -503,9 +572,15 @@ ExtractPowerGradients[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=(#~DeleteCases~Null)&;
 Expr];
 
+SplitAllContractions[InputExpr_]:=Module[{Expr=InputExpr},
+	Expr//=First;
+	Expr//=AllContractions;
+	Expr//=((#*Last@InputExpr)&/@#)&;
+Expr];
+
 DevelopAllScalars[InputExpr_]~Y~Module[{Expr=InputExpr},
 	CacheContexts[];
-	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(AllContractions[#]))&,#]&;
+	Expr//=Map[(xAct`Hamilcar`Private`NewParallelSubmit@(SplitAllContractions[#]))&,#]&;
 	Expr//=MonitorParallel;
 Expr];
 
