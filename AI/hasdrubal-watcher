@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# Hasdrubal file watcher
+# Monitors .PROMPT.txt and sends content to REPL pane when saved
+
+TARGET_PANE="${HASDRUBAL_REPL_PANE:-}"
+VIM_PANE="${HASDRUBAL_VIM_PANE:-}"
+PROMPT_FILE="${HASDRUBAL_PROMPT_FILE:-.PROMPT.txt}"
+LOG_FILE="${HASDRUBAL_LOG_FILE:-$(pwd)/.hasdrubal.log}"
+
+timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
+log() { local line; line="$(timestamp) [hasdrubal] $*"; printf '%s\n' "$line"; printf '%s\n' "$line" >>"$LOG_FILE"; }
+err() { local line; line="$(timestamp) [hasdrubal][error] $*"; printf '%s\n' "$line"; printf '%s\n' "$line" >>"$LOG_FILE"; }
+
+if ! command -v tmux >/dev/null 2>&1; then err "tmux not found"; fi
+if [[ -z "$TARGET_PANE" ]]; then err "HASDRUBAL_REPL_PANE not set"; fi
+
+printf '%s [hasdrubal] watcher start: pane=%s prompt=%s log=%s\n' \
+  "$(date '+%Y-%m-%d %H:%M:%S')" "$TARGET_PANE" "$PROMPT_FILE" "$LOG_FILE" >> "$LOG_FILE" || true
+
+log "============================================================"
+log "              H A S D R U B A L   W A T C H E R"
+log "============================================================"
+log "Watching $PROMPT_FILE and sending to REPL pane $TARGET_PANE"
+log "Logging to $LOG_FILE"
+log "------------------------------------------------------------"
+
+push_prompt() {
+  if [[ ! -f "$PROMPT_FILE" ]]; then
+    err "prompt file missing: $PROMPT_FILE"
+    return 1
+  fi
+
+  # Verify target pane exists
+  if ! tmux list-panes -a -F '#{pane_id}' | grep -qx -- "$TARGET_PANE"; then
+    err "target pane not found: $TARGET_PANE"
+    return 1
+  fi
+
+  # Read prompt content
+  prompt_content="$(cat "$PROMPT_FILE")"
+
+  # Skip if empty
+  if [[ -z "$prompt_content" ]]; then
+    log "skipping empty prompt"
+    return 0
+  fi
+
+  # Load into tmux buffer
+  if ! tmux load-buffer -b hasdrubal_prompt - 2>>"$LOG_FILE" < "$PROMPT_FILE"; then
+    err "tmux load-buffer failed"
+    return 1
+  fi
+
+  # Paste to REPL pane
+  if ! tmux paste-buffer -t "$TARGET_PANE" -b hasdrubal_prompt -d 2>>"$LOG_FILE"; then
+    err "tmux paste-buffer failed; falling back to send-keys"
+    if ! tmux send-keys -t "$TARGET_PANE" -- "$prompt_content" 2>>"$LOG_FILE"; then
+      err "tmux send-keys fallback failed"
+      return 1
+    fi
+  fi
+
+  # Send Enter to submit
+  sleep 0.05
+  tmux send-keys -t "$TARGET_PANE" "Enter" 2>>"$LOG_FILE"
+
+  bytes=$(wc -c < "$PROMPT_FILE" 2>/dev/null || echo 0)
+  log "pushed $bytes bytes from $PROMPT_FILE"
+}
+
+# Wait for prompt file to exist
+until [[ -f "$PROMPT_FILE" ]]; do
+  log "waiting for $PROMPT_FILE to be created..."
+  sleep 0.5
+done
+
+# Watch for file changes using inotify or polling
+if command -v inotifywait >/dev/null 2>&1; then
+  # Use inotify if available
+  while inotifywait -e close_write -q "$PROMPT_FILE" >/dev/null 2>&1; do
+    push_prompt || true
+  done
+else
+  # Fall back to polling
+  last_mtime=$(stat -c %Y "$PROMPT_FILE" 2>/dev/null || echo 0)
+  while :; do
+    sleep 1
+    mtime=$(stat -c %Y "$PROMPT_FILE" 2>/dev/null || echo 0)
+    if [[ "$mtime" != "$last_mtime" ]]; then
+      last_mtime="$mtime"
+      push_prompt || true
+    fi
+  done
+fi
+
+# Cleanup on exit
+cleanup() {
+  log "received interrupt; cleaning up session"
+
+  # If we're in a hasdrubal session, kill the entire session
+  if [[ -n "${HASDRUBAL_SESSION:-}" ]]; then
+    log "killing hasdrubal session: $HASDRUBAL_SESSION"
+    tmux kill-session -t "$HASDRUBAL_SESSION" 2>>"$LOG_FILE" || true
+  else
+    # Fallback: kill individual panes
+    log "no session name; killing individual panes"
+    if [[ -n "$TARGET_PANE" ]]; then
+      tmux kill-pane -t "$TARGET_PANE" 2>>"$LOG_FILE" || true
+    fi
+    if [[ -n "$VIM_PANE" ]]; then
+      tmux kill-pane -t "$VIM_PANE" 2>>"$LOG_FILE" || true
+    fi
+  fi
+
+  log "cleanup complete"
+  exit 0
+}
+trap cleanup INT TERM EXIT

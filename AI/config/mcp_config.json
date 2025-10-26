@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "hamilcar": {
+      "command": "python",
+      "args": [
+        "AI/mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": ".",
+        "MATHEMATICA_KERNEL_PATH": "wolframkernel"
+      }
+    }
+  }
+}

@@ -59,6 +59,14 @@ Handles time-dependent tensor definitions with multiple derivative orders:
 - Manages conversions between inert and active forms
 - Defines time evolution rules
 
+#### RulesTotal (`Sources/RulesTotal.m`)
+Manages bidirectional transformation between composite and canonical forms:
+- `TotalFrom`: Expands composite quantities into canonical variables (fields, momenta, derivatives)
+- `TotalTo`: Contracts canonical expressions back to compact composite notation
+- `PrependTotalFrom`: Registers expansion rules for composite-to-canonical conversion
+- `PrependTotalTo`: Registers contraction rules for canonical-to-composite conversion
+- Essential for Poisson bracket calculations which require canonical variable form
+
 ### Global Variables
 - `$DynamicalMetric`: Controls whether spatial metric is treated as dynamical field (default: True)
 - `$ManualSmearing`: When True, disables automatic smearing in Poisson brackets (default: False)
@@ -85,7 +93,7 @@ This reloads all source files without restarting Mathematica, useful during acti
 
 ### Adding New Functionality
 1. Create new .m files in the `Sources/` directory
-2. Add function declarations to `Hamelin.m` in the usage section
+2. Add function declarations to `Hamilcar.m` in the usage section
 3. Include the new file in the `RereadSources[]` function list
 4. Use `IncludeHeader[]` for loading sub-modules within source files
 
@@ -219,3 +227,22 @@ At root level, `master` should contain only:
 - `.wl`: Wolfram Language files
 - `.sh`: Shell scripts for installation
 - `.nb`: Mathematica notebook files (generated from .m documentation sources)
+
+## AI Agent System (Hasdrubal)
+
+Hasdrubal is an AI assistant that provides a natural language interface to Hamilcar computations. It has been extracted into a separate repository.
+
+**Repository**: `~/Documents/Hasdrubal`
+**Links**:
+- GitHub: https://github.com/wevbarker/Hasdrubal
+- GitLab: https://gitlab.com/wevbarker/Hasdrubal
+
+See the Hasdrubal repository for:
+- Interactive REPL with split-pane display
+- Tmux-based Vim workflow for file-watching prompts
+- MCP server exposing Hamilcar tools
+- GPT-4o agent with field theory domain knowledge
+- Testing framework with golden reference pattern
+# Code Style and Professional Standards
+
+NEVER use emojis in code, comments, documentation, output, or user-facing text. This is a professional codebase.
