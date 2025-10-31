@@ -1,0 +1,1 @@
+In[#]:= DefTensor[SuperHamiltonian[], M3, PrintAs -> "\[ScriptCapitalH]"]; FromSuperHamiltonian = MakeRule[{SuperHamiltonian[], (1/(GravitationalCoupling * Sqrt[DetG[]])) * (ConjugateMomentumG[i, j] * ConjugateMomentumG[-i, -j] - (1/2) * TraceConjugateMomentumG[]^2) - GravitationalCoupling * Sqrt[DetG[]] * RicciScalarCD[]}, MetricOn -> All, ContractMetrics -> True]

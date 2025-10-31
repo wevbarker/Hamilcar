@@ -1,6 +1,10 @@
 Block[{Print=DoNothing},
 <<xAct`xPlain`;
 ];
+
+$Listings=True;
+$ListingsBackground=RGBColor[0.96,0.96,0.96];
+
 Title@"Hamilcar: MCP-compliant Hamiltonian analysis tools";
 Author@"Will E. V. Barker";
 
@@ -8,7 +12,7 @@ Comment@"This is the main documentation for the Hamilcar package, which extends 
 
 Hamilcar is a software package for Wolfram (formerly Mathematica) designed to perform canonical field theory calculations in 3+1 dimensions. The canonical formulation assumes the action S to have the structure S = integral of dt integral of d cubed x [pi psi(x,t) dot psi(x,t) - H(psi,pi psi)], where the ingredients are:
 - The dynamical fields psi(x,t) are real tensors on the spatial manifold, which may be a collection of distinct fields, each field having some collection of spatial indices (a, b, etc.), perhaps with some symmetry among the indices.
-- The conjugate momenta pi psi(x,t) are the canonical momenta conjugate to the fields psi(x,t).  
+- The conjugate momenta pi psi(x,t) are the canonical momenta conjugate to the fields psi(x,t).
 - The Hamiltonian density H(psi,pi psi) is constructed from the fields, momenta, spatial metric, and spatial derivatives.
 
 The package provides essential functions for canonical field theory:
@@ -38,7 +42,7 @@ Comment@"Canonical formulation of general relativity using the ADM decomposition
 This section demonstrates the ADM (Arnowitt-Deser-Misner) formulation of general relativity in canonical field theory. In the ADM formalism, spacetime is decomposed as 3+1 dimensional, with spatial slices evolving in time. The key variables are the spatial metric and its conjugate momentum, related to the extrinsic curvature. The constraints are the super-Hamiltonian (Hamiltonian constraint) and super-momentum (momentum constraint) which generate time evolution and spatial diffeomorphisms respectively.";
 
 Comment@"We first load the Hamilcar package, which provides tools for canonical field theory calculations. The package extends xAct to work with time-dependent fields and their conjugate momenta in a 3+1 dimensional spacetime decomposition.";
-Code[<<xAct`Hamilcar`];
+Code[<<xAct`Hamilcar`,LineLabel->"LoadHamilcar"];
 
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 $DefInfoQ=False;
@@ -92,10 +96,10 @@ FromTraceConjugateMomentumG=MakeRule[{
 	TraceConjugateMomentumG[],
 	Scalar[ConjugateMomentumG[a,-a]]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"TraceConjugateMomentumG"];
 TraceConjugateMomentumG[]~DisplayRule~FromTraceConjugateMomentumG;
 Comment@"Register the expansion rule for the trace of conjugate momentum.";
-Code[FromTraceConjugateMomentumG//PrependTotalFrom];
+Code[FromTraceConjugateMomentumG//PrependTotalFrom,LineLabel->"PrependTotalFromTraceConjugateMomentumG"];
 
 Comment@"Compute all possible combinations of Poisson brackets between the spatial metric and its conjugate momentum.
 
@@ -114,14 +118,14 @@ Module[{Expr,Answ},Expr=#;Answ=PoissonBracket@@#;DisplayExpression[Expr->Answ];]
 Comment@"Define the lapse function and shift vector of the ADM decomposition.
 
 In the ADM formalism, the lapse function and shift vector describe how the spatial slices are embedded in spacetime. The lapse controls the rate of proper time advance between slices, while the shift describes how the spatial coordinate system moves between slices. These are Lagrange multipliers that enforce the super-Hamiltonian and super-momentum constraints respectively.";
-Code[DefTensor[Lapse[],M3,PrintAs->"\[ScriptCapitalN]"]];
+Code[DefTensor[Lapse[],M3,PrintAs->"\[ScriptCapitalN]"],LineLabel->"DefineLapse"];
 Lapse[]//DisplayExpression;
-Code[DefTensor[Shift[m],M3,PrintAs->"\[ScriptCapitalN]"]];
+
+Code[DefTensor[Shift[m],M3,PrintAs->"\[ScriptCapitalN]"],LineLabel->"DefineShift"];
 Shift[m]//DisplayExpression;
 
-
 Comment@"Define the gravitational coupling constant.";
-Code[DefConstantSymbol[GravitationalCoupling,PrintAs->"\[Alpha]"]];
+Code[DefConstantSymbol[GravitationalCoupling,PrintAs->"\[Alpha]"],LineLabel->"DefineGravitationalCoupling"];
 GravitationalCoupling//DisplayExpression;
 
 Comment@{"Define the super-Hamiltonian constraint (Hamiltonian constraint) from the ADM formalism. This uses the trace of the conjugate momentum defined in",Cref@"FromTraceConjugateMomentumG","."};
@@ -133,10 +137,10 @@ FromSuperHamiltonian=MakeRule[{SuperHamiltonian[],
 		-(1/2)*TraceConjugateMomentumG[]^2
 	)-GravitationalCoupling*Sqrt@DetG[]*RicciScalarCD[]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineSuperHamiltonian"];
 SuperHamiltonian[]~DisplayRule~FromSuperHamiltonian;
 Comment@"Register the expansion rule for the super-Hamiltonian constraint.";
-Code[FromSuperHamiltonian//PrependTotalFrom];
+Code[FromSuperHamiltonian//PrependTotalFrom,LineLabel->"PrependTotalFromSuperHamiltonian"];
 
 Comment@"Define the super-momentum constraint (momentum constraint) from the ADM formalism.";
 Code[
@@ -144,10 +148,10 @@ DefTensor[SuperMomentum[-i],M3,PrintAs->"\[ScriptCapitalH]"];
 FromSuperMomentum=MakeRule[{SuperMomentum[-i],
 	-2*CD[-j]@ConjugateMomentumG[j,-i]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineSuperMomentum"];
 SuperMomentum[-i]~DisplayRule~FromSuperMomentum;
 Comment@"Register the expansion rule for the super-momentum constraint.";
-Code[FromSuperMomentum//PrependTotalFrom];
+Code[FromSuperMomentum//PrependTotalFrom,LineLabel->"PrependTotalFromSuperMomentum"];
 
 
 Comment@"Define smearing functions needed for computing Poisson brackets. These functions allow us to evaluate brackets between constraints at different spatial points.
@@ -155,19 +159,19 @@ Comment@"Define smearing functions needed for computing Poisson brackets. These 
 Smearing functions are mathematical tools essential for computing Poisson brackets between field operators at different spatial points. In canonical field theory, constraints like the super-Hamiltonian and super-momentum are density-like objects that need to be integrated over spatial regions. Smearing functions provide the test functions for these integrations, allowing us to compute the algebra between smeared constraints. The scalar smearing functions are used with scalar constraints, while vector smearing functions are used with vector constraints like the super-momentum.";
 
 Comment@"Define scalar smearing functions.";
-Code[DefTensor[ScalarSmearingS[],M3,PrintAs->"\[ScriptS]"]];
+Code[DefTensor[ScalarSmearingS[],M3,PrintAs->"\[ScriptS]"],LineLabel->"DefineScalarSmearingS"];
 ScalarSmearingS[]//DisplayExpression;
-Code[DefTensor[ScalarSmearingF[],M3,PrintAs->"\[ScriptF]"]];
+Code[DefTensor[ScalarSmearingF[],M3,PrintAs->"\[ScriptF]"],LineLabel->"DefineScalarSmearingF"];
 ScalarSmearingF[]//DisplayExpression;
 
 Comment@"Define vector smearing functions with both covariant and contravariant versions.";
-Code[DefTensor[VectorSmearingCovariantS[-i],M3,PrintAs->"\[ScriptS]"]];
+Code[DefTensor[VectorSmearingCovariantS[-i],M3,PrintAs->"\[ScriptS]"],LineLabel->"DefineVectorSmearingCovariantS"];
 VectorSmearingCovariantS[-i]//DisplayExpression;
-Code[DefTensor[VectorSmearingContravariantS[i],M3,PrintAs->"\[ScriptS]"]];
+Code[DefTensor[VectorSmearingContravariantS[i],M3,PrintAs->"\[ScriptS]"],LineLabel->"DefineVectorSmearingContravariantS"];
 VectorSmearingContravariantS[i]//DisplayExpression;
-Code[DefTensor[VectorSmearingCovariantF[-i],M3,PrintAs->"\[ScriptF]"]];
+Code[DefTensor[VectorSmearingCovariantF[-i],M3,PrintAs->"\[ScriptF]"],LineLabel->"DefineVectorSmearingCovariantF"];
 VectorSmearingCovariantF[-i]//DisplayExpression;
-Code[DefTensor[VectorSmearingContravariantF[i],M3,PrintAs->"\[ScriptF]"]];
+Code[DefTensor[VectorSmearingContravariantF[i],M3,PrintAs->"\[ScriptF]"],LineLabel->"DefineVectorSmearingContravariantF"];
 VectorSmearingContravariantF[i]//DisplayExpression;
 
 
@@ -177,19 +181,19 @@ Comment@"Now we compute the algebra between constraints. This is the Dirac hyper
 The Dirac hypersurface deformation algebra describes how the constraints of general relativity act on each other under Poisson brackets. This algebra shows that the super-Hamiltonian generates normal deformations of the spatial hypersurface, while the super-momentum generates tangential deformations (spatial diffeomorphisms). The algebra closes in the sense that brackets between constraints produce linear combinations of the same constraints, possibly with structure functions that depend on the smearing functions and their derivatives.";
 
 Comment@"Set manual smearing to true so we can use our defined smearing functions.";
-Code[$ManualSmearing=True];
+Code[$ManualSmearing=True,LineLabel->"EnableManualSmearing"];
 
 Comment@"Compute the auto-commutator of the super-Hamiltonian using scalar smearing functions.";
 Code[
 Expr={ScalarSmearingF[]*SuperHamiltonian[],ScalarSmearingS[]*SuperHamiltonian[]}
-];
+,LineLabel->"SetupSuperHamiltonianAutocommutator"];
 Expr//DisplayExpression;
 Code[
 Expr//=(TotalFrom/@#)&;
 Expr//=(PoissonBracket@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeSuperHamiltonianAutocommutator"];
 DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperHamiltonianPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express the bracket result in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum"," and spatial derivatives of the smearing functions."};
@@ -201,20 +205,20 @@ Expr//=FindAlgebra[#,
 	{SuperHamiltonian[],
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
-];
+,LineLabel->"FindAlgebraSuperHamiltonianAutocommutator"];
 DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianAlgebra"];
 
 Comment@"Compute the bracket between the super-Hamiltonian and super-momentum using scalar and contravariant vector smearing.";
 Code[
 Expr={ScalarSmearingF[]*SuperHamiltonian[],VectorSmearingContravariantS[i]*SuperMomentum[-i]}
-];
+,LineLabel->"SetupSuperHamiltonianSuperMomentumBracket"];
 Expr//DisplayExpression;
 Code[
 Expr//=(TotalFrom/@#)&;
 Expr//=(PoissonBracket@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeSuperHamiltonianSuperMomentumBracket"];
 DisplayExpression[Expr,EqnLabel->"SuperHamiltonianSuperMomentumPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-Hamiltonian constraint defined in",Cref@"FromSuperHamiltonian","."};
@@ -226,20 +230,20 @@ Expr//=FindAlgebra[#,
 	{SuperHamiltonian[],
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
-];
+,LineLabel->"FindAlgebraSuperHamiltonianSuperMomentumBracket"];
 DisplayExpression[BracketExpr,EqnLabel->"SuperHamiltonianMomentumAlgebra"];
 
 Comment@"Compute the auto-commutator of the super-momentum using contravariant vector smearing.";
 Code[
 Expr={VectorSmearingContravariantF[i]*SuperMomentum[-i],VectorSmearingContravariantS[j]*SuperMomentum[-j]}
-];
+,LineLabel->"SetupSuperMomentumAutocommutatorContravariant"];
 Expr//DisplayExpression;
 Code[
 Expr//=(TotalFrom/@#)&;
 Expr//=(PoissonBracket@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeSuperMomentumAutocommutatorContravariant"];
 DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint defined in",Cref@"FromSuperMomentum","."};
@@ -251,20 +255,20 @@ Expr//=FindAlgebra[#,
 	{SuperHamiltonian[],
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
-];
+,LineLabel->"FindAlgebraSuperMomentumAutocommutatorContravariant"];
 DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraContravariant"];
 
 Comment@{"Compute the auto-commutator of the super-momentum using covariant vector smearing for comparison with",Cref@"SuperMomentumAlgebraContravariant","."};
 Code[
 Expr={VectorSmearingCovariantF[-i]*SuperMomentum[i],VectorSmearingCovariantS[-j]*SuperMomentum[j]}
-];
+,LineLabel->"SetupSuperMomentumAutocommutatorCovariant"];
 Expr//DisplayExpression;
 Code[
 Expr//=(TotalFrom/@#)&;
 Expr//=(PoissonBracket@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeSuperMomentumAutocommutatorCovariant"];
 DisplayExpression[Expr,EqnLabel->"SuperMomentumSuperMomentumCovariantPoissonBracket"];
 
 Comment@{"Use \"FindAlgebra\" to express this bracket in terms of the super-momentum constraint with covariant smearing, comparing to",Cref@"SuperMomentumAlgebraContravariant","."};
@@ -276,10 +280,12 @@ Expr//=FindAlgebra[#,
 	{SuperHamiltonian[],
 	SuperMomentum[i]}]&;
 {BracketExpr,RulesExpr}=Expr
-];
+,LineLabel->"FindAlgebraSuperMomentumAutocommutatorCovariant"];
 DisplayExpression[BracketExpr,EqnLabel->"SuperMomentumAlgebraCovariant"];
 
 Comment@{"The results in",Cref@{"SuperHamiltonianAlgebra","SuperHamiltonianMomentumAlgebra","SuperMomentumAlgebraContravariant","SuperMomentumAlgebraCovariant"}," constitute the complete Dirac hypersurface deformation algebra of general relativity, showing how the constraints generate spacetime diffeomorphisms."};
+
+Quit[];
 
 Section@"Maxwell theory";
 Comment@"Canonical electromagnetic field theory in the Hamiltonian formalism. Maxwell theory is simpler than GR since there are no metric variations in Poisson brackets.
@@ -288,30 +294,30 @@ This section demonstrates the canonical formulation of electromagnetic field the
 
 
 Comment@"For Maxwell theory, we need to disable dynamical metric since we work on a fixed background and enable manual smearing for Maxwell theory calculations.";
-Code[$DynamicalMetric=False];
-Code[$ManualSmearing=True];
+Code[$DynamicalMetric=False,LineLabel->"DisableDynamicalMetric"];
+Code[$ManualSmearing=True,LineLabel->"EnableManualSmearingMaxwell"];
 
 
 Comment@"Define the spatial components of the electromagnetic vector potential and their canonical conjugate momenta (the electric field components).
 
 In the canonical formulation of electromagnetism, the spatial components of the vector potential serve as the canonical position variables, while their conjugate momenta are the electric field components. The temporal component of the vector potential does not have a conjugate momentum, making it a non-dynamical Lagrange multiplier that enforces the Gauss constraint.";
-Code[DefCanonicalField[VectorPotential[-i],FieldSymbol->"A",MomentumSymbol->"E"]];
+Code[DefCanonicalField[VectorPotential[-i],FieldSymbol->"A",MomentumSymbol->"E"],LineLabel->"DefineVectorPotentialField"];
 VectorPotential[-i]//DisplayExpression;
 ConjugateMomentumVectorPotential[i]//DisplayExpression;
 
 Comment@"Verify the canonical Poisson bracket between vector potential and electric field. Temporarily disable manual smearing for canonical bracket verification.";
-Code[$ManualSmearing=False];
+Code[$ManualSmearing=False,LineLabel->"DisableManualSmearing"];
 Code[
 Expr={VectorPotential[-i],ConjugateMomentumVectorPotential[j]}
-];
+,LineLabel->"SetupMaxwellCanonicalBracket"];
 Expr//DisplayExpression;
 Code[
 Expr//=(PoissonBracket@@#)&;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeMaxwellCanonicalBracket"];
 DisplayExpression[Expr,EqnLabel->"MaxwellCanonicalBracket"];
 Comment@"Re-enable manual smearing for subsequent calculations.";
-Code[$ManualSmearing=True];
+Code[$ManualSmearing=True,LineLabel->"ReEnableManualSmearing"];
 
 
 Comment@{"Define the magnetic field components as the curl of the vector potential, establishing the relationship between canonical coordinates and the electromagnetic field tensor components."};
@@ -320,10 +326,10 @@ DefTensor[MagneticField[i],M3,PrintAs->"B"];
 FromMagneticField=MakeRule[{MagneticField[i],
 	epsilonG[i,j,k]*CD[-j]@VectorPotential[-k]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineMagneticField"];
 MagneticField[i]~DisplayRule~FromMagneticField;
 Comment@"Register the expansion rule for the magnetic field.";
-Code[FromMagneticField//PrependTotalFrom];
+Code[FromMagneticField//PrependTotalFrom,LineLabel->"PrependTotalFromMagneticField"];
 
 Comment@{"Define the Maxwell Hamiltonian as the integral of electric and magnetic energy densities. This uses the magnetic field definition from",Cref@"FromMagneticField"," and the canonical electric field coordinates."};
 Code[
@@ -331,10 +337,10 @@ DefTensor[MaxwellHamiltonian[],M3,PrintAs->"H"];
 FromMaxwellHamiltonian=MakeRule[{MaxwellHamiltonian[],
 	(1/2)*(ConjugateMomentumVectorPotential[i]*ConjugateMomentumVectorPotential[-i] + MagneticField[i]*MagneticField[-i])},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineMaxwellHamiltonian"];
 MaxwellHamiltonian[]~DisplayRule~FromMaxwellHamiltonian;
 Comment@"Register the expansion rule for the Maxwell Hamiltonian.";
-Code[FromMaxwellHamiltonian//PrependTotalFrom];
+Code[FromMaxwellHamiltonian//PrependTotalFrom,LineLabel->"PrependTotalFromMaxwellHamiltonian"];
 
 
 Comment@{"The temporal component of the vector potential is a Lagrange multiplier, leading to Gauss constraint as a primary constraint.
@@ -345,13 +351,13 @@ DefTensor[GaussConstraint[],M3,PrintAs->"G"];
 FromGaussConstraint=MakeRule[{GaussConstraint[],
 	CD[-i]@ConjugateMomentumVectorPotential[i]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineGaussConstraint"];
 GaussConstraint[]~DisplayRule~FromGaussConstraint;
 Comment@"Register the expansion rule for the Gauss constraint.";
-Code[FromGaussConstraint//PrependTotalFrom];
+Code[FromGaussConstraint//PrependTotalFrom,LineLabel->"PrependTotalFromGaussConstraint"];
 
 Comment@"Define the Lagrange multiplier for Gauss constraint (the temporal component of the vector potential).";
-Code[DefTensor[LagrangeMultiplierA0[],M3,PrintAs->"\!\(\*SubscriptBox[\(A\),\(0\)]\)"]];
+Code[DefTensor[LagrangeMultiplierA0[],M3,PrintAs->"\!\(\*SubscriptBox[\(A\),\(0\)]\)"],LineLabel->"DefineLagrangeMultiplierA0"];
 LagrangeMultiplierA0[]//DisplayExpression;
 
 
@@ -363,10 +369,10 @@ DefTensor[MaxwellTotalHamiltonian[],M3,PrintAs->"\!\(\*SubscriptBox[\(H\),\(T\)]
 FromMaxwellTotalHamiltonian=MakeRule[{MaxwellTotalHamiltonian[],
 	MaxwellHamiltonian[] + LagrangeMultiplierA0[]*GaussConstraint[]},
 	MetricOn->All,ContractMetrics->True]
-];
+,LineLabel->"DefineMaxwellTotalHamiltonian"];
 MaxwellTotalHamiltonian[]~DisplayRule~FromMaxwellTotalHamiltonian;
 Comment@"Register the expansion rule for the total Hamiltonian.";
-Code[FromMaxwellTotalHamiltonian//PrependTotalFrom];
+Code[FromMaxwellTotalHamiltonian//PrependTotalFrom,LineLabel->"PrependTotalFromMaxwellTotalHamiltonian"];
 
 
 Comment@{"Check if the Gauss constraint is preserved under time evolution by computing the Poisson bracket between the smeared constraint and the total Hamiltonian defined in",Cref@"FromMaxwellTotalHamiltonian",".
@@ -374,7 +380,7 @@ Comment@{"Check if the Gauss constraint is preserved under time evolution by com
 The consistency of a primary constraint under time evolution is checked by computing its Poisson bracket with the total Hamiltonian. If this bracket vanishes identically, the constraint is preserved and no secondary constraints arise. If the bracket is non-zero, it either gives a secondary constraint or determines a Lagrange multiplier. For the Gauss constraint in Maxwell theory, the bracket should vanish identically, confirming the consistency of the constraint system."};
 Code[
 Expr={ScalarSmearingF[]*GaussConstraint[],MaxwellTotalHamiltonian[]}
-];
+,LineLabel->"SetupGaussConstraintConsistency"];
 DisplayExpression[Expr,EqnLabel->"PrePoissonBracket"];
 Code[
 Expr//=(TotalFrom/@#)&;
@@ -383,7 +389,7 @@ Expr//=VarD[ScalarSmearingF[],CD];
 Expr//=TotalFrom;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeGaussConstraintConsistency"];
 DisplayExpression[Expr,EqnLabel->"GaussConstraintConsistency"];
 
 Comment@{"The result in",Cref@"GaussConstraintConsistency"," should vanish identically, showing that no secondary constraints arise. Taking the variational derivative with respect to the smearing function \"ScalarSmearingF[]\" demonstrates that the coefficient of any term must be zero."};
@@ -391,14 +397,14 @@ Comment@{"The result in",Cref@"GaussConstraintConsistency"," should vanish ident
 Comment@{"Compute the Poisson bracket between Gauss constraints at different points using scalar smearing, completing the constraint algebra analysis for Maxwell theory."};
 Code[
 Expr={ScalarSmearingF[]*GaussConstraint[],ScalarSmearingS[]*GaussConstraint[]}
-];
+,LineLabel->"SetupGaussGaussConstraintAlgebra"];
 Expr//DisplayExpression;
 Code[
 Expr//=(TotalFrom/@#)&;
 Expr//=(PoissonBracket@@#)&;
 Expr//=TotalTo;
 Expr//=FullSimplify
-];
+,LineLabel->"ComputeGaussGaussConstraintAlgebra"];
 DisplayExpression[Expr,EqnLabel->"GaussGaussConstraintAlgebra"];
 
 Comment@{"The constraint algebra results in",Cref@{"GaussConstraintConsistency","GaussGaussConstraintAlgebra"}," demonstrate that Maxwell theory has a consistent constraint system with the single Gauss constraint generating electromagnetic gauge transformations, contrasting with the richer constraint algebra of general relativity shown in",Cref@{"SuperHamiltonianAlgebra","SuperMomentumAlgebraContravariant"},"."};
