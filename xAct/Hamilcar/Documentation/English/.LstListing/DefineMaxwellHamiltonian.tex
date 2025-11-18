@@ -1,0 +1,1 @@
+In[#]:= DefTensor[MaxwellHamiltonian[], M3, PrintAs -> "H"]; FromMaxwellHamiltonian = MakeRule[{MaxwellHamiltonian[], (1/2) * (ConjugateMomentumVectorPotential[i] * ConjugateMomentumVectorPotential[-i] + MagneticField[i] * MagneticField[-i])}, MetricOn -> All, ContractMetrics -> True]

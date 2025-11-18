@@ -1,0 +1,1 @@
+In[#]:= DefTensor[TraceConjugateMomentumG[], M3, PrintAs -> "\[Pi]"]; FromTraceConjugateMomentumG = MakeRule[{TraceConjugateMomentumG[], Scalar[ConjugateMomentumG[a, -a]]}, MetricOn -> All, ContractMetrics -> True]

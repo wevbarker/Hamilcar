@@ -69,13 +69,17 @@ FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
 		];
 
 		BoundaryAnsatz=BulkAnsatz;
-		BoundaryAnsatz//=(#/.{RicciScalarCD->Zero})&;
+		(*Useful for Gorof-Sagnotti, not for*)
+		(*BoundaryAnsatz//=(#/.{RicciScalarCD->Zero})&;*)
 		BoundaryAnsatz//=RecoverSchematicAnsatz;
-		BoundaryAnsatz//=CurvatureReduction;
+		(**)BoundaryAnsatz//=CurvatureReduction;(**)
 		BoundaryAnsatz//=MakeSchematicBoundaryCurrent;
 		BoundaryAnsatz//=BoundaryCurrentToBoundary;
 		BoundaryAnsatzParameters=BoundaryAnsatz;
 		BoundaryAnsatzParameters//=ExtractParameters;
+		(**)BoundaryAnsatzParameterQ[InputCoupling_]:=StringMatchQ[
+			ToString@InputCoupling,"S"~~__];
+		BoundaryAnsatzParameters//=Cases[#,_?BoundaryAnsatzParameterQ]&;(**)
 		If[OptionValue@DDIs,
 			BoundaryAnsatzParameters//=(#~Join~DDIAnsatzParameters)&;
 		];
@@ -88,8 +92,7 @@ FindAlgebra[InputBulkBracket_,InputSchematicAnsatz_,OptionsPattern[]]~Y~Module[{
 			ParameterSolution-=DDIAnsatz;
 		];
 		ParameterSolution//=CollectTensors[#,CollectMethod->ToExpandedCanonical]&;
-		(*ParameterSolution//Print;
-		Quit[];*)
+		(*ParameterSolution//=CollectTensors[#,CollectMethod->ToSymmetrizedCanonical]&;*)
 		ParameterSolution//=ObtainSolution[#,
 			BulkAnsatzParameters,BoundaryAnsatzParameters,
 			Method->OptionValue@Method]&;

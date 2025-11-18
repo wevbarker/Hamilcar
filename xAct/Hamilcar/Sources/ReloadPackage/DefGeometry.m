@@ -6,6 +6,7 @@ GSymb="\[ScriptH]";
 (*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
 Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
 	PrintAs->GSymb,SymCovDQ->True];
+PrintAs@Evaluate@DetG^="\[ScriptH]";
 DefCovD[CDT[-a],SymbolOfCovD->{"#","D"},FromMetric->G];
 
 StandardIndices=ToString/@Alphabet[];

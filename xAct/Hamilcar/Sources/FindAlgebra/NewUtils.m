@@ -131,10 +131,14 @@ BoundaryCurrentToBoundary[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=CollectTensors[#,CollectMethod->ToSymmetrizedCanonical]&;
 Expr];
 
-MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr,ReturnExpr={}},
+(*Apparently the version only with derivatives was never working*)
+(*MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr,ReturnExpr={}},*)
+(**)MakeCurvatureReduction[InputExpr_]~Y~Module[{Expr,ExprDenominator,ReturnExpr={InputExpr}},(**)
 	{Expr,ExprDenominator}=InputExpr;
 	While[
-		ReducibleQ@Expr
+		(*Apparently the loop was never working*)
+		(**)ReducibleQ@{Expr,ExprDenominator}(**)
+		(*ReducibleQ@Expr*)
 	,
 		Expr//=(#~Delete~(First@Flatten@(#~Position~CD)))&;
 		Expr//=(#~Delete~(First@Flatten@(#~Position~CD)))&;
@@ -148,6 +152,7 @@ ReducibleQ[InputExpr_]~Y~(((First@InputExpr)~Count~CD)>1);
 
 CurvatureReduction[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=(#/.{RicciCD->{CD,CD}})&;
+	Expr//=(#/.{RicciScalarCD->{CD,CD}})&;
 	Expr//=({Flatten@First@#,Last@#}&/@#)&;
 	Expr//=(#~Cases~(_?ReducibleQ))&;
 	Expr//=(MakeCurvatureReduction/@#)&;
@@ -267,7 +272,10 @@ Expr];
 FindAlgebra::NoSolution="No solution could be found. Try a different schematic ansatz or a different \"Method\".";
 SolveWithSolve[InputExpr_,InputAnsatzParameters_]~Y~Module[{Expr=InputExpr},
 	(*Expr//=(#~Reduce~InputAnsatzParameters)&;*)
-	Expr//=Quiet[(#~Solve~InputAnsatzParameters)]&;
+	DumpSave["BigSystem.mx",Expr];
+	DumpSave["BigParameters.mx",InputAnsatzParameters];
+	(*Expr//=Quiet[(#~Solve~InputAnsatzParameters)]&;*)
+	Expr//=Solve;
 	(Expr//=First)~Check~(Throw@Message@FindAlgebra::NoSolution);
 Expr];
 
@@ -288,10 +296,12 @@ ObtainSolution[InputExpr_,
 	Expr=InputExpr,
 	BulkAnsatzParameters=InputBulkAnsatzParameters,
 	BoundaryAnsatzParameters=InputBoundaryAnsatzParameters},
+	(*Expr//Print;*)
+	(*Print/@(List@@Expr);*)
 	Expr//=ToConstantSymbolEquations[#==0]&;
-	Expr//=RescaleFullSystem[#,
+	(*Expr//=RescaleFullSystem[#,
 			InputBulkAnsatzParameters,
-			InputBoundaryAnsatzParameters]&;
+			InputBoundaryAnsatzParameters]&;*)
 	Switch[OptionValue@Method,
 		Solve,
 		Expr//=(#~SolveWithSolve~(BulkAnsatzParameters~Join~BoundaryAnsatzParameters))&,
@@ -339,6 +349,7 @@ VerifyWithRespectToEffectiveSmearingFunction[InputBulkBracket_,
 	BulkAnsatz//=(#~SmearingVarD~InputEffectiveSmearingFunction)&;
 	TotalDifference=BulkBracket-BulkAnsatz;
 	TotalDifference//=CollectTensors[#,CollectMethod->ToSymmetrizedCanonical]&;
+	(*TotalDifference//Print;*)
 	If[TotalDifference===0,
 		Print@("** Verified with respect to the effective smearing function "<>ToString@InputEffectiveSmearingFunction<>".");
 	,
