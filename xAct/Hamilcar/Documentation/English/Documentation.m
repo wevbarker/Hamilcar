@@ -58,7 +58,6 @@ VectorSmearingCovariantF[-i]//DisplayExpression;
 Code[DefTensor[VectorSmearingContravariantF[i],M3,PrintAs->"\[ScriptF]"],LineLabel->"DefineVectorSmearingContravariantF"];
 VectorSmearingContravariantF[i]//DisplayExpression;
 
-(*
 Section@"General relativity";
 Comment@"Canonical formulation of general relativity using the ADM decomposition.
 
@@ -264,8 +263,8 @@ DisplayExpression[Expr,EqnLabel->"SuperMomentumAlgebraCovariant"];
 Quit[];
 
 Comment@{"The results in",Cref@{"SuperHamiltonianAlgebra","SuperHamiltonianMomentumAlgebra","SuperMomentumAlgebraContravariant","SuperMomentumAlgebraCovariant"}," constitute the complete Dirac hypersurface deformation algebra of general relativity, showing how the constraints generate spacetime diffeomorphisms."};
-*)
 
+(*
 Section@"Maxwell theory";
 Comment@"Canonical electromagnetic field theory in the Hamiltonian formalism. Maxwell theory is simpler than GR since there are no metric variations in Poisson brackets.
 
@@ -382,5 +381,6 @@ Expr//=TotalTo;
 DisplayExpression[Expr,EqnLabel->"GaussGaussConstraintAlgebra"];
 
 Comment@{"The constraint algebra results in",Cref@{"GaussConstraintConsistency","GaussGaussConstraintAlgebra"}," demonstrate that Maxwell theory has a consistent constraint system with the single Gauss constraint generating electromagnetic gauge transformations, contrasting with the richer constraint algebra of general relativity shown in",Cref@{"SuperHamiltonianAlgebra","SuperMomentumAlgebraContravariant"},"."};
+*)
 
 Quit[];

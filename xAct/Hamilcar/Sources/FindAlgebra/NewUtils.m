@@ -272,8 +272,6 @@ Expr];
 FindAlgebra::NoSolution="No solution could be found. Try a different schematic ansatz or a different \"Method\".";
 SolveWithSolve[InputExpr_,InputAnsatzParameters_]~Y~Module[{Expr=InputExpr},
 	(*Expr//=(#~Reduce~InputAnsatzParameters)&;*)
-	DumpSave["BigSystem.mx",Expr];
-	DumpSave["BigParameters.mx",InputAnsatzParameters];
 	(*Expr//=Quiet[(#~Solve~InputAnsatzParameters)]&;*)
 	Expr//=Solve;
 	(Expr//=First)~Check~(Throw@Message@FindAlgebra::NoSolution);
