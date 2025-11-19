@@ -2,7 +2,7 @@
 (*  Recanonicalize  *)
 (*==================*)
 
-Recanonicalize[InputExpr_]:=Module[{Expr=InputExpr},
+Recanonicalize[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=ToCanonical;
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;

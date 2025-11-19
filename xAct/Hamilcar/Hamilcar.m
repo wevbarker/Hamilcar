@@ -16,11 +16,20 @@ Off@(Solve::fulldim);
 Off@(Syntax::stresc);
 Off@(FrontEndObject::notavail);
 
+(*This became necessary since Wolfram 14.1*)
+Unprotect@Print;
+Print[Expr___]:=Null/;!($KernelID==0);
+Protect@Print;
+Unprotect@Message;
+Message[Expr___]:=Null/;!($KernelID==0);
+Protect@Message;
+
 (*==================*)
 (*  xAct`Hamilcar`  *)
 (*==================*)
 
 BeginPackage["xAct`Hamilcar`",{"xAct`xTensor`","xAct`SymManipulator`","xAct`xPerm`","xAct`xCore`","xAct`xTras`"}];
+ParallelNeeds["xAct`Hamilcar`"];
 SetOptions[$FrontEndSession,EvaluationCompletionAction->"ScrollToOutput"];
 Print[xAct`xCore`Private`bars];
 Print["Package xAct`Hamilcar` version ",$Version[[1]],", ",$Version[[2]]];
@@ -62,6 +71,9 @@ Print[xAct`xCore`Private`bars]];
 DefCanonicalField::usage="DefCanonicalField";
 PoissonBracket::usage="PoissonBracket";
 FindAlgebra::usage="FindAlgebra";
+Verify::usage="Verify";
+Constraints::usage="Constraints";
+DDIs::usage="DDIs";
 TotalFrom::usage="TotalFrom";
 TotalTo::usage="TotalTo";
 PrependTotalFrom::usage="PrependTotalFrom";
@@ -91,11 +103,17 @@ $ManualSmearing=False;
 
 Begin["xAct`Hamilcar`Private`"];
 $MaxDerOrd=5;
+$MaxPowerNumber=3;
 $RegisteredFields={};
+$RegisteredPowers=<||>;
 $RegisteredMomenta={};
 $RegisteredTensorMomenta={};
 $FromInert={};
 $ToInert={};
+(* Debugging infrastructure variables *)
+$CallStack=Null;
+$CallStackTraceFileName="hamilcar-call-stack-trace.txt";
+$NumberOfCriticalPoints=50;
 IncludeHeader[FunctionName_]:=Module[{PathName},
 	PathName=$InputFileName~StringDrop~(-2);
 	PathName=FileNameJoin@{PathName,FunctionName<>".m"};

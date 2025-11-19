@@ -1,1 +1,1 @@
-In[#]:= Expr //= TotalFrom; Expr //= FindAlgebra[#1, {SuperMomentum * CD[ScalarSmearingF] * ScalarSmearingS, SuperMomentum * ScalarSmearingF * CD[ScalarSmearingS]}, {SuperHamiltonian[], SuperMomentum[i]}] & ; {BracketExpr, RulesExpr} = Expr
+In[#]:= Expr //= FindAlgebra[#1, {{{SuperMomentum}, {CD, ScalarSmearingF, ScalarSmearingS}}}, Constraints -> {SuperMomentum[i]}, Method -> Solve, Verify -> True] & ; 

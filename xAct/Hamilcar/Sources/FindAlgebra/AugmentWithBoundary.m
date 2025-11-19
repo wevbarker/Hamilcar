@@ -4,7 +4,7 @@
 
 IncludeHeader@"MakeDerivativeCombinations";
 
-AugmentWithBoundary[InputExpr_]:=Module[{
+AugmentWithBoundary[InputExpr_]~Y~Module[{
 	BoundaryAnsatz=InputExpr,
 	AugmentedAnsatz,
 	BoundaryAnsatzParameters},

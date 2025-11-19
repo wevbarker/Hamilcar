@@ -1,1 +1,1 @@
-In[#]:= Expr //= TotalFrom /@ #1 & ; Expr //= PoissonBracket @@ #1 & ; Expr //= TotalTo; Expr //= FullSimplify
+In[#]:= Expr //= (PoissonBracket[#1, #2, Parallel -> True] & ) @@ #1 & ; Expr //= TotalTo

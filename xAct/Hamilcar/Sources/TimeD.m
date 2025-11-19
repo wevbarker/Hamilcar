@@ -38,7 +38,7 @@ DefTimeTensor[InputField_[Inds___],Manifold_,SymmExpr_,OptionsPattern[]]:=Module
 		(Symbol@(ToString@InputField<>"xppppp"))[Time]->(Symbol@(ToString@InputField<>"ppppp"))})&;
 ];
 
-TimeD[InputExpr_]:=Module[{Expr=InputExpr},
+TimeD[InputExpr_]~Y~Module[{Expr=InputExpr},
 	Expr//=TotalFrom;
 	Expr//=SeparateMetric[G];
 	Expr//=ScreenDollarIndices;
@@ -64,6 +64,6 @@ TimeD[InputExpr_]:=Module[{Expr=InputExpr},
 	Expr//CollectTensors;
 Expr];
 
-TimeD[InputExpr_,Ord_]:=Module[{Expr=InputExpr},
+TimeD[InputExpr_,Ord_]~Y~Module[{Expr=InputExpr},
 	Do[Expr//=TimeD,{Ord}];
 Expr];

@@ -2,7 +2,7 @@
 (*  CollectConstraints  *)
 (*======================*)
 
-ConjugateTerm[InputExpr_,Constraint_[ConstInds___]]:=Module[{Expr=InputExpr},
+ConjugateTerm[InputExpr_,Constraint_[ConstInds___]]~Y~Module[{Expr=InputExpr},
 	Expr//=(#/.{Constraint->DummyConstraint})&;
 	Expr//=VarD[DummyConstraint[ConstInds],CD];
 	Expr//=TotalTo;
@@ -10,9 +10,10 @@ ConjugateTerm[InputExpr_,Constraint_[ConstInds___]]:=Module[{Expr=InputExpr},
 	Expr//=ToCanonical;
 	Expr//=ContractMetric;
 	Expr//=ScreenDollarIndices;
+	Expr//=FullSimplify;
 	Constraint[ConstInds]*Expr];
 
-CollectConstraints[InputExpr_,ConstraintsList_]:=Module[
+CollectConstraints[InputExpr_,ConstraintsList_]~Y~Module[
 	{Expr=0},
 	(Expr+=ConjugateTerm[InputExpr,#])&/@ConstraintsList;
 	(*(Expr+=(#*ToHigherDerivativeCanonical@TotalTo@(VarD[#,

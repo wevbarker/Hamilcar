@@ -3,6 +3,12 @@
 (*=================*)
 
 ReadAtRuntime@"DefGeometry";
+IncludeHeader@"NewParallelSubmit";
+IncludeHeader@"MonitorParallel";
+IncludeHeader@"StackSetDelayed";
+IncludeHeader@"CallStackBegin";
+IncludeHeader@"CallStackEnd";
+IncludeHeader@"CLICallStack";
 
 ReloadPackage[]:=Module[{},
 	If[$NotLoaded,

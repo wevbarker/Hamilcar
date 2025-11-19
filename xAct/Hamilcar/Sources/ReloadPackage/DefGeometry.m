@@ -6,6 +6,7 @@ GSymb="\[ScriptH]";
 (*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
 Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
 	PrintAs->GSymb,SymCovDQ->True];
+PrintAs@Evaluate@DetG^="\[ScriptH]";
 DefCovD[CDT[-a],SymbolOfCovD->{"#","D"},FromMetric->G];
 
 StandardIndices=ToString/@Alphabet[];
@@ -48,6 +49,13 @@ DefTimeTensor[ConjugateMomentumG[a,b],M3,
 	Symmetric[{a,b}],PrintAs->"\[Pi]"];
 DefTensor[TensorConjugateMomentumG[a,b],M3,
 	Symmetric[{a,b}],PrintAs->"\[GothicCapitalT]\[Pi]"];
+
+(*Define the powers of these canonical fields*)
+xAct`Hamilcar`Private`DefPower[G,
+	xAct`Hamilcar`Private`QuantitySymbol->"\[ScriptH]"];
+xAct`Hamilcar`Private`DefPower[ConjugateMomentumG,
+	xAct`Hamilcar`Private`QuantitySymbol->"\[Pi]"];
+
 (*Define the time coordinate orthogonal to the foliation*)
 DefConstantSymbol[Time,PrintAs->"\[ScriptT]"];
 (*Define the time-dependent metric*)
@@ -67,6 +75,12 @@ xAct`Hamilcar`Private`GTimeInverseToG=MakeRule[{GTimeInverse[a,b],G[a,b]},
 AutomaticRules[GTimeInversep,
 	MakeRule[{GTimeInversep[a,b],-GTimep[a,b]},
 	MetricOn->All,ContractMetrics->True]];
+(*Define a dummy covariant derivative for use in `FindAlgebra`*)
+DefTensor[FloatingCD[-i],M3,PrintAs->"\[Del]"];
+(*Simplify the Riemann curvature tensor in three dimensions*)
+(*AutomaticRules[RiemannCD,*)
+(*RiemannCDToRicciCD=*)
+AutomaticRules[RiemannCD,MakeRule[{RiemannCD[-r,-s,-m,-n],G[-r,-m]*RicciCD[-s,-n]-G[-r,-n]*RicciCD[-s,-m]-G[-s,-m]*RicciCD[-r,-n]+G[-s,-n]*RicciCD[-r,-m]-(1/2)*(G[-r,-m]*G[-s,-n]-G[-r,-n]*G[-s,-m])*RicciScalarCD[]},MetricOn->All,ContractMetrics->True]];(**)
 (*Define a dummy constraint for `CollectConstraints`*)
 DefTensor[DummyConstraint[AnyIndices@TangentM3],M3];
 (*Define a dummy measure for use in `FindAlgebra`*)
