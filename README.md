@@ -205,7 +205,39 @@ registers a contraction rule to convert canonical variable expressions back to c
 
 ### Function `FindAlgebra`
 
-This function is undocumented and under active development. The purpose of the function is to determine constraint algebroids.
+```mathematica
+FindAlgebra[<Expr>,{{<Fctr1>,<Fctr2>,...},...}]
+```
+seeks to express `<Expr>` as a sum of terms, where each term corresponds to one of the sub-lists and has factors corresponding to indexed tensors whose heads are `<Fctr1>`, `<Fctr2>`, etc. These tensor heads should have been defined using `DefCanonicalField` or `DefTensor`. The re-expression is achieved automatically by means of any required number of integrations by parts.
+
+```mathematica
+FindAlgebra[<Expr>,{{<Fctr1>,<Fctr2>,...,{CD,...,<Fctr3>,...}},...}]
+```
+additionally admits terms where one or more applications of the spatial covariant derivative `CD` act on any of a select group of factors, here `<Fctr3>`, etc.
+
+#### Details and options
+
+- The function is designed to reconstruct constraint algebras from Poisson bracket results, expressing raw bracket outputs in terms of the original constraint functions.
+- The schematic ansatz (second argument) specifies which tensor factors are expected in the final result:
+	- Each sub-list represents a possible term structure
+	- Tensor heads without `CD` wrappers appear undifferentiated
+	- Tensor heads inside `{CD,...}` sub-lists may have derivatives acting on them
+- The following options may be given:
+	- `Constraints` is a list of special (and appropriately indexed) tensors with respect to which the re-expression is expected to be homogeneously linear. The result will be expressed with these tensors factored out.
+	- `Verify` is a boolean which, when set to `True`, causes the re-expression and `<Expr>` to be varied internally with respect to any tensors which appear exactly to the first power in all terms (after an application of `TotalFrom`). This usually includes smearing functions, but may also include some canonical variables. The equality of the variations is checked to ensure that the re-expression is correct. Default is `False`.
+	- `Method` specifies the solution algorithm: `Solve` (default, general) or `LinearSolve` (faster for linear systems).
+
+#### Example: constraint algebra
+
+After computing a Poisson bracket between smeared constraints:
+```mathematica
+bracket = PoissonBracket[SuperHamiltonian[SmearingF[]], SuperHamiltonian[SmearingS[]]];
+```
+the result is expressed in terms of canonical variables. To re-express this in terms of the constraints themselves:
+```mathematica
+FindAlgebra[bracket, {{SuperMomentum, {CD, SmearingF, SmearingS}}}]
+```
+This seeks to write `bracket` as a sum of terms proportional to `SuperMomentum`, where derivatives may act on the smearing functions `SmearingF` and `SmearingS`.
 
 ### Function `TimeD`
 
