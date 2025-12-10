@@ -4,11 +4,16 @@
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
-# _Hamilcar_: MCP-compliant tools for Hamiltonian analysis
+# Hamiltonian (canonical) analysis toolkit
 ## Version 0.0.0-developer
 
-- Initial development version of the canonical field theory package.
-- Extends xAct for time-dependent field calculations.
+- Admits arbitrary tensorial field theories in 3+1 dimensions.
+- Admits field theory on flat spacetime, or a dynamical metric for gravity.
+- Keeps track of canonical fields and their conjugate momenta.
+- Computes Poisson brackets between canonical quantities.
+- Re-expresses computed brackets in terms of index-free ansätze using integrations by parts and dimensionally dependent identities.
+- Can be used by humans.
+- Can be used by agents.
 
 ## License
 
@@ -78,13 +83,7 @@ This provides an interactive notebook with all calculations, explanations, and m
 
 ## Agentic Integration
 
-While _Hamilcar_ currently provides a comprehensive _Mathematica_ interface for canonical field theory calculations, the ultimate goal is to enable seamless integration with agentic systems. The requisite **JSON-RPC interface** that will allow AI agents to programmatically access Hamilcar's functionality is **yet to be developed**.
-
-This future interface will enable:
-- Automated constraint algebra analysis
-- Programmatic field theory calculations
-- Integration with larger agentic workflows
-- Standardized communication protocols for field theory operations
+While _Hamilcar_ currently provides a comprehensive _Mathematica_ interface for canonical field theory calculations, it is intended for integration with agentic systems. A rudimentary agent [_Hasdrubal_](https://github.com/wevbarker/Hasdrubal) is under development.
 
 ## General use 
 
