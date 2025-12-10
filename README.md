@@ -4,7 +4,7 @@
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
-# Hamiltonian (canonical) analysis toolkit
+# Hamiltonian (canonical) analysis toolkit for _xAct_
 ## Version 0.0.0-developer
 
 - Admits arbitrary tensorial field theories in 3+1 dimensions.
@@ -320,13 +320,17 @@ C:\Users\user\Hamilcar> xcopy /e /k /h /i xAct\ "C:\Users\user\AppData\Roaming\M
 
 There are several ways to get help:
 - The [xAct google group](https://groups.google.com/g/xAct) contains a well established, highly active and very friendly community of researchers. Feel free to start a _New conversation_ by posting a minimal working example of your code.
-- For private correspondence, you can email us at [barker@fzu.cz](mailto:barker@fzu.cz).
+- For private correspondence, you can email [barker@fzu.cz](mailto:barker@fzu.cz).
 - Alternatively you may wish to raise a [_New issue_](https://github.com/wevbarker/Hamilcar/issues) on _GitHub_.
 
 ## Acknowledgements
 
-_Hamilcar_ was improved by many useful discussions with Dražen Glavan and Tom Złośnik.
+_Hamilcar_ was improved by useful discussions with Boris Bolliet, Justin Feng, Drazen Glavan, Will Handley, Richard Woodard and Tom Zlosnik.
 
-This work used the DiRAC Data Intensive service (CSD3 [www.csd3.cam.ac.uk](www.csd3.cam.ac.uk)) at the University of Cambridge, managed by the University of Cambridge University Information Services on behalf of the STFC DiRAC HPC Facility ([www.dirac.ac.uk](www.dirac.ac.uk)). The DiRAC component of CSD3 at Cambridge was funded by BEIS, UKRI and STFC capital funding and STFC operations grants. DiRAC is part of the UKRI Digital Research Infrastructure.
+I am grateful for the support of Girton College, Cambridge, Marie Sklodowska-Curie Actions and the Institute of Physics of the Czech Academy of Sciences.
 
-WB is grateful for the kind hospitality of Leiden University and the Lorentz Institute, and the support of Girton College, Cambridge, Marie Skłodowska-Curie Actions and the Institute of Physics of the Czech Academy of Sciences.
+This work used the DiRAC Data Intensive service (CSD3 [www.csd3.cam.ac.uk](https://www.csd3.cam.ac.uk)) at the University of Cambridge, managed by the University of Cambridge University Information Services on behalf of the STFC DiRAC HPC Facility ([www.dirac.ac.uk](https://www.dirac.ac.uk)). The DiRAC component of CSD3 at Cambridge was funded by BEIS, UKRI and STFC capital funding and STFC operations grants. DiRAC is part of the UKRI Digital Research Infrastructure.
+
+This work also used the Newton compute server, access to which was provisioned by Will Handley using an ERC grant.
+
+Co-funded by the European Union (Physics for Future - Grant Agreement No. 101081515). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Research Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.
