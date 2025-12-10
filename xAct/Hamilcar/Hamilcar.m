@@ -48,11 +48,11 @@ Quiet@If[xAct`Hamilcar`Private`$CLI,
 		xAct`Hamilcar`Private`$WorkingDirectory=NotebookDirectory[]]];
 $Path~AppendTo~xAct`Hamilcar`Private`$WorkingDirectory;
 xAct`Hamilcar`Private`$InstallDirectory=Select[FileNameJoin[{#,"xAct/Hamilcar"}]&/@$Path,DirectoryQ][[1]];
-If[xAct`Hamilcar`Private`$CLI,	
+(*If[xAct`Hamilcar`Private`$CLI,	
 	Print@Import@FileNameJoin@{xAct`Hamilcar`Private`$InstallDirectory,
 				"Logos","ASCIILogo.txt"},
 	Print@Magnify[Import@FileNameJoin@{xAct`Hamilcar`Private`$InstallDirectory,
-				"Logos","GitLabLogo.png"},0.3]];
+				"Logos","GitLabLogo.png"},0.3]];*)
 
 (*==============*)
 (*  Disclaimer  *)
@@ -78,6 +78,7 @@ TotalFrom::usage="TotalFrom";
 TotalTo::usage="TotalTo";
 PrependTotalFrom::usage="PrependTotalFrom";
 PrependTotalTo::usage="PrependTotalTo";
+Recanonicalize::usage="Recanonicalize";
 DefTimeTensor::usage="DefTimeTensor";
 TimeD::usage="TimeD";
 

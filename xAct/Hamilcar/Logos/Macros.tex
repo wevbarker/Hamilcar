@@ -1,0 +1,571 @@
+% Macros
+
+\newcommand{\wb}[1]{{\color[RGB]{0,155,0}{\textbf{\textit{[WB: #1]}}}}}
+
+\newrobustcmd{\NPhy}{%
+	\tensor{N}{_{\text{Phy}}}%
+}
+\newrobustcmd{\NCan}{%
+	\tensor{N}{_{\text{Can}}}%
+}
+\newrobustcmd{\NFirst}{%
+	\tensor{N}{_{\text{1st}}}%
+}
+\newrobustcmd{\NSecond}{%
+	\tensor{N}{_{\text{2nd}}}%
+}
+
+\newrobustcmd{\ScaleFactor}{%
+	a
+}
+\newrobustcmd{\HubbleNumber}{%
+	H
+}
+\newrobustcmd{\HubbleNumberDot}{%
+	\dot{H}
+}
+
+\newrobustcmd{\Primary}[1]{\tensor{\Phi}{_{#1}}}
+\newrobustcmd{\FirstOrderPrimary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Phi$}}}}{_{#1}}}
+\newrobustcmd{\SecondOrderPrimary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Phi$}}}}{_{#1}}}
+\newrobustcmd{\Secondary}[1]{\tensor{\Psi}{_{#1}}}
+\newrobustcmd{\FirstOrderSecondary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Psi$}}}}{_{#1}}}
+\newrobustcmd{\SecondOrderSecondary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Psi$}}}}{_{#1}}}
+\newrobustcmd{\ActualSecondary}[1]{\tensor{\Theta}{_{#1}}}
+\newrobustcmd{\FirstOrderActualSecondary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Theta$}}}}{_{#1}}}
+\newrobustcmd{\SecondOrderActualSecondary}[1]{\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Theta$}}}}{_{#1}}}
+\newrobustcmd{\QVar}[1]{\tensor{q}{_{#1}}}
+\newrobustcmd{\BackgroundQVar}[1]{\tensor*{\overline{q}}{_{#1}}}
+\newrobustcmd{\DeltaQVar}[1]{\tensor*{\delta q}{_{#1}}}
+\newrobustcmd{\QVarDot}[1]{\tensor{\dot{q}}{_{#1}}}
+\newrobustcmd{\DeltaQVarDot}[1]{\tensor*{\delta \dot{q}}{_{#1}}}
+\newrobustcmd{\QVarDash}[1]{\tensor{q'}{_{#1}}}
+\newrobustcmd{\DeltaQVarDash}[1]{\tensor*{\delta q'}{_{#1}}}
+\newrobustcmd{\PVar}[1]{\tensor{p}{_{#1}}}
+\newrobustcmd{\BackgroundPVar}[1]{\tensor*{\overline{p}}{_{#1}}}
+\newrobustcmd{\DeltaPVar}[1]{\tensor*{\delta p}{_{#1}}}
+\newrobustcmd{\PVarDot}[1]{\tensor{\dot{p}}{_{#1}}}
+\newrobustcmd{\DeltaPVarDot}[1]{\tensor*{\delta \dot{p}}{_{#1}}}
+\newrobustcmd{\PVarDash}[1]{\tensor{p'}{_{#1}}}
+\newrobustcmd{\DeltaPVarDash}[1]{\tensor*{\delta p'}{_{#1}}}
+\newrobustcmd{\Mul}[1]{\tensor{\ell}{_{#1}}}
+\newrobustcmd{\BackgroundMul}[1]{\tensor*{\overline{\ell}}{_{#1}}}
+\newrobustcmd{\DeltaMul}[1]{\tensor*{\delta\ell}{_{#1}}}
+\newrobustcmd{\MulDot}[1]{\tensor{\dot{\ell}}{_{#1}}}
+\newrobustcmd{\DeltaMulDot}[1]{\tensor*{\delta \dot{\ell}}{_{#1}}}
+\newrobustcmd{\MulDash}[1]{\tensor{\ell'}{_{#1}}}
+\newrobustcmd{\DeltaMulDash}[1]{\tensor*{\delta \ell'}{_{#1}}}
+
+\newrobustcmd{\Action}{%
+	\mathscr{S}%
+}
+
+\newrobustcmd{\FirstOrderAction}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\mathscr{S}$}}}}{#1}%
+}
+\newrobustcmd{\SecondOrderAction}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\mathscr{S}$}}}}{#1}%
+}
+
+%	The covariant derivative 
+\newrobustcmd{\CovD}[1]{%
+	\tensor{D}{#1}
+}
+%	The background covariant derivative
+\newrobustcmd{\BackgroundCovD}[1]{%
+	\tensor*{\overline{D}}{#1}
+}
+%	The covariant derivative induced on the foliation
+\newrobustcmd{\CD}[1]{%
+	\tensor{\nabla}{#1}%
+}
+%	The background covariant derivative induced on the foliation
+\newrobustcmd{\BackgroundCD}[1]{%
+	\tensor{\overline{\nabla}}{#1}%
+}
+% 	The Bach tensor
+\newrobustcmd{\Bach}[1]{%
+	\tensor*{B}{#1}%
+}
+%	The Weyl tensor
+\newrobustcmd{\Weyl}[1]{%
+	\tensor{C}{#1}%
+}
+%	The Schouten tensor
+\newrobustcmd{\Schouten}[1]{%
+	\tensor{S}{#1}%
+}
+%	The Riemann, Ricci or Ricci scalar 
+\newrobustcmd{\Curvature}[1]{%
+	\tensor{R}{#1}
+}
+%	The velocity of the Riemann, Ricci or Ricci scalar
+\newrobustcmd{\DotCurvature}[1]{%
+	\tensor*{\dot{R}}{#1}
+}
+%	The acceleration of the Riemann, Ricci or Ricci scalar
+\newrobustcmd{\DDotCurvature}[1]{%
+	\tensor*{\ddot{R}}{#1}
+}
+%	The background Riemann, Ricci or Ricci scalar
+\newrobustcmd{\BackgroundCurvature}[1]{%
+	\tensor{\overline{R}}{#1}
+}
+%	The induced Riemann, Ricci or Ricci scalar on the foliation
+\newrobustcmd{\R}[1]{%
+	\tensor{\mathcal{R}}{#1}%
+}
+%	The background induced Riemann, Ricci or Ricci scalar on the foliation
+\newrobustcmd{\BackgroundR}[1]{%
+	\tensor*{\overline{\mathcal{R}}}{#1}%
+}
+%	The induced Riemann, Ricci or Ricci scalar on the foliation
+\newrobustcmd{\CurvatureFoliation}[1]{%
+	\tensor{\mathcal{R}}{#1}
+}
+%	The background induced Riemann, Ricci or Ricci scalar on the foliation
+\newrobustcmd{\BackgroundCurvatureFoliation}[1]{%
+	\tensor*{\overline{\mathcal{R}}}{#1}
+}
+%	The primary constraint
+\newrobustcmd{\PrimaryConstraint}[1]{%
+	\tensor*{\Phi}{#1}%
+}
+\newrobustcmd{\FirstOrderPrimaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Phi$}}}}{#1}%
+}
+\newrobustcmd{\SecondOrderPrimaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Phi$}}}}{#1}%
+}
+%	The multiplier 
+\newrobustcmd{\Multiplier}[1]{%
+	\tensor*{\lambda}{#1}%
+}
+%	The background multiplier
+\newrobustcmd{\BackgroundMultiplier}[1]{%
+	\tensor*{\overline{\lambda}}{#1}%
+}
+%	The perturbation to the multiplier
+\newrobustcmd{\DeltaMultiplier}[1]{%
+	\tensor*{\delta\lambda}{#1}%
+}
+%	The secondary constraint
+\newrobustcmd{\SecondaryConstraint}[1]{%
+	\tensor*{\Psi}{#1}%
+}
+\newrobustcmd{\FirstOrderSecondaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Psi$}}}}{#1}%
+}
+\newrobustcmd{\SecondOrderSecondaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Psi$}}}}{#1}%
+}
+\newrobustcmd{\FirstOrderActualSecondaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Theta$}}}}{#1}%
+}
+\newrobustcmd{\SecondOrderActualSecondaryConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Theta$}}}}{#1}%
+}
+%	A smearing function
+\newrobustcmd{\SmearingS}[1]{%
+	\tensor*{s}{#1}%
+}
+%	A smearing function
+\newrobustcmd{\SmearingF}[1]{%
+	\tensor*{f}{#1}%
+}
+%	The generic primary constraint
+\newrobustcmd{\GenericPrimaryConstraint}[1]{%
+	\tensor*{\Phi}{}\left[{#1}\right]%
+}
+%	The first order generic primary constraint
+\newrobustcmd{\FirstOrderGenericPrimaryConstraint}[1]{%
+	\tensor*{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\Phi$}}}}{}\left[{#1}\right]%
+}
+%	The second order generic primary constraint
+\newrobustcmd{\SecondOrderGenericPrimaryConstraint}[1]{%
+	\tensor*{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\Phi$}}}}{}\left[{#1}\right]%
+}
+%	The total Hamiltonian
+\newrobustcmd{\TotalHamiltonian}{%
+	\tensor*{\mathscr{H}}{}%
+}
+%	The total Hamiltonian
+\newrobustcmd{\TotalHamiltonianGen}[1]{%
+	\tensor*{\mathscr{H}}{}\left[{#1}\right]%
+}
+%	The first order total Hamiltonian
+\newrobustcmd{\FirstOrderTotalHamiltonian}{%
+	\tensor*{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\mathscr{H}$}}}}{}%
+}
+%	The second order total Hamiltonian
+\newrobustcmd{\SecondOrderTotalHamiltonian}[1]{%
+	\tensor*{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\mathscr{H}$}}}}{}\left[{#1}\right]%
+}
+%	The third order total Hamiltonian
+\newrobustcmd{\ThirdOrderTotalHamiltonian}[1]{%
+	\tensor*{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(3)$}}}{\scalebox{0.99}{$\mathscr{H}$}}}}{}\left[{#1}\right]%
+}
+%	The super-Hamiltonian or super-momentum constraint
+\newrobustcmd{\SuperConstraint}[1]{%
+	\tensor{\mathcal{H}}{#1}%
+}
+%	The reduced super-Hamiltonian or super-momentum constraint
+\newrobustcmd{\ReducedSuperConstraint}[1]{%
+	\tensor{\mathbb{H}}{#1}%
+}
+\newrobustcmd{\ZerothOrderReducedSuperConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(0)$}}}{\scalebox{0.99}{$\mathbb{H}$}}}}{#1}%
+}
+\newrobustcmd{\FirstOrderReducedSuperConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\mathbb{H}$}}}}{#1}%
+}
+\newrobustcmd{\SuperConstraintDot}[1]{%
+	\tensor{\dot{\mathcal{H}}}{#1}%
+}
+%	The dressed super-Hamiltonian or super-momentum constraint
+\newrobustcmd{\DressedSuperConstraint}[1]{%
+	\tensor{\mathfrak{H}}{#1}%
+}
+\newrobustcmd{\FirstOrderSuperConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(1)$}}}{\scalebox{0.99}{$\mathcal{H}$}}}}{#1}%
+}
+\newrobustcmd{\SecondOrderSuperConstraint}[1]{%
+	\tensor{\vphantom{l^{l^2}}\smash{\stackrel{\raisebox{-3pt}{\scalebox{0.55}{$(2)$}}}{\scalebox{0.99}{$\mathcal{H}$}}}}{#1}%
+}
+%	The lapse function 
+\newrobustcmd{\Lapse}{%
+	N	
+}
+%	The background lapse function
+\newrobustcmd{\BackgroundLapse}{%
+	\overline{N}	
+}
+%	The perturbation to the lapse function
+\newrobustcmd{\DeltaLapse}{%
+	\delta N	
+}
+%	The shift vector
+\newrobustcmd{\Shift}[1]{%
+	\tensor{N}{#1}
+}
+%	The background shift vector
+\newrobustcmd{\BackgroundShift}[1]{%
+	\tensor*{\overline{N}}{#1}
+}
+%	The perturbation to the shift vector
+\newrobustcmd{\DeltaShift}[1]{%
+	\tensor*{\delta N}{#1}
+}
+%	The Kronecker delta
+\newrobustcmd{\Kronecker}[1]{%
+	\tensor*{\delta}{#1}
+}
+%	The metric tensor
+\newrobustcmd{\G}[1]{%
+	\tensor*{g}{#1}%
+}
+%	The metric tensor
+\newrobustcmd{\Metric}[1]{%
+	\tensor{g}{#1}
+}
+%	The background metric tensor
+\newrobustcmd{\BackgroundG}[1]{%
+	\tensor*{\overline{g}}{#1}%
+}
+%	The perturbation to the metric tensor
+\newrobustcmd{\DeltaMetric}[1]{%
+	\tensor*{\delta g}{#1}%
+}
+%	The perturbation of the stress-energy tensor
+\newrobustcmd{\DeltaStressEnergy}[1]{%
+	\tensor*{\delta T}{#1}%
+}
+%	The perturbation to the metric tensor
+\newrobustcmd{\DeltaG}[1]{%
+	\tensor*{\delta h}{#1}%
+}
+%	The perturbation to the metric tensor
+\newrobustcmd{\DeltaMetricFoliation}[1]{%
+	\tensor*{\delta h}{#1}%
+}
+%	The velocity of the perturbation to the metric tensor
+\newrobustcmd{\DotDeltaMetricFoliation}[1]{%
+	\tensor*{\delta \dot{h}}{#1}%
+}
+%	The momentum conjugate to the metric tensor
+\newrobustcmd{\ConjugateMomentumG}[1]{%
+	\tensor*{\pi}{#1}%
+}
+%	The velocity of the momentum conjugate to the metric tensor
+\newrobustcmd{\ConjugateMomentumGDot}[1]{%
+	\tensor*{\dot{\pi}}{#1}%
+}
+%	The background momentum conjugate to the metric tensor
+\newrobustcmd{\BackgroundConjugateMomentumG}[1]{%
+	\tensor*{\overline{\pi}}{#1}%
+}
+%	The perturbation to the momentum conjugate to the metric tensor
+\newrobustcmd{\ConjugateMomentumDeltaG}[1]{%
+	\tensor*{\delta\pi}{#1}%
+}
+%	The second perturbation to the momentum conjugate to the metric tensor
+\newrobustcmd{\ConjugateMomentumDDeltaG}[1]{%
+	\tensor*{\delta\delta\pi}{#1}%
+}
+%	The actual F-function 
+\newrobustcmd{\FFunctionActual}[1]{%
+	\tensor*{F}{#1}%
+}
+%	The F-function
+\newrobustcmd{\FFunction}[1]{%
+	\tensor*{\mathcal{F}}{#1}%
+}
+%	The actual extrinsic curvature tensor
+\newrobustcmd{\ExtrinsicCurvatureActual}[1]{%
+	\tensor*{K}{#1}%
+}
+%	The gauge projector
+\newrobustcmd{\GaugeProjector}[1]{%
+	\tensor{\mathscr{P}}{#1}%
+}
+%	The Schouten projector
+\newrobustcmd{\SchoutenProjector}[1]{%
+	\tensor{\mathfrak{P}}{#1}%
+}
+%	The Killing vector
+\newrobustcmd{\Killing}[1]{%
+	\tensor*{\xi}{#1}%
+}
+%	The actual extrinsic curvature tensor
+\newrobustcmd{\ExtrinsicCurvatureActualDot}[1]{%
+	\tensor*{\dot{K}}{#1}%
+}
+%	The extrinsic curvature tensor
+\newrobustcmd{\ExtrinsicCurvature}[1]{%
+	\tensor*{\mathcal{K}}{#1}%
+}
+%	The background extrinsic curvature tensor
+\newrobustcmd{\BackgroundExtrinsicCurvature}[1]{%
+	\tensor*{\overline{\mathcal{K}}}{#1}%
+}
+% 	The perturbation to the extrinsic curvature tensor
+\newrobustcmd{\DeltaExtrinsicCurvature}[1]{%
+	\tensor*{\delta\mathcal{K}}{#1}%
+}
+%	The velocity of the perturbation of the extrinsic curvature tensor
+\newrobustcmd{\DotDeltaExtrinsicCurvature}[1]{%
+	\tensor*{\delta\dot{\mathcal{K}}}{#1}%
+}
+%	The conjugate momentum to the extrinsic curvature tensor
+\newrobustcmd{\ConjugateMomentumExtrinsicCurvature}[1]{%
+	\tensor*{\rho}{#1}%
+}
+%	The second perturbation to the conjugate momentum to the extrinsic curvature tensor
+\newrobustcmd{\ConjugateMomentumDDeltaExtrinsicCurvature}[1]{%
+	\tensor*{\delta\delta\rho}{#1}%
+}
+%	The velocity of the conjugate momentum to the extrinsic curvature tensor
+\newrobustcmd{\ConjugateMomentumExtrinsicCurvatureDot}[1]{%
+	\tensor*{\dot{\rho}}{#1}%
+}
+%	The background conjugate momentum to the extrinsic curvature tensor
+\newrobustcmd{\BackgroundConjugateMomentumExtrinsicCurvature}[1]{%
+	\tensor*{\overline{\rho}}{#1}%
+}
+%	The perturbation to the conjugate momentum to the extrinsic curvature tensor
+\newrobustcmd{\ConjugateMomentumDeltaExtrinsicCurvature}[1]{%
+	\tensor*{\delta\rho}{#1}%
+}
+\newrobustcmd{\Cadabra}{\textit{Cadabra}\xspace}
+
+
+
+% from the old version
+%	The unit-timelike normal vector 
+\newrobustcmd{\UnitTimelike}[1]{%
+	\tensor{n}{#1}
+}
+%	The coordinate functions
+\newrobustcmd{\Coordinate}[1]{%
+	\tensor{x}{#1}
+}
+%	The general vector 
+\newrobustcmd{\Vector}[1]{%
+	\tensor{A}{#1}
+}
+%	The partial derivative 
+\newrobustcmd{\PD}[1]{%
+	\tensor*{\partial}{#1}
+}
+%	The Christoffel symbols 
+\newrobustcmd{\Christoffel}[1]{%
+	\tensor*{\Gamma}{#1}
+}
+%	The generic field 
+\newrobustcmd{\GenQ}{%
+	\tensor*{q}{}
+}
+%	The generic momentum 
+\newrobustcmd{\GenP}{%
+	\tensor*{p}{}
+}
+%	The perturbation to the generic field
+\newrobustcmd{\DeltaGenQ}{%
+	\tensor*{\delta q}{}
+}
+%	The perturbation to the generic momentum
+\newrobustcmd{\DeltaGenP}{%
+	\tensor*{\delta p}{}
+}
+%	The velocity of the perturbation of the generic field
+\newrobustcmd{\DotDeltaGenQ}{%
+	\tensor*{\delta\dot{q}}{}
+}
+%	The velocity of the perturbation of the generic momentum
+\newrobustcmd{\DotDeltaGenP}{%
+	\tensor*{\delta\dot{p}}{}
+}
+%	The second perturbation to the generic field
+\newrobustcmd{\DDeltaGenQ}{%
+	\tensor*{\delta\delta q}{}
+}
+%	The second perturbation to the generic momentum
+\newrobustcmd{\DDeltaGenP}{%
+	\tensor*{\delta\delta p}{}
+}
+%	The velocity of the second perturbation of the generic field
+\newrobustcmd{\DotDDeltaGenQ}{%
+	\tensor*{\delta\delta \dot{q}}{}
+}
+%	The velocity of the second perturbation of the generic momentum
+\newrobustcmd{\DotDDeltaGenP}{%
+	\tensor*{\delta\delta \dot{p}}{}
+}
+%	The momentum conjugate to the metric on the foliation
+\newrobustcmd{\ConjugateMomentumMetricFoliation}[1]{%
+	\tensor*{\pi}{#1}
+}
+%	The velocity of the momentum conjugate to the metric on the foliation
+\newrobustcmd{\ConjugateMomentumMetricFoliationDot}[1]{%
+	\tensor*{\dot{\pi}}{#1}
+}
+%	The metric on the foliation
+\newrobustcmd{\MetricFoliation}[1]{%
+	\tensor{h}{#1}
+}
+%	The background metric on the foliation
+\newrobustcmd{\BackgroundMetricFoliation}[1]{%
+	\tensor*{\overline{h}}{#1}
+}
+%	The velocity of the background metric on the foliation
+\newrobustcmd{\BackgroundMetricFoliationDot}[1]{%
+	\tensor*{\dot{\overline{h}}}{#1}
+}
+%	The velocity of the metric on the foliation
+\newrobustcmd{\MetricFoliationDot}[1]{%
+	\tensor{\dot{h}}{#1}
+}
+%	The timelike Killing vector field
+\newrobustcmd{\KillingVector}[1]{%
+	\tensor{\xi}{#1}
+}
+%	The velocity of the extrinsic curvature
+\newrobustcmd{\ExtrinsicCurvatureDot}[1]{%
+	\tensor*{\dot{\mathcal{K}}}{#1}
+}
+%	The Brinkmann function
+\newrobustcmd{\Brinkmann}{%
+	{\mathcal{G}}
+}
+%	The Schwarzschild radius
+\newrobustcmd{\SchwarzschildRadius}{%
+	{r_{\text{g}}}
+}
+%	The first Weyl exponent 
+\newrobustcmd{\PsiFunc}{%
+	{\psi}
+}
+%	The second Weyl exponent
+\newrobustcmd{\GammaFunc}{%
+	{\gamma}
+}
+%	The U function
+\newrobustcmd{\UFunc}{%
+	{\mathcal{U}}
+}
+%	The U function
+\newrobustcmd{\DotUFunc}{%
+	{\mathcal{\dot{U}}}
+}
+%	The angular momentum per unit mass
+\newrobustcmd{\AngularMomentumPerUnitMass}{%
+	{a}
+}
+%	The first Kasner exponent
+\newrobustcmd{\KasnerA}{%
+	{\alpha}
+}
+%	The second Kasner exponent
+\newrobustcmd{\KasnerB}{%
+	{\beta}
+}
+%	The third Kasner exponent
+\newrobustcmd{\KasnerC}{%
+	{\gamma}
+}
+%	Shorthand K tensor for GR at two loops
+\newrobustcmd{\ShorthandK}[1]{%
+	\tensor*{\mathscr{K}}{#1}%
+}
+%	Shorthand L tensor for GR at two loops
+\newrobustcmd{\ShorthandL}[1]{%
+	\tensor{\mathscr{L}}{#1}%
+}
+%	Shorthand Q tensor for GR at two loops
+\newrobustcmd{\ShorthandQ}[1]{%
+	\tensor{\mathscr{Q}}{#1}%
+}
+%	Trace of shorthand Q tensor (2-index, symmetric)
+\newrobustcmd{\TraceShorthandQ}[1]{%
+	\tensor*{\mathscr{Q}}{#1}%
+}
+%	The 0+ spin-parity component of the vector field
+\newrobustcmd{\VectorZeroPlus}[1]{%
+	\tensor{A^{\#1}_{0^+}}{#1}%
+}
+%	The 1- spin-parity component of the vector field
+\newrobustcmd{\VectorOneMinus}[1]{%
+	\tensor{A^{\#1}_{1^-}}{#1}%
+}
+%	The conjugate momentum to the 0+ spin-parity component of the vector field
+\newrobustcmd{\ConjugateMomentumVectorZeroPlus}[1]{%
+	\tensor{\pi(A)^{\#1}_{0^+}}{#1}%
+}
+%	The conjugate momentum to the 1- spin-parity component of the vector field
+\newrobustcmd{\ConjugateMomentumVectorOneMinus}[1]{%
+	\tensor{\pi(A)^{\#1}_{1^-}}{#1}%
+}
+%	The Lagrange multiplier for the 0+ spin-parity component of the vector field
+\newrobustcmd{\LagrangeMultiplierVectorZeroPlus}[1]{%
+	\tensor{\lambda(A)^{\#1}_{0^+}}{#1}%
+}
+%	The Lagrange multiplier for the 1- spin-parity component of the vector field
+\newrobustcmd{\LagrangeMultiplierVectorOneMinus}[1]{%
+	\tensor{\lambda(A)^{\#1}_{1^-}}{#1}%
+}
+%	The primary constraint for the 1- spin-parity component of the vector field
+\newrobustcmd{\PrimaryConstraintVectorOneMinus}[1]{%
+	\tensor{\phi(A)^{\#1}_{1^-}}{#1}%
+}
+%	The time derivative of the primary constraint for the 1- spin-parity component of the vector field
+\newrobustcmd{\PrimaryConstraintVectorOneMinusDot}[1]{%
+	\tensor{\dot{\phi}(A)^{\#1}_{1^-}}{#1}%
+}
+%	The secondary constraint for the 0+ spin-parity component of the vector field
+\newrobustcmd{\SecondaryConstraintVectorZeroPlus}[1]{%
+	\tensor{\chi(A)^{\#1}_{0^+}}{#1}%
+}
+%	The secondary constraint for the 1- spin-parity component of the vector field
+\newrobustcmd{\SecondaryConstraintVectorOneMinus}[1]{%
+	\tensor{\chi(A)^{\#1}_{1^-}}{#1}%
+}

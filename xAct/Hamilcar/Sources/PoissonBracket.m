@@ -72,7 +72,7 @@ PoissonBracket[InputOperatorOne_,InputOperatorTwo_,OptionsPattern[]]~Y~Module[{
 			Expr=Total[LeibnizArray~Flatten~1];
 		];
 	];
-	Expr//=Recanonicalise;
+	Expr//=Recanonicalize;
 	If[!xAct`Hamilcar`Private`$CLI,
 		FinishDynamic[];
 		NotebookDelete@CallStack;

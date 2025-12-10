@@ -2,7 +2,6 @@
 (*  MonomialPoissonBracket  *)
 (*==========================*)
 
-IncludeHeader@"Recanonicalise";
 IncludeHeader@"ToDensities";
 
 MonomialPoissonBracket[OperatorOne_,OperatorTwo_]~Y~Module[{
@@ -47,6 +46,6 @@ MonomialPoissonBracket[OperatorOne_,OperatorTwo_]~Y~Module[{
 
 	(* Combine and recanonicalise *)
 	Expr+=GExpr;
-	Expr//=Recanonicalise;
+	Expr//=Recanonicalize;
 
 Expr];
