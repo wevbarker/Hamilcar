@@ -2,7 +2,7 @@
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
 
-[![Read the paper](https://img.shields.io/badge/Documentation-PDF-blue?style=for-the-badge)](Documentation.pdf?raw=true)
+[![Paper](https://img.shields.io/badge/Paper-PrePrint-blue?style=for-the-badge)](PaperPrePrint.pdf?raw=true)
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
