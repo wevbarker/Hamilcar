@@ -2,6 +2,8 @@
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
 
+[![Documentation](https://img.shields.io/badge/Documentation-PDF-blue)](Documentation.pdf)
+
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
 # Hamiltonian (canonical) analysis toolkit for _xAct_
