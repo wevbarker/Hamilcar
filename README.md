@@ -1,6 +1,7 @@
 ![license](https://img.shields.io/github/license/wevbarker/Hamilcar)
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
+[![arXiv](https://img.shields.io/badge/arXiv-2512.25007-b31b1b.svg)](https://arxiv.org/abs/2512.25007)
 
 [![Paper](https://img.shields.io/badge/Paper-PrePrint-blue?style=for-the-badge)](Documentation.pdf?raw=true)
 
@@ -27,11 +28,14 @@ _Hamilcar_ is provided without warranty, or the implied warranty of merchantibil
 
 If _Hamilcar_ was useful to your research, please **cite us** using the following _BibTeX_:
 ```tex
-@misc{Barker:2025Hamilcar,
-    author = "Barker, Will E. V.",
-    title = "{Hamilcar: A Mathematica Package for Canonical Field Theory}",
-    year = "2025",
-    note = "In development"
+@article{Barker:2025noc,
+    author = "Barker, Will",
+    title = "{Fast Poisson brackets and constraint algebras in canonical gravity}",
+    eprint = "2512.25007",
+    archivePrefix = "arXiv",
+    primaryClass = "physics.comp-ph",
+    month = "12",
+    year = "2025"
 }
 ```
 
