@@ -1,9 +1,8 @@
 ![license](https://img.shields.io/github/license/wevbarker/Hamilcar)
 ![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
 ![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
+[![Paper](https://img.shields.io/badge/Paper-PrePrint-blue?style=for-the-badge)](https://arxiv.org/abs/2512.25007)
 [![arXiv](https://img.shields.io/badge/arXiv-2512.25007-b31b1b.svg)](https://arxiv.org/abs/2512.25007)
-
-[![Paper](https://img.shields.io/badge/Paper-PrePrint-blue?style=for-the-badge)](Documentation.pdf?raw=true)
 
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
 
@@ -331,12 +330,12 @@ There are several ways to get help:
 
 ## Acknowledgements
 
-_Hamilcar_ was improved by useful discussions with Boris Bolliet, Justin Feng, Drazen Glavan, Will Handley, Richard Woodard and Tom Zlosnik.
+_Hamilcar_ was improved by useful discussions with Boris Bolliet, Justin Feng, Drazen Glavan, Will Handley, Carlo Marzo, Roberto Percacci, Syksy Rasanen, Alessandro Santoni, Ignacy Sawicki, Richard Woodard and Tom Zlosnik.
 
-I am grateful for the support of Girton College, Cambridge, Marie Sklodowska-Curie Actions and the Institute of Physics of the Czech Academy of Sciences.
+I am grateful for the support of Marie Sklodowska-Curie Actions and the Institute of Physics of the Czech Academy of Sciences.
 
-This work used the DiRAC Data Intensive service (CSD3 [www.csd3.cam.ac.uk](https://www.csd3.cam.ac.uk)) at the University of Cambridge, managed by the University of Cambridge University Information Services on behalf of the STFC DiRAC HPC Facility ([www.dirac.ac.uk](https://www.dirac.ac.uk)). The DiRAC component of CSD3 at Cambridge was funded by BEIS, UKRI and STFC capital funding and STFC operations grants. DiRAC is part of the UKRI Digital Research Infrastructure.
+I was supported by the research environment and infrastructure of the Handley Lab at the University of Cambridge.
 
-This work also used the Newton compute server, access to which was provisioned by Will Handley using an ERC grant.
+This work was performed using the Cambridge Service for Data Driven Discovery (CSD3), part of which is operated by the University of Cambridge Research Computing on behalf of the STFC DiRAC HPC Facility ([www.dirac.ac.uk](https://www.dirac.ac.uk)). The DiRAC component of CSD3 was funded by BEIS capital funding via STFC capital grants ST/P002307/1 and ST/R002452/1 and STFC operations grant ST/R00689X/1. DiRAC is part of the National e-Infrastructure.
 
 Co-funded by the European Union (Physics for Future - Grant Agreement No. 101081515). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or European Research Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.
