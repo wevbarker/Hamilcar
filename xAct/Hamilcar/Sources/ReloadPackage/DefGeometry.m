@@ -2,11 +2,14 @@
 (*  DefGeometry  *)
 (*===============*)
 DefManifold[M3,3,IndexRange[{a,z}]];
-GSymb="\[ScriptH]";
+(*GSymb="\[ScriptH]";*)
+GSymb="\[Gamma]";
 (*Quiet@DefMetric[1,G[-a,-b],CD,{";","\!\(\*OverscriptBox[\(\[Del]\),\(_\)]\)"},*)
-Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},
+(*Quiet@DefMetric[1,G[-a,-b],CD,{";","\[Del]"},*)
+Quiet@DefMetric[1,G[-a,-b],CD,{";","\[ScriptCapitalD]"},
 	PrintAs->GSymb,SymCovDQ->True];
-PrintAs@Evaluate@DetG^="\[ScriptH]";
+(*PrintAs@Evaluate@DetG^="\[ScriptH]";*)
+PrintAs@Evaluate@DetG^="\[Gamma]";
 DefCovD[CDT[-a],SymbolOfCovD->{"#","D"},FromMetric->G];
 
 StandardIndices=ToString/@Alphabet[];
@@ -52,7 +55,8 @@ DefTensor[TensorConjugateMomentumG[a,b],M3,
 
 (*Define the powers of these canonical fields*)
 xAct`Hamilcar`Private`DefPower[G,
-	xAct`Hamilcar`Private`QuantitySymbol->"\[ScriptH]"];
+	(*xAct`Hamilcar`Private`QuantitySymbol->"\[ScriptH]"];*)
+	xAct`Hamilcar`Private`QuantitySymbol->"\[Gamma]"];
 xAct`Hamilcar`Private`DefPower[ConjugateMomentumG,
 	xAct`Hamilcar`Private`QuantitySymbol->"\[Pi]"];
 
@@ -76,7 +80,8 @@ AutomaticRules[GTimeInversep,
 	MakeRule[{GTimeInversep[a,b],-GTimep[a,b]},
 	MetricOn->All,ContractMetrics->True]];
 (*Define a dummy covariant derivative for use in `FindAlgebra`*)
-DefTensor[FloatingCD[-i],M3,PrintAs->"\[Del]"];
+(*DefTensor[FloatingCD[-i],M3,PrintAs->"\[Del]"];*)
+DefTensor[FloatingCD[-i],M3,PrintAs->"\[ScriptCapitalD]"];
 (*Simplify the Riemann curvature tensor in three dimensions*)
 (*AutomaticRules[RiemannCD,*)
 (*RiemannCDToRicciCD=*)
