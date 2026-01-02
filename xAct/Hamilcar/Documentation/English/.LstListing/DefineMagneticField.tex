@@ -1,1 +1,0 @@
-In[#]:= DefTensor[MagneticField[i], M3, PrintAs -> "B"]; FromMagneticField = MakeRule[{MagneticField[i], epsilonG[i, j, k] * CD[-j][VectorPotential[-k]]}, MetricOn -> All, ContractMetrics -> True]

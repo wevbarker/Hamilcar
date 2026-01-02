@@ -1,1 +1,0 @@
-In[#]:= DefTensor[MaxwellTotalHamiltonian[], M3, PrintAs -> "\!\(\ * SubscriptBox[\(H\),\(T\)]\)"]; FromMaxwellTotalHamiltonian = MakeRule[{MaxwellTotalHamiltonian[], MaxwellHamiltonian[] + LagrangeMultiplierA0[] * GaussConstraint[]}, MetricOn -> All, ContractMetrics -> True]
