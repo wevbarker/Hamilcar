@@ -101,8 +101,8 @@ When you first run `` <<xAct`Hamilcar` `` the software defines a three-dimension
 | _Wolfram Language_      | Output format                    | Meaning                                                                                     |
 |-------------------------|----------------------------------|---------------------------------------------------------------------------------------------|
 | `a`, `b`, `c`, ..., `z` | $a$, $b$, $c$, ... $z$           | Spatial coordinate indices (corresponding to _adapted_ coordinates in the ADM prescription) |
-| `G[-a,-b]`              | $h_{ab}$                         | Induced metric on the spatial hypersurface                                                  |
-| `CD[-a]@`               | $\nabla_{a}$                     | Spatial covariant derivative                                                                |
+| `G[-a,-b]`              | $\gamma_{ab}$                         | Induced metric on the spatial hypersurface                                                  |
+| `CD[-a]@`               | $\mathcal{D}_{a}$                     | Spatial covariant derivative                                                                |
 | `epsilonG[-a,-b,-c]`    | $\epsilon_{abc}$                 | Induced totally antisymmetric tensor on the spatial hypersurface                            |
 
 For those familiar with _xAct_, note that calls to `DefManifold` and `DefMetric` are made internally at this stage. The package establishes a spatial manifold `M3`, creating the necessary geometric structure for canonical field theory calculations.
