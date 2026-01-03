@@ -6,7 +6,7 @@
 (*  Version  *)
 (*===========*)
 
-xAct`Hamelin`$Version={"1.0.0",{2026,1,3}};
+xAct`Hamilcar`$Version={"1.0.0",{2026,1,3}};
 (*xAct`Hamilcar`$Version={"0.0.0-developer",DateList@FileDate@$InputFileName~Drop~(-3)};*)
 
 If[Unevaluated[xAct`xCore`Private`$LastPackage]===xAct`xCore`Private`$LastPackage,xAct`xCore`Private`$LastPackage="xAct`Hamilcar`"];
