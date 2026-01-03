@@ -1,10 +1,12 @@
-![license](https://img.shields.io/github/license/wevbarker/Hamilcar)
-![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-orange.svg)
-![xAct](https://img.shields.io/badge/xAct-1.2.0+-green.svg)
-[![Paper](https://img.shields.io/badge/Paper-PrePrint-blue?style=for-the-badge)](https://arxiv.org/abs/2512.25007)
-[![arXiv](https://img.shields.io/badge/arXiv-2512.25007-b31b1b.svg)](https://arxiv.org/abs/2512.25007)
-
 <img src="xAct/Hamilcar/Logos/GitHubLogo.png" width="1000">
+
+![license](https://img.shields.io/github/license/wevbarker/Hamilcar)
+![Mathematica](https://img.shields.io/badge/Mathematica-14.0+-blue.svg)
+![xAct](https://img.shields.io/badge/xAct-1.2.0+-blue.svg)
+
+[![Paper](https://img.shields.io/badge/Documentation-2512.25007-blue?style=for-the-badge)](https://arxiv.org/abs/2512.25007)
+
+[![arXiv](https://img.shields.io/badge/arXiv-2512.25007-b31b1b.svg)](https://arxiv.org/abs/2512.25007)
 
 # Hamiltonian (canonical) analysis toolkit for _xAct_
 ## Version 0.0.0-developer
