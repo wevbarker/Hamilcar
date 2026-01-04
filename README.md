@@ -76,17 +76,7 @@ PoissonBracket[Phi[],ConjugateMomentumPhi[]];
 
 ## Documentation 
 
-Comprehensive documentation with worked examples is available as an interactive Mathematica notebook at `xAct/Hamilcar/Documentation/English/Documentation.nb`. This documentation includes:
-
-- **General Relativity**: Complete walkthrough of the ADM formalism, including constraint definitions, smearing functions, and computation of the Dirac hypersurface deformation algebra
-- **Maxwell Theory**: Canonical electromagnetic field theory demonstrating Gauss constraint analysis and the Dirac algorithm
-
-To access the documentation, open the notebook file in Mathematica:
-```mathematica
-NotebookOpen["xAct/Hamilcar/Documentation/English/Documentation.nb"]
-```
-
-This provides an interactive notebook with all calculations, explanations, and mathematical results ready to execute.
+Documentation with general relativity as a worked example is available at `xAct/Hamilcar/Documentation/English/`. Currently, the documentation is programmatically generated from the `Documentation.m` script, which uses some custom packages to produce `Documentation.nb` and `Documentation.pdf` files. The notebook and PDF are readable, and display the relevant commands in code blocks, however the notebook is not meant to be interactive or executable. More standard documentation may be added in future releases. It is also recommended to read the associated paper (see top of this README).
 
 ## Agentic Integration
 
